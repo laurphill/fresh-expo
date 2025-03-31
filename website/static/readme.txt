@@ -1,1 +1,0 @@
-images, javascript, css file go inside static that won't change

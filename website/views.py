@@ -8,6 +8,6 @@ views = Blueprint('views', __name__)
 
 @views.route('/') #empty slash for homepage
 def home():
-    return render_template("home.html")
+    return("hi")
 
 #render html inside the home template
