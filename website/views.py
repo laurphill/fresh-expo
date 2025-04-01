@@ -6,8 +6,7 @@ from flask import Blueprint, render_template
 
 views = Blueprint('views', __name__) 
 
-@views.route('/') #empty slash for homepage
+@views.route('/') #homepage place holder
 def home():
     return("hi")
 
-#render html inside the home template
