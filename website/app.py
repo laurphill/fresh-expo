@@ -7,7 +7,6 @@ from flask_wtf import FlaskForm #validate data at all times and increased securi
 from wtforms import StringField, PasswordField, SubmitField #appropriate inputs for username, password, and after submitting said inputs
 from wtforms.validators import InputRequired, Length #controlling properties of inputs
 from flask_bcrypt import Bcrypt #secure passwords/information
-import jsonify
 
 #initialize app
 app = Flask(__name__)
