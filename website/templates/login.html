@@ -1,3 +1,5 @@
+<!--File for login page visibility, button to registration if no account. Needs design and better error message if input is wrong-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +8,14 @@
     <title>Login</title>
 </head>
 <body>
-    <h1>Login page</h1>
+    <h1>Login</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="Incorrect input!!!">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
     <form method = "POST" action="">
         {{form.hidden_tag()}}
         {{form.username}} 
