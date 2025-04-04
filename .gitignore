@@ -1,0 +1,29 @@
+store  login page visibility, button to registration if no account, save just in case needed again
+.ignore 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="Incorrect input!!!">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <form method = "POST" action="">
+        {{form.hidden_tag()}}
+        {{form.username}} 
+        {{form.password}}
+        {{form.submit}}
+    </form>
+    <a href = "{{url_for('register')}}">Dont have an account? Sign up</a><br>
+
+</body>
+</html>

@@ -10,7 +10,6 @@ from flask_bcrypt import Bcrypt #secure passwords/information
 
 #initialize app
 app = Flask(__name__)
-
 #For hashing passwords
 bcrypt = Bcrypt(app)
 
@@ -41,6 +40,9 @@ class User(db.Model, UserMixin):
     def is_user_name_taken(cls, username):
       return db.session.query(db.exists().where(User.username==username)).scalar()
 
+    def __repr__(self):
+        return f"<Username {self.username}>\n<Password {self.password}>"
+
 #create tables
 with app.app_context(): 
     db.create_all()
@@ -63,12 +65,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Register")    
 
 #home page
-@app.route('/') 
+@app.route('/', methods = ['GET', 'POST']) 
 def home():
     return render_template("home.html")
 
-#login route
-@app.route("/login", methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -79,26 +79,28 @@ def login():
                 return redirect(url_for("dashboard"))
         else:
             login_error() 
-    return render_template("login.html", form=form)
+    return render_template("home.html", form=form)
 
 #if an input is incorrect, flash message
 def login_error():
     flash("Incorrect username or password, please try again")
-    return redirect(url_for("login"))
+    return redirect(url_for("home"))
 
 #if a new user tries to register with a duplicate username, flash duplicate error message
 def duplicate_user():
     flash("This username already exists, please try again")
     return redirect(url_for("register"))
 
-#logout route
+#logs user out if clicked
 @app.route("/logout", methods = ["GET","POST"])
-@login_required #user has to be logged in for this to work
 def logout():
-    logout_user() 
-    return redirect(url_for("login"))
-
-#register route
+    return redirect(url_for("home"))
+@app.route("/forgot", methods = ["GET", "POST"])
+def forgot():
+    
+    return render_template("forgot.html")
+    
+#register page
 @app.route("/register", methods=['GET','POST'])
 def register():
     form = RegisterForm()
