@@ -1,10 +1,9 @@
-/* for homepage design */
-
+/* for password recovery page */
 * {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 /*animate wave background*/
 section {
@@ -64,46 +63,73 @@ section .wave.wave4{
     }
 }
 /*for main background*/
- body {
+body {
     display: flex;
     min-height: 100vh;
 } 
-/*wrap everything*/
+
 .wrapper {
     width: 420px;
     margin: auto;
     margin-top: 110px;
     justify-content: center;
     background: transparent;
-    color: whitesmoke;
+    color: #ffffff;
     border-radius: 10px;
     padding: 30px 40px;
 }
-/*login header*/
-.wrapper h1 {
-    font-size: 36px;
-    text-align: center;
+
+.wrapper .input-box {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    background-color: whitesmoke;
+    margin: 30px 0;
+    margin-top: 100px;
+    border-radius: 30px;
 }
-/* place both buttons next to each other and other design */
-.wrapper .btn{
-    width: 32%;
-    height: 30%;
-    background: rgba(170, 154, 246, 0.4);
+.input-box input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
     border: none;
     outline: none;
-    text-align: center;
+    border: 2px solid white;
     border-radius: 40px;
     font-size: 16px;
+    color: rgb(49, 49, 49);
     padding: 20px 45px 20px 20px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    display: inline-block
-    
+
 }
-/* adjust create account button */
-.wrapper .btn.reg{
-    width: 50%;
-    margin-left: 50px;
-    margin-top:30px;
+/*username input*/
+.input-box input::placeholder {
+    color: rgb(49, 49, 49)
 }
+.wrapper .btn {
+    width: 100%;
+    height: 45px;
+    background: #fff;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    box-shadow: 0 0 10px rgb(49, 49, 49);
+    cursor:pointer;
+    font-size: 16px;
+    color: #4b4040;
+    font-weight: 600;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.wrapper .back {
+    background: transparent;
+    border: none;
+    outline: none;
+    border-radius: 40px;
+    cursor:pointer;
+    font-size: 16px;
+    color: rgb(49, 49, 49);
+    font-weight: 400;
+    margin-top: 30px;
+    margin-left: 135px;
+}
+
