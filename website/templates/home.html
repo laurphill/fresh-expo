@@ -2,14 +2,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel = "stylesheet" href = "../static/home.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Log in</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-    <h1>Login authentication</h1>
-    <a href = "{{url_for('login')}}">Login Page</a><br>
-    <a href = "{{url_for('register')}}">Register Page</a><br>
-
+    <section>
+        <div class = "wave wave1"></div>
+        <div class = "wave wave2"></div>
+        <div class = "wave wave3"></div>
+        <div class = "wave wave4"></div>
+        
+        <div class = "wrapper">
+            <form action ="">
+                <h1>Login</h1>
+                <div class = "input-box">
+                    <input type ="text" 
+                    placeholder = "Username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class = "input-box">
+                    <input type = "password" 
+                    placeholder="Password" required>
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+                <div class = "remember-forgot">
+                    <label><input type = "checkbox">Remember me</label>
+                    <a href = "forgot">Forgot password?</a>
+                </div>
+                <button type = "submit" class = "btn" formaction="dashboard">Login</button>
+                <div class = "register-link">
+                    <p>Don't have an account?
+                        <a href = "{{url_for('register')}}">Register</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </section>
 </body>
 </html>
