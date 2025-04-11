@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  font-family: "Poppins", Tahoma, Geneva, Verdana, sans-serif;
+  color: #0073cf;
+}
+
+nav {
+  background-color: #fff;
+  box-shadow: 1px 1px 1px #1034b7;
+  padding: 10px;
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.nav-left {
+  width: 100px;
+}
+
+.nav-right {
+  width: 100px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-center {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 5px 10px;
+  border-radius: 25px;
+  width: fit-content;
+}
+
+.search-bar input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 5px;
+  font-size: 14px;
+  width: 350px;
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #3857bd;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sidebar {
+  display: none;
+  list-style: none;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  height: 100vh;
+  width: 250px;
+  z-index: 999;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 1px 0 5px #3753dd;
+  transition: 0.3s;
+}
+
+.sidebar.active {
+  display: flex;
+}
+
+.sidebar li {
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+}
+
+.sidebar a {
+  width: 100%;
+  text-decoration: none;
+  color: #3857bd;
+  display: block;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.sidebar a:hover {
+  background-color: #f0f0f0;
+}
+
+.close-icon {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #3857bd;
+  display: flex;
+  align-items: center;
+}
+
+.profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.profile-button ion-icon {
+  font-size: 24px;
+  color: #3857bd;
+}
+
+.profile-button:hover {
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
