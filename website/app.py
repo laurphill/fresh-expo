@@ -1,44 +1,135 @@
-#entry point for app
-from templates import * # for html templates
-from flask import Flask, render_template, redirect, url_for, flash #for taking user to pages without having to manually switch 
-from flask_sqlalchemy import SQLAlchemy #database
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user #making login functionality easier
-from flask_wtf import FlaskForm #validate data at all times and increased security for user input
-from wtforms import StringField, PasswordField, SubmitField, BooleanField #appropriate inputs for username, password, and after submitting said inputs
-from wtforms.validators import InputRequired, Length #controlling properties of inputs
-from flask_bcrypt import Bcrypt #secure passwords/information
+from Imports import *
 
-#initialize app
-app = Flask(__name__)
 #For hashing passwords
 bcrypt = Bcrypt(app)
-
-# Initialize database/set a secret key
-app.config['SECRET_KEY'] = '00123801989349857773048209842893048'
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
 
 #reload user id from database
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
+# Setting to get print statements for debugging
+Verbose = True
+
+class User(db.Model):
+    __tablename__ = 'users'  # Define the table name
+
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    username = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
+    email = Column(String(100), unique=True, nullable=False)  # Email field, must be unique
+    password = Column(String(100), nullable=False)  # Password field
+
+    def __repr__(self):
+        return f"<User(id={self.id}, username={self.username}, email={self.email})>"    # Prints user info
+
+engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
+
+# Create all tables in the database
+
+with app.app_context():
+    db.metadata.create_all(bind=engine)
+
+# Create a sessionmaker instance to interact with the database
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# Function to add a new user
+def create_user(db_session, username: str, email: str, password: str):
+
+    email_exists = db_session.query(User).filter((User.email == email)).first()
+    if email_exists:
+        # If a user with the same email exists, return error message
+        print(f"Error: Email address '{email}' already exists.")
+        return None
+    
+    username_exists = db_session.query(User).filter((User.username == username)).first()
+    if username_exists:
+        # If a user with the same username exists, return error message
+        print(f"Error: Username '{username}' already exists.")
+        return None
+    
+    new_user = User(username=username, email=email, password=password)
+    db_session.add(new_user)
+    db_session.commit()
+    db_session.refresh(new_user)
+    print(f"User Created: {new_user}")
+    return new_user
+
+# Function to get a user by ID
+def get_user_by_id(db_session, user_id: int):
+    
+    user_exists = db_session.query(User).filter(User.id == user_id).first()
+
+    if Verbose == True:
+        if user_exists:
+            print(f"User ID {user_id}: {user_exists}")
+        if not user_exists:
+            print(f"User ID {user_id} does not exist.")
+        
+    return user_exists
+
+# Function to get a user by username
+def get_user_by_username(db_session, username: str):
+    user_exists = db_session.query(User).filter(User.username == username).first()
+    if Verbose == True:
+        print(f"User with username {username}: {user_exists}")
+        if not user_exists:
+            print(f'No user "{username}" exists.')
+    return user_exists
+
+# Function to update user information
+def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str):
+    user = db_session.query(User).filter(User.id == user_id).first()
+    user_former = user
+    
+    email_exists = db_session.query(User).filter((User.email == new_email)).first()
+    if email_exists:
+        # If a user with the same email exists, return error message
+        print(f"Error: Email address '{new_email}' already exists.")
+        return None
+    
+    username_exists = db_session.query(User).filter((User.username == new_username)).first()
+    if username_exists:
+        # If a user with the same username exists, return error message
+        print(f"Error: Username '{new_username}' already exists.")
+        return None
+    
+    if user:
+        user.username = new_username
+        user.email = new_email
+        user.password = new_password
+        db_session.commit()
+        db_session.refresh(user)
+
+    if Verbose:
+        if user:
+            print(f"User {user_former} updated: {user}")
+        if not user:
+            print(f"User ID {user_id} not found.")
+    
+    return user
+
+# Function to delete a user
+def delete_user(db_session, user_id: int):
+    user = db_session.query(User).filter(User.id == user_id).first()
+    
+    if Verbose:
+        if user:
+            print(f"Deleted user: {user}.")
+        if not user:
+            print(f"No user with ID {user_id}.")
+    
+    if user:
+        db_session.delete(user)
+        db_session.commit()
+        return user
+    
+    return None
+
 #reload the user object from the user ID stored in the session
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-#Set up class for user information data storage table
-class User(db.Model, UserMixin):
-    # To specify the columns, we create class variables that belong to the Column class
-    id = db.Column(db.Integer, primary_key=True)        # a unique id
-    username = db.Column(db.String(20), nullable=False, unique = True) #username storage
-    password = db.Column(db.String(80), nullable=False) #password storage
-
-#create tables
-with app.app_context(): 
-    db.create_all()
 
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
@@ -46,11 +137,6 @@ class RegisterForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     submit = SubmitField("Register")    
 
-    def validate_username(self, username): #validates if there is no other user with the same username, raises validation error if so
-        existing_username = User.query.filter_by(username = username.data).first()
-        if existing_username:     
-            flash("That username already exists, please enter a different one.")
-        
 #Logging in 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
@@ -115,6 +201,5 @@ def settings():
     pass
 
 if __name__ == "__main__":
-    
     app.run(debug = True) 
 
