@@ -1,17 +1,19 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
 /* for login page design */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 /*animate wave background*/
 section {
     position: relative;
     width: 100%;
     height: 100vh;
-    background: hsl(251, 76%, 60%);
+    background: hsl(227, 76%, 43%);
     overflow: hidden;
 }
 
@@ -125,7 +127,7 @@ section .wave.wave4{
 .wrapper .remember-forgot {
     display: flex;
     justify-content: space-between;
-    font-size: 14.5px;
+    font-size: 12px;
     margin: -15px 0 15px;
 }
 

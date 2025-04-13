@@ -39,20 +39,20 @@ def create_user(db_session, username: str, email: str, password: str):
     email_exists = db_session.query(User).filter((User.email == email)).first()
     if email_exists:
         # If a user with the same email exists, return error message
-        print(f"Error: Email address '{email}' already exists.")
+        flash(f"Error: Email address '{email}' already exists.")
         return None
     
     username_exists = db_session.query(User).filter((User.username == username)).first()
     if username_exists:
         # If a user with the same username exists, return error message
-        print(f"Error: Username '{username}' already exists.")
+        flash(f"Error: Username '{username}' already exists.")
         return None
     
     new_user = User(username=username, email=email, password=password)
     db_session.add(new_user)
     db_session.commit()
     db_session.refresh(new_user)
-    print(f"User Created: {new_user}")
+    flash(f"User Created: {new_user}")
     return new_user
 
 # Function to get a user by ID
@@ -62,9 +62,9 @@ def get_user_by_id(db_session, user_id: int):
 
     if Verbose == True:
         if user_exists:
-            print(f"User ID {user_id}: {user_exists}")
+            flash(f"User ID {user_id}: {user_exists}")
         if not user_exists:
-            print(f"User ID {user_id} does not exist.")
+            flash(f"User ID {user_id} does not exist.")
         
     return user_exists
 
@@ -72,9 +72,9 @@ def get_user_by_id(db_session, user_id: int):
 def get_user_by_username(db_session, username: str):
     user_exists = db_session.query(User).filter(User.username == username).first()
     if Verbose == True:
-        print(f"User with username {username}: {user_exists}")
+        flash(f"User with username {username}: {user_exists}")
         if not user_exists:
-            print(f'No user "{username}" exists.')
+            flash(f'No user "{username}" exists.')
     return user_exists
 
 # Function to update user information
@@ -85,13 +85,13 @@ def update_user(db_session, user_id: int, new_username: str, new_email: str, new
     email_exists = db_session.query(User).filter((User.email == new_email)).first()
     if email_exists:
         # If a user with the same email exists, return error message
-        print(f"Error: Email address '{new_email}' already exists.")
+        flash(f"Error: Email address '{new_email}' already exists.")
         return None
     
     username_exists = db_session.query(User).filter((User.username == new_username)).first()
     if username_exists:
         # If a user with the same username exists, return error message
-        print(f"Error: Username '{new_username}' already exists.")
+        flash(f"Error: Username '{new_username}' already exists.")
         return None
     
     if user:
@@ -103,9 +103,9 @@ def update_user(db_session, user_id: int, new_username: str, new_email: str, new
 
     if Verbose:
         if user:
-            print(f"User {user_former} updated: {user}")
+            flash(f"User {user_former} updated: {user}")
         if not user:
-            print(f"User ID {user_id} not found.")
+            flash(f"User ID {user_id} not found.")
     
     return user
 
@@ -115,9 +115,9 @@ def delete_user(db_session, user_id: int):
     
     if Verbose:
         if user:
-            print(f"Deleted user: {user}.")
+            flash(f"Deleted user: {user}.")
         if not user:
-            print(f"No user with ID {user_id}.")
+            flash(f"No user with ID {user_id}.")
     
     if user:
         db_session.delete(user)
@@ -145,8 +145,8 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Login") 
 
 @app.route('/')
-def home():
-    return render_template("home.html")
+def landing():
+    return render_template("landing.html")
 
 #login page
 @app.route('/login', methods = ['GET', 'POST']) 
@@ -191,9 +191,9 @@ def register():
     return render_template("register.html",form=form)
 
 #dashboard route
-@app.route("/dashboard", methods = ["GET", "POST"])
-def dashboard():
-    return render_template("dashboard.html")
+@app.route("/home", methods = ["GET", "POST"])
+def homepage():
+    return render_template("homepage.html")
 
 app.route("/settings")
 @login_required

@@ -1,4 +1,41 @@
-<!--HTML for registration page-->
+<!DOCTYPE html>
+<html lang = en>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="../static/register.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</html>
+<body>
+    <section>
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+        <div class="wave wave4"></div>
+
+        <div class="wrapper">
+            <form method = "POST" action="">
+                {{form.hidden_tag()}}
+                <h1>Register</h1>
+                <div class = "input-box">
+                    {{form.username(placeholder = "Username")}}
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class = "input-box">
+                    {{form.password(placeholder="Password")}}
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+                <div class = "btn">
+                    {{form.submit(class="btn")}}
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
+<!-- HTML for registration page
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,4 +53,4 @@
             {{form.submit()}}
     </form>
 </body>
-</html>
+</html> -->
