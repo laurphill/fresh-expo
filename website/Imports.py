@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, url_for, flash #for taking u
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
-from wtforms import StringField, PasswordField, SubmitField, BooleanField #appropriate inputs for username, password, and after submitting said inputs
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, EmailField #appropriate inputs for username, password, and after submitting said inputs
 from wtforms.validators import InputRequired, Length #controlling properties of inputs
 from flask_bcrypt import Bcrypt #secure passwords/information
 from sqlalchemy import create_engine, Column, Integer, String

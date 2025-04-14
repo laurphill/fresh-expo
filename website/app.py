@@ -12,13 +12,20 @@ login_manager.login_view = 'login'
 # Setting to get print statements for debugging
 Verbose = True
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
 
     id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
     username = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
     email = Column(String(100), unique=True, nullable=False)  # Email field, must be unique
     password = Column(String(100), nullable=False)  # Password field
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
+        with app.app_context():
+            db.create_all()
 
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, email={self.email})>"    # Prints user info
@@ -40,7 +47,7 @@ def create_user(db_session, username: str, email: str, password: str):
     if email_exists:
         # If a user with the same email exists, return error message
         flash(f"Error: Email address '{email}' already exists.")
-        return None
+        # return None
     
     username_exists = db_session.query(User).filter((User.username == username)).first()
     if username_exists:
@@ -135,11 +142,13 @@ def load_user(user_id):
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
+    email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
 
 #Logging in 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
+    email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     remember_me = BooleanField(render_kw={"place_holder":"Remember me"})
     submit = SubmitField("Login") 
@@ -157,7 +166,7 @@ def login():
         if user: #if the user is in the database
             if bcrypt.check_password_hash(user.password, form.password.data): #and if the password matches the user
                 login_user(user)
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('homepage'))
         else:
             flash("Incorrect username or password, try again.")
             return redirect(url_for('login'))
@@ -183,7 +192,7 @@ def register():
 
     if form.validate_on_submit(): #will hash password for secure registration then create new user with given username
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
-        new_user = User(username=form.username.data, password = hashed_password) #set up user in database format
+        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password) #set up user in database format
         db.session.add(new_user) #add new user to database
         db.session.commit() #commit changes
         return redirect(url_for('login')) #take user to login after registration
