@@ -6,15 +6,17 @@
 
 body {
   font-family: "Poppins", Tahoma, sans-serif;
-  background-color: #000000;
   color: #5170ef;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
   line-height: 1.6;
+  background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
 }
 
 /* NAVBAR */
 nav {
-  background-color: #ffffff;
+
   box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
   padding: 10px 20px;
   position: sticky;
@@ -49,9 +51,10 @@ nav {
 /* MAIN CONTENT */
 .main-content {
   display: flex;
-  flex-direction: row;        
+  flex-direction: column;     
+  min-height: calc(100vh - 60px); /* Adjust height to fit the navbar */   
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   padding: 60px 5%;
   gap: 40px;
   flex-wrap: nowrap;        
@@ -59,6 +62,9 @@ nav {
 }
 
 .hero {
+  max-width: 1000px;
+  margin: 30px auto 40px;
+  width: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -71,10 +77,7 @@ nav {
   background-repeat: no-repeat;
   border-radius: 12px;
   color: white;
-}
-
-.hero{
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .hero-left h1 {
@@ -90,11 +93,11 @@ nav {
 
 .cta-button {
   display: inline-block;
-  margin-top: 20px;
-  padding: 10px 25px;
+  margin-top: 10px;
+  padding: 8px 18px;
   background-color: #e74343;
   color: #ffffff;
-  border-radius: 12px;
+  border-radius: 10px;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.2s;
@@ -111,41 +114,32 @@ nav {
   border-radius: 12px;
 }
 
-/* WEEKLY HIGHLIGHTS SIDEBAR */
-.weekly-highlights {
-  width: 280px;
-  flex-shrink: 0;
-  background-color: #fff9d6;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: #6984df;
+.about {
+  width: 100%;
+  text-align: left;
+  padding-left: 60px;
+  margin: 0;
+  color: #3a3a3a;
+  font-family: 'Fredoka', sa;
+}
+.about h2 {
+  font-size: 1.7rem;
+  color: #5567cb;
+  margin-bottom: 8px;
+  line-height: 1.2;
 }
 
-.weekly-highlights h2 {
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  color: #ffffff;
-}
-
-.weekly-highlights ul {
-  list-style: none;
-}
-
-.weekly-highlights li {
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 10px 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.weekly-highlights h3 {
+.about p {
+  max-width: 600px;     
+  line-height: 1.8;   
+  padding-left: 5%;  
   font-size: 1rem;
-  color: #9baded;
 }
 
-.weekly-highlights p {
+footer {
+  text-align: center;
+  padding: 10px;
+  color: #555151;
   font-size: 0.9rem;
-  color: #756e6e;
+  margin-top: 60px;
 }
