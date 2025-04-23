@@ -19,16 +19,20 @@ class User(db.Model, UserMixin):
     username = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
     email = Column(String(100), unique=True, nullable=False)  # Email field, must be unique
     password = Column(String(100), nullable=False)  # Password field
+    bio = Column(String(100), unique = False, nullable = True) #column for profile bio
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, email, password, bio):
         self.username = username
         self.email = email
         self.password = password
+        self.bio = bio
+
         with app.app_context():
             db.create_all()
 
+
     def __repr__(self):
-        return f"<User(id={self.id}, username={self.username}, email={self.email})>"    # Prints user info
+        return f"<User(id={self.id}, username={self.username}, email={self.email}, bio={self.bio})>"    # Prints user info
 
 engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
 
@@ -148,14 +152,13 @@ class RegisterForm(FlaskForm):
 #Logging in 
 class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
-    email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     remember_me = BooleanField(render_kw={"place_holder":"Remember me"})
     submit = SubmitField("Login") 
 
 @app.route('/')
-def landing():
-    return render_template("landing.html")
+def homepage():
+    return render_template("homepage.html")
 
 #login page
 @app.route('/login', methods = ['GET', 'POST']) 
@@ -166,25 +169,22 @@ def login():
         if user: #if the user is in the database
             if bcrypt.check_password_hash(user.password, form.password.data): #and if the password matches the user
                 login_user(user)
-                return redirect(url_for('homepage'))
+                return redirect(url_for('dashboard'))
         else:
             flash("Incorrect username or password, try again.")
             return redirect(url_for('login'))
     return render_template("login.html", form=form)
-
 
 #logs user out if clicked
 @app.route("/logout", methods = ["GET","POST"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
-
+    return redirect(url_for('homepage'))
 #password recovery
 @app.route("/recover_pass", methods = ["GET", "POST"])
 def recover_pass():
     return render_template("recover_pass.html")
-    
 #register page
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -200,14 +200,56 @@ def register():
     return render_template("register.html",form=form)
 
 #dashboard route
-@app.route("/home", methods = ["GET", "POST"])
-def homepage():
-    return render_template("homepage.html")
+@app.route("/dashboard", methods = ["GET", "POST"])
+def dashboard():
+    return render_template("dashboard.html", username = current_user.username)
 
-app.route("/settings")
+#all routes that can only be accessed when user is logged in
+@app.route("/settings")
 @login_required
-def settings():
-    pass
+def settings_main():
+    return render_template('settings.html')
+
+@app.route("/settings/<username>", methods = ["GET", "POST"])
+@login_required
+def settings(username):
+    if current_user.username == username:
+        return render_template('settings.html', user = current_user)
+    else:
+        return redirect(url_for("login"))
+
+@app.route("/profile/<username>", methods=['GET', 'POST'])
+@login_required
+def profile(username):
+    if current_user.username == username:
+        return render_template('profile.html', user=current_user)
+    else:
+        return "User not found", 404
+        
+@app.route("/calendar", methods = ["GET", "POST"])
+@login_required
+def calendar():
+    return render_template('calendar.html', events = events)
+
+@app.route('/chats', methods = ["GET", "POST"])
+@login_required
+def chats():
+    return render_template('chats.html')
+
+@app.route('/events', methods = ["GET", "POST"])
+@login_required
+def events():
+    return render_template('events.html')
+
+@app.route('/organizations', methods = ["GET", "POST"])
+@login_required
+def organizations():
+    return render_template('organizations.html')
+
+@app.route('/resources', methods = ["GET", "POST"])
+@login_required
+def resources():
+    return render_template('resources.html')
 
 if __name__ == "__main__":
     app.run(debug = True) 

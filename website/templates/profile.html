@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "../static/profile.css">
+    <title>{{ current_user.username }}'s Profile</title>
+</head>
+<body>
+
+    <h1>{{ current_user.username }}'s Profile</h1>
+    <p>Email: {{ current_user.email }}</p>
+
+    <div class="page-header">
+        <h1>{{ current_user.username }}</h1>
+        <table class="table">
+            <tbody>
+            <tr>
+            <th scope="row">Name</th>
+            <td>{% if current_user.username %}{{ current_user.username }}{% endif %}</td>
+            </tr>
+            {% if current_user.is_administrator() %}
+                <tr>
+                <th scope="row">Email</th>
+                <td><a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a></td>
+                </tr>
+            {% endif %}
+            <tr>
+            <th scope="row">Bio</th>
+            <td>{% if current_user.bio %}{{ current_user.bio }}{% endif %}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endblock %}
+    
+    
+</body>
+</html>
