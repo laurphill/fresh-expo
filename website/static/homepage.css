@@ -1,0 +1,199 @@
+/*File for the CSS for dashboard*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Poppins", Tahoma, sans-serif;
+    background-color: #ffffff;
+    color: #5170ef;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  
+  /* NAVBAR */
+  nav {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 1px 1px 5px rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  .nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Logo + Site Title */
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .logo {
+    width: 40px;
+    height: auto;
+  }
+  .site-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #647fe1;
+    font-family: 'Fredoka', sa;
+  }
+  
+  /* MAIN CONTENT */
+  .main-content {
+    display: flex;
+    flex-direction: row;        
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 60px 5%;
+    gap: 40px;
+    flex-wrap: nowrap;        
+    min-width: 0;
+  }
+  
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding: 60px 5%;
+    background-image: url("tulipslatech.jpg"); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    color: white;
+  }
+  
+  .hero{
+    opacity: 0.8;
+  }
+  
+  .hero-left h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+  
+  .hero-left p {
+    font-size: 1.1rem;
+    color: #ffffff;
+  }
+  
+  .cta-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 25px;
+    background-color: #e74343;
+    color: #ffffff;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  
+  .cta-button:hover {
+    background-color: #ead975;
+  }
+  
+  .hero-right img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+  }
+  
+  /* WEEKLY HIGHLIGHTS SIDEBAR */
+  .weekly-highlights {
+    width: 280px;
+    flex-shrink: 0;
+    background-color: #fff9d6;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #6984df;
+  }
+  
+  .weekly-highlights h2 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: #ffffff;
+  }
+  
+  .weekly-highlights ul {
+    list-style: none;
+  }
+  
+  .weekly-highlights li {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .weekly-highlights h3 {
+    font-size: 1rem;
+    color: #9baded;
+  }
+  
+  .weekly-highlights p {
+    font-size: 0.9rem;
+    color: #756e6e;
+  }
+
+  .connect-button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    background-color: #647fe1;
+    color: white;
+    padding: 10px 18px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: 'Fredoka', sans-serif;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .connect-button:hover {
+    background-color: #0056b3;
+  }
+
+  .flash-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+  
+  .flash-message {
+    animation: fadeInOut 4s ease-in-out forwards;
+    font-size: 1rem;
+    color: #333;
+    background: none;
+    box-shadow: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-weight: bold;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
