@@ -3,37 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "stylesheet" href = "../static/profile.css">
+    <link rel = "stylesheet" href = "../static/profile/profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <title>{{ current_user.username }}'s Profile</title>
 </head>
 <body>
-
-    <h1>{{ current_user.username }}'s Profile</h1>
-    <p>Email: {{ current_user.email }}</p>
-
-    <div class="page-header">
-        <h1>{{ current_user.username }}</h1>
-        <table class="table">
-            <tbody>
-            <tr>
-            <th scope="row">Name</th>
-            <td>{% if current_user.username %}{{ current_user.username }}{% endif %}</td>
-            </tr>
-            {% if current_user.is_administrator() %}
-                <tr>
-                <th scope="row">Email</th>
-                <td><a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a></td>
-                </tr>
-            {% endif %}
-            <tr>
-            <th scope="row">Bio</th>
-            <td>{% if current_user.bio %}{{ current_user.bio }}{% endif %}</td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Study Groups</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <a href="{{url_for('events')}}">Events</a>
+        <a href="{{url_for('organizations')}}">Organizations</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
     </div>
-    {% endblock %}
-    
+
+    <div class = "wrapper">        
+        <form method = "POST" action="">
+            {{form.hidden_tag()}}
+            <h1>{{user.username}}'s Profile</h1>
+            <div class = "user-data">
+                Username : {{current_user.username}}                
+            </div>
+            <div class = "user-data">
+                Email : {{current_user.email}}
+            </div>  
+            <div class = "user-data">
+                Nickname : {{current_user.nickname}}
+            </div>
+            <div class = "user-data">
+                Bio : {{current_user.bio}}
+            </div>
+
+        </form>
+    </div>
+
+
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
     
 </body>
 </html>

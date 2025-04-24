@@ -12,6 +12,16 @@ login_manager.login_view = 'login'
 # Setting to get print statements for debugging
 Verbose = True
 
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    follower_id = db.Column(db.Integer,
+                            db.ForeignKey('users.id'),
+                            primary_key=True)
+    following_id = db.Column(db.Integer,
+                             db.ForeignKey('users.id'),
+                             primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
 
@@ -19,20 +29,53 @@ class User(db.Model, UserMixin):
     username = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
     email = Column(String(100), unique=True, nullable=False)  # Email field, must be unique
     password = Column(String(100), nullable=False)  # Password field
-    bio = Column(String(100), unique = False, nullable = True) #column for profile bio
+    bio = Column(String(100), nullable = True, server_default="About Me")
+    nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
+    # following = db.relationship('Follow',
+    #                            foreign_keys=[Follow.follower_id],
+    #                            backref=db.backref('follower', lazy='joined'),
+    #                            lazy='dynamic',
+    #                            cascade='all, delete-orphan')
+    # followers = db.relationship('Follow',
+    #                             foreign_keys=[Follow.following_id],
+    #                             backref=db.backref('following', lazy='joined'),
+    #                             lazy='dynamic',
+    #                             cascade='all, delete-orphan')
 
-    def __init__(self, username, email, password, bio):
+    def __init__(self, username, email, password, bio, nickname):
         self.username = username
         self.email = email
         self.password = password
+        self.nickname = nickname
         self.bio = bio
 
         with app.app_context():
             db.create_all()
 
+    # def follow(self, user):
+    #     if not self.is_following(user):
+    #         f = Follow(follower=self, following=user)
+    #         db.session.add(f)
+
+    # def unfollow(self, user):
+    #     f = self.following.filter_by(following_id=user.id).first()
+    #     if f:
+    #         db.session.delete(f)
+
+    # def is_following(self, user):
+    #     if user.id is None:
+    #         return False
+    #     return self.following.filter_by(
+    #         following_id=user.id).first() is not None
+
+    # def is_a_follower(self, user):
+    #     if user.id is None:
+    #         return False
+    #     return self.followers.filter_by(
+    #         follower_id=user.id).first() is not None
 
     def __repr__(self):
-        return f"<User(id={self.id}, username={self.username}, email={self.email}, bio={self.bio})>"    # Prints user info
+        return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
 
 engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
 
@@ -43,6 +86,7 @@ with app.app_context():
 
 # Create a sessionmaker instance to interact with the database
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # Function to add a new user
 def create_user(db_session, username: str, email: str, password: str):
@@ -89,7 +133,7 @@ def get_user_by_username(db_session, username: str):
     return user_exists
 
 # Function to update user information
-def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str):
+def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str, new_nickname: str, new_bio:str):
     user = db_session.query(User).filter(User.id == user_id).first()
     user_former = user
     
@@ -109,6 +153,8 @@ def update_user(db_session, user_id: int, new_username: str, new_email: str, new
         user.username = new_username
         user.email = new_email
         user.password = new_password
+        user.nickname = new_nickname
+        user.bio = new_bio
         db_session.commit()
         db_session.refresh(user)
 
@@ -156,6 +202,15 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField(render_kw={"place_holder":"Remember me"})
     submit = SubmitField("Login") 
 
+class SettingsForm(FlaskForm):
+    username = StringField(validators=[Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
+    email = EmailField(validators=[Length(min=4, max = 100)], render_kw={"place_holder":"email"})
+    password = PasswordField(validators=[Length(min=4, max = 20)], render_kw={"place_holder":"password"})
+    nickname = StringField('Nickname', validators=[DataRequired()],render_kw={"place_holder":"nickname"})
+    bio = StringField('Bio',validators=[DataRequired()],render_kw={"place_holder":"Bio"})
+    submit = SubmitField('Update')
+    
+
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
@@ -192,7 +247,7 @@ def register():
 
     if form.validate_on_submit(): #will hash password for secure registration then create new user with given username
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
-        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password) #set up user in database format
+        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password, nickname = "", bio = "") #set up user in database format
         db.session.add(new_user) #add new user to database
         db.session.commit() #commit changes
         return redirect(url_for('login')) #take user to login after registration
@@ -208,21 +263,31 @@ def dashboard():
 @app.route("/settings")
 @login_required
 def settings_main():
-    return render_template('settings.html')
+    form = SettingsForm()
+    return render_template('settings.html', form=form)
 
 @app.route("/settings/<username>", methods = ["GET", "POST"])
 @login_required
 def settings(username):
+    form = SettingsForm()
     if current_user.username == username:
-        return render_template('settings.html', user = current_user)
-    else:
-        return redirect(url_for("login"))
+        if form.validate_on_submit():
+            user = User.query.first()
+            if user:
+                user.username = form.username.data
+                user.email = form.email.data
+                user.nickname = form.nickname.data
+                user.bio = form.bio.data
+                db.session.commit()
+                return redirect(url_for('settings/<username>'))
+        return render_template('settings.html', user=current_user, form=form)
 
 @app.route("/profile/<username>", methods=['GET', 'POST'])
 @login_required
 def profile(username):
+    form = SettingsForm()
     if current_user.username == username:
-        return render_template('profile.html', user=current_user)
+        return render_template('profile.html', user=current_user,form=form)
     else:
         return "User not found", 404
         
@@ -250,6 +315,36 @@ def organizations():
 @login_required
 def resources():
     return render_template('resources.html')
+
+@app.route('/resources/opportunities', methods = ['GET', 'POST'])
+@login_required 
+def opportunities():
+    return render_template('opportunities.html')
+
+@app.route('/resources/advising', methods = ['GET', 'POST'])
+@login_required 
+def advising():
+    return render_template('advising.html')
+
+@app.route('/resources/offcampus', methods = ['GET', 'POST'])
+@login_required 
+def offcampus():
+    return render_template('offcampus.html')
+
+@app.route('/resources/oncampus', methods = ['GET', 'POST'])
+@login_required 
+def oncampus():
+    return render_template('oncampus.html')
+
+@app.route('/resources/spots', methods = ['GET', 'POST'])
+@login_required 
+def spots():
+    return render_template('spots.html')
+
+@app.route('/resources/food', methods = ['GET', 'POST'])
+@login_required 
+def food():
+    return render_template('food.html')
 
 if __name__ == "__main__":
     app.run(debug = True) 

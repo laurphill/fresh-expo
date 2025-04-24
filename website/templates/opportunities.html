@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <link rel = "stylesheet" href = "../static/organizations.css">
+    <title>Opportunities</title>
+    <link rel = "stylesheet" href = "../static/resources/opportunities.css">
 </head>
 <body>
-    <!-- list organizations by category (Culture/Diversity, Engineering, Poetry, etc) -->
     <div class="sidebar">
         <button id="toggleSidebar" class="toggle-btn">☰</button>
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
@@ -20,9 +18,9 @@
         <a href="{{url_for('logout')}}">Log Out</a>
     </div>
     <div class="wrapper">
-        <header class="main-head">Organizations</header>
+        <header class="main-head">Volunteering and Internship Opportunities</header>
         <article class="content">
-          <h1>info</h1>
+          <h1>info here</h1>
           <p>
             In this layout, we display the areas in source order for any screen less
             that 500 pixels wide. We go to a two column layout, and then to a three
@@ -30,15 +28,16 @@
             grid.
           </p>
         </article>
+        <article class="content2">
+            <h1></h1>
+            <p>
+                Bomb
+            </p>
+          </article>
         <aside class="side"><img src="../static/images/PawPoint.png"></aside>
         <div class="ad"><img src="../static/images/PawPoint.png"></div>
       </div>
-      <article class="content2">
-        <h1></h1>
-        <p>
-            Bomb
-        </p>
-      </article>
+
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");
         const sidebar = document.querySelector(".sidebar");
