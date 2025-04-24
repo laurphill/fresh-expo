@@ -2,14 +2,17 @@
 
 ## To-do:
    - Work on errors with duplicate users, incorrect inputs, etc
-   - dashboard design and functionality
    - user profile design and functionality
-   - user customization
+   - forgot password functionality
+   - connecting canvas account
    - user interactivity with planning, courses, calendars, etc.
 
 ## My completed tasks:
    - set up routes
    - set up SQL database and created functionality to store user and passwords(hashed)
    - created functionality for login and registering user
-   - designed home page, login page, and password recovery page
+   - designed landing page, login page, and password recovery page
+   - created resources page and advising page
+   - upgraded database with profile features
+   - created calendar and to do designs
 
