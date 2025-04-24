@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "../static/profile/settings.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>{{ current_user.username }}'s Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Study Groups</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <a href="{{url_for('events')}}">Events</a>
+        <a href="{{url_for('organizations')}}">Organizations</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class = "wrapper">        
+        <form method = "POST" action="">
+            {{form.hidden_tag()}}
+            <h1>Settings</h1>
+            <div class = "input-box">
+                Username : {{current_user.username}}
+                <br>
+                Change Username:
+                {{form.username(placeholder = "Username")}}
+                
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class = "input-box">
+                <br>
+                Email : {{current_user.email}}
+                <br>
+                Change Email:
+                {{form.email(placeholder="Email")}}
+                <i class='bx bxs-envelope'></i>
+            </div>  
+            <div class = "input-box">
+                <br>
+                Change Password:
+                {{form.password(placeholder="Password")}}
+                <i class='bx bxs-lock-alt' ></i>
+                
+            </div>
+            <div class = "input-box">
+                <br>
+                Nickname : {{current_user.nickname}}
+                <br>
+                Change nickname:
+                {{form.nickname(placeholder="Name")}}
+                <br>
+            </div>
+            <div class = "input-box">
+                <br>
+                Bio : {{current_user.bio}}
+                <br>
+                Change Bio:
+                {{form.bio(placeholder="About Me")}}
+            </div>
+            <div class = "btn">
+                {{form.submit(class="btn")}}
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
+    
+</body>
+</html>
