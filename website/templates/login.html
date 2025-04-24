@@ -11,6 +11,15 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+    {% endwith %}
     <section>
         <div class = "wave wave1"></div>
         <div class = "wave wave2"></div>

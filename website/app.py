@@ -10,7 +10,7 @@ login_manager.login_view = 'login'
 
 
 # Setting to get print statements for debugging
-Verbose = True
+Verbose = False
 
 class Follow(db.Model):
     __tablename__ = 'follows'
@@ -225,9 +225,13 @@ def login():
             if bcrypt.check_password_hash(user.password, form.password.data): #and if the password matches the user
                 login_user(user)
                 return redirect(url_for('dashboard'))
+            else:
+                flash("Incorrect password.")
+                return redirect(url_for('login'))
         else:
-            flash("Incorrect username or password, try again.")
+            flash("Invalid username or password.")
             return redirect(url_for('login'))
+        
     return render_template("login.html", form=form)
 
 #logs user out if clicked
@@ -246,10 +250,29 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit(): #will hash password for secure registration then create new user with given username
+        # Check for existing username/email
+        existing_user = User.query.filter_by(username=form.username.data).first()
+        existing_email = User.query.filter_by(email=form.email.data).first()
+        
+        if existing_user:
+            flash("Username already exists.", "error")
+            return render_template("register.html", form=form)
+
+        if existing_email:
+            flash("Email already registered.", "error")
+            return render_template("register.html", form=form)
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
-        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password, nickname = "", bio = "") #set up user in database format
+        new_user = User(
+            username=form.username.data, 
+            email = form.email.data, 
+            password = hashed_password, 
+            nickname = "", 
+            bio = ""
+            ) #set up user in database format
         db.session.add(new_user) #add new user to database
         db.session.commit() #commit changes
+
+        flash("Registration successful! You can now log in.", "success")
         return redirect(url_for('login')) #take user to login after registration
     #html for registration page
     return render_template("register.html",form=form)
@@ -345,6 +368,80 @@ def spots():
 @login_required 
 def food():
     return render_template('food.html')
+
+# Connect with other users via QR code
+@app.route("/connect")
+def connect():
+    return render_template("connect.html")
+
+# QR code scanner route
+@app.route('/scan')
+def scan():
+    return render_template('scan.html')
+
+# Route to add user when qr code scanned
+@app.route('/scanned')
+def scanned():
+    url = request.url
+    match = re.search(r'(\d+)(?!.*\d)', url)  # Last number match
+    scanned_user_id = int(match.group(1)) if match else None
+
+    if not scanned_user_id:
+        flash("Invalid QR code.")
+        return redirect(url_for('homepage'))
+
+    try:
+        scanned_user_id = int(scanned_user_id)
+    except ValueError:
+        flash("Invalid user ID format.")
+        return redirect(url_for('connect'))
+
+    if scanned_user_id == current_user.id:
+        flash("You can't add yourself.")
+        return redirect(url_for('connect'))
+
+    db_session = SessionLocal()
+    friend = get_user_by_id(db_session, scanned_user_id)
+
+    if not friend:
+        flash(f"User ID {scanned_user_id} not found.")
+        return redirect(url_for('connect'))
+
+    if friend in current_user.friends:
+        flash(f"You are already connected with {friend.username}.")
+        return redirect(url_for('connect'))
+
+    current_user.friends.append(friend)
+    db_session.commit()
+
+    flash(f"Success! You are now connected with {friend.username}.")
+    return redirect(url_for('dashboard'))
+
+# Generates a qr code with the user's id info
+@app.route('/generate')
+def generate():
+    user_id = current_user.id
+    qr = QRCode(
+    version=1,
+    error_correction=ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+    )
+    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"  # Generates something like http://localhost:5000/connect?userId=4
+
+    # Add data to the QR code
+    qr.add_data(qr_data)
+    
+    # Generate QR code
+    img = qr.make_image()
+
+    # Convert image to base64 so we can embed it directly in HTML
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = b64encode(buffered.getvalue()).decode()
+
+    return render_template("generate.html", qr_code_data=img_str)
+
 
 if __name__ == "__main__":
     app.run(debug = True) 

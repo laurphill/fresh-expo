@@ -1,0 +1,32 @@
+<!-- templates/connect.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect - PawPoint</title>
+  <link rel="stylesheet" href="../static/connect.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  <div class="container">
+    <h1>Connect With Others</h1>
+    <p>Select an option to get started:</p>
+
+    <div class="button-group">
+      <a href="/scan" class="btn scan">📷 Scan QR Code</a>
+      <a href="/generate" class="btn generate">🔗 Generate My QR Code</a>
+    </div>
+  </div>
+
+</body>
+</html>

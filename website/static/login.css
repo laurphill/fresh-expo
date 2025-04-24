@@ -186,3 +186,30 @@ section .wave.wave4{
     text-decoration: underline;
     color: rgb(188, 139, 237)   ;
 }
+
+.flash-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+  
+  .flash-message {
+    animation: fadeInOut 4s ease-in-out forwards;
+    font-size: 1rem;
+    color: #333;
+    background: none;
+    box-shadow: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-weight: bold;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
