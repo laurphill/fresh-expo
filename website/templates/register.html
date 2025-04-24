@@ -1,0 +1,19 @@
+<!--HTML for registration page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel = "stylesheet" href = "../static/register.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+</head>
+<body>
+    <h1>Create Account</h1>
+    <form method = "POST" action ="">
+            {{form.hidden_tag()}}
+            {{form.username()}}
+            {{form.password()}}
+            {{form.submit()}}
+    </form>
+</body>
+</html>
