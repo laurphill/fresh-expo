@@ -112,7 +112,7 @@
       grid-template-areas:
         "header  header"
         "sidebar content"
-        "  ad";
+        "content  ad";
     }
 
   }

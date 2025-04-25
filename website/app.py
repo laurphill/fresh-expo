@@ -8,9 +8,17 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Setting to get print statements for debugging
 Verbose = True
+
+friends_table = db.Table(
+     'friends',
+     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+     db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
+ )
 
 class Follow(db.Model):
     __tablename__ = 'follows'
@@ -20,7 +28,7 @@ class Follow(db.Model):
     following_id = db.Column(db.Integer,
                              db.ForeignKey('users.id'),
                              primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.now())
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -30,63 +38,33 @@ class User(db.Model, UserMixin):
     email = Column(String(100), unique=True, nullable=False)  # Email field, must be unique
     password = Column(String(100), nullable=False)  # Password field
     bio = Column(String(100), nullable = True, server_default="About Me")
+    profile_pic = Column(String(), nullable=True) 
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
-    # following = db.relationship('Follow',
-    #                            foreign_keys=[Follow.follower_id],
-    #                            backref=db.backref('follower', lazy='joined'),
-    #                            lazy='dynamic',
-    #                            cascade='all, delete-orphan')
-    # followers = db.relationship('Follow',
-    #                             foreign_keys=[Follow.following_id],
-    #                             backref=db.backref('following', lazy='joined'),
-    #                             lazy='dynamic',
-    #                             cascade='all, delete-orphan')
+    friends = db.relationship(
+     'User',
+     secondary=friends_table,
+     primaryjoin=id==friends_table.c.user_id,
+     secondaryjoin=id==friends_table.c.friend_id,
+     backref='added_by'
+ )
 
-    def __init__(self, username, email, password, bio, nickname):
+    def __init__(self, username, email, password, bio, nickname, profile_pic):
         self.username = username
         self.email = email
         self.password = password
         self.nickname = nickname
         self.bio = bio
+        self.profile_pic = profile_pic
 
         with app.app_context():
             db.create_all()
 
-    # def follow(self, user):
-    #     if not self.is_following(user):
-    #         f = Follow(follower=self, following=user)
-    #         db.session.add(f)
-
-    # def unfollow(self, user):
-    #     f = self.following.filter_by(following_id=user.id).first()
-    #     if f:
-    #         db.session.delete(f)
-
-    # def is_following(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.following.filter_by(
-    #         following_id=user.id).first() is not None
-
-    # def is_a_follower(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.followers.filter_by(
-    #         follower_id=user.id).first() is not None
-
     def __repr__(self):
-        return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
-
-engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
-
+        return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio}), profile_pic = {self.profile_pic}>"    # Prints user info
 # Create all tables in the database
 
 with app.app_context():
     db.metadata.create_all(bind=engine)
-
-# Create a sessionmaker instance to interact with the database
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 # Function to add a new user
 def create_user(db_session, username: str, email: str, password: str):
@@ -133,7 +111,7 @@ def get_user_by_username(db_session, username: str):
     return user_exists
 
 # Function to update user information
-def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str, new_nickname: str, new_bio:str):
+def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str, new_nickname: str, new_bio:str, new_profile_pic):
     user = db_session.query(User).filter(User.id == user_id).first()
     user_former = user
     
@@ -149,14 +127,16 @@ def update_user(db_session, user_id: int, new_username: str, new_email: str, new
         flash(f"Error: Username '{new_username}' already exists.")
         return None
     
-    if user:
+    if request.method == 'POST':
         user.username = new_username
         user.email = new_email
         user.password = new_password
         user.nickname = new_nickname
+        user.profile_pic = new_profile_pic
         user.bio = new_bio
         db_session.commit()
         db_session.refresh(user)
+        return redirect(url_for('settings/<username>'))
 
     if Verbose:
         if user:
@@ -206,10 +186,12 @@ class SettingsForm(FlaskForm):
     username = StringField(validators=[Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
     email = EmailField(validators=[Length(min=4, max = 100)], render_kw={"place_holder":"email"})
     password = PasswordField(validators=[Length(min=4, max = 20)], render_kw={"place_holder":"password"})
-    nickname = StringField('Nickname', validators=[DataRequired()],render_kw={"place_holder":"nickname"})
-    bio = StringField('Bio',validators=[DataRequired()],render_kw={"place_holder":"Bio"})
+    nickname = StringField('Nickname',render_kw={"place_holder":"nickname"})
+    bio = StringField('Bio',render_kw={"place_holder":"Bio"})
+    profile_pic = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
-    
+
+
 
 @app.route('/')
 def homepage():
@@ -244,14 +226,23 @@ def recover_pass():
 @app.route("/register", methods=['GET','POST'])
 def register():
     form = RegisterForm()
+    existing_user = User.query.filter_by(username=form.username.data).first()
+    existing_email = User.query.filter_by(email=form.email.data).first()
+
+    if existing_user:
+        flash("Username already exists.", "error")
+        return render_template("register.html", form=form)
+    if existing_email:
+        flash("Email already registered.", "error")
+        return render_template("register.html", form=form)
 
     if form.validate_on_submit(): #will hash password for secure registration then create new user with given username
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
-        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password, nickname = "", bio = "") #set up user in database format
+        new_user = User(username=form.username.data, email = form.email.data, password = hashed_password, nickname = form.username.data, bio = "", profile_pic='') #set up user in database format
         db.session.add(new_user) #add new user to database
         db.session.commit() #commit changes
+        flash("Registration successful! You can now log in.", "success")
         return redirect(url_for('login')) #take user to login after registration
-    #html for registration page
     return render_template("register.html",form=form)
 
 #dashboard route
@@ -259,12 +250,6 @@ def register():
 def dashboard():
     return render_template("dashboard.html", username = current_user.username)
 
-#all routes that can only be accessed when user is logged in
-@app.route("/settings")
-@login_required
-def settings_main():
-    form = SettingsForm()
-    return render_template('settings.html', form=form)
 
 @app.route("/settings/<username>", methods = ["GET", "POST"])
 @login_required
@@ -272,44 +257,56 @@ def settings(username):
     form = SettingsForm()
     if current_user.username == username:
         if form.validate_on_submit():
+            # f = form.profile_pic.data
+            # filename = secure_filename(f.filename)
+            # file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            # f.save(file_path)
             user = User.query.first()
             if user:
                 user.username = form.username.data
                 user.email = form.email.data
                 user.nickname = form.nickname.data
                 user.bio = form.bio.data
+                # user.profile_pic = file_path
                 db.session.commit()
-                return redirect(url_for('settings/<username>'))
-        return render_template('settings.html', user=current_user, form=form)
+                return redirect(url_for('settings', username=username))
+            
+    return render_template('settings.html', user=current_user, form=form)
 
 @app.route("/profile/<username>", methods=['GET', 'POST'])
 @login_required
 def profile(username):
     form = SettingsForm()
+    # user = get_user_by_username(db.session, username)
+
     if current_user.username == username:
-        return render_template('profile.html', user=current_user,form=form)
+        return render_template('profile.html', user = current_user, form=form)
     else:
         return "User not found", 404
-        
-@app.route("/calendar", methods = ["GET", "POST"])
+
+@app.route("/other_profile/<username>", methods=['GET', 'POST'])
+def other_profile(username):
+    user = get_user_by_username(db.session, username)
+    form = SettingsForm()
+    return render_template('other_profile.html', user = user, form=form)
+
+@app.route("/friend_profile/<username>", methods=['GET', 'POST'])
+def friend_profile(username):
+    user = get_user_by_username(db.session, username)
+    form = SettingsForm()
+    return render_template('other_profile.html', user = user, form=form)
+
+
+@app.route('/friends', methods = ["GET", "POST"])
 @login_required
-def calendar():
-    return render_template('calendar.html', events = events)
+def friends():
+    return render_template('friends.html', friends=current_user.friends)
+
 
 @app.route('/chats', methods = ["GET", "POST"])
 @login_required
 def chats():
     return render_template('chats.html')
-
-@app.route('/events', methods = ["GET", "POST"])
-@login_required
-def events():
-    return render_template('events.html')
-
-@app.route('/organizations', methods = ["GET", "POST"])
-@login_required
-def organizations():
-    return render_template('organizations.html')
 
 @app.route('/resources', methods = ["GET", "POST"])
 @login_required
@@ -345,6 +342,81 @@ def spots():
 @login_required 
 def food():
     return render_template('food.html')
+
+@app.route('/calendar', methods = ['GET', 'POST'])
+@login_required 
+def calendar():
+    return render_template('calendar.html')
+# Connect with other users via QR code
+@app.route("/connect")
+def connect():
+    return render_template("connect.html")
+
+# QR code scanner route
+@app.route('/scan')
+def scan():
+    return render_template('scan.html')
+
+# Route to add user when qr code scanned
+@app.route('/scanned')
+def scanned():
+    url = request.url
+    match = re.search(r'(\d+)(?!.*\d)', url)  # Last number match
+    scanned_user_id = int(match.group(1)) if match else None
+
+    if not scanned_user_id:
+        flash("Invalid QR code.")
+        return redirect(url_for('connect'))
+
+    if scanned_user_id == current_user.id:
+        flash("You can't add yourself.")
+        return redirect(url_for('connect'))    
+    
+    print(current_user.friends)
+    friend = User.query.get(scanned_user_id)
+
+    if not friend:
+        flash(f"User ID {scanned_user_id} not found.")
+        return redirect(url_for('connect'))
+
+    print(friend in current_user.friends)
+    if friend in current_user.friends:
+        flash(f"You are already connected with {friend.username}.")
+        return redirect(url_for('connect'))
+
+    current_user.friends.append(friend)
+    print(friend)
+    db.session.commit()
+    print(current_user.friends)
+
+
+    flash(f"Success! You are now connected with {friend.username}.")
+    return redirect(url_for('dashboard'))
+
+# Generates a qr code with the user's id info
+@app.route('/generate')
+def generate():
+    user_id = current_user.id
+    qr = QRCode(
+    version=1,
+    error_correction=ERROR_CORRECT_L,
+    box_size=10,
+    border=4,
+    )
+    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"  # Generates something like http://localhost:5000/connect?userId=4
+
+    # Add data to the QR code
+    qr.add_data(qr_data)
+    
+    # Generate QR code
+    img = qr.make_image()
+
+    # Convert image to base64 so we can embed it directly in HTML
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = b64encode(buffered.getvalue()).decode()
+
+    return render_template("generate.html", qr_code_data=img_str)
 
 if __name__ == "__main__":
     app.run(debug = True) 

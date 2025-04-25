@@ -2,6 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+
   }
 
   body {
@@ -52,6 +54,7 @@
   .sidebar.expanded a{
     opacity: 1;
     font-size: 1rem;
+    
   }
   .sidebar a:hover {
     background-color: #506bd4;
@@ -64,11 +67,16 @@
   .main-content {
     flex: 1;
     padding: 40px;
+    margin-left: -10px;
+    width: 1000px;
   }
 
   .welcome {
     font-size: 1.8rem;
     margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+
+
   }
 
 /*LOGO*/
@@ -98,6 +106,7 @@
 .weekly-highlights {
     width: 330px;
     height: 500px;
+    margin-right: 10  0px;
     flex-shrink: 0;
     background-color: #fff9d6;
     padding: 20px;
