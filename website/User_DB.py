@@ -2,6 +2,12 @@ from Imports import *
 
 Verbose = False
 
+friends_table = db.Table(
+     'friends',
+     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+     db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
+ )
+
 class Follow(db.Model):
     __tablename__ = 'follows'
     follower_id = db.Column(db.Integer,
@@ -21,6 +27,15 @@ class User(db.Model, UserMixin):
     password = Column(String(100), nullable=False)  # Password field
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
+    
+    friends = db.relationship(
+     'User',
+     secondary=friends_table,
+     primaryjoin=id==friends_table.c.user_id,
+     secondaryjoin=id==friends_table.c.friend_id,
+     backref='added_by'
+ )
+    
     # following = db.relationship('Follow',
     #                            foreign_keys=[Follow.follower_id],
     #                            backref=db.backref('follower', lazy='joined'),
@@ -32,7 +47,7 @@ class User(db.Model, UserMixin):
     #                             lazy='dynamic',
     #                             cascade='all, delete-orphan')
 
-    def __init__(self, username, email, password, bio, nickname):
+    def __init__(self, username, email, password, bio="About Me", nickname="nickname"):
         self.username = username
         self.email = email
         self.password = password
@@ -67,17 +82,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
 
-engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread": False})  # SQLite needs this argument
-
-# Create all tables in the database
-
-with app.app_context():
-    db.metadata.create_all(bind=engine)
-
-# Create a sessionmaker instance to interact with the database
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
 # Function to add a new user
 def create_user(db_session, username: str, email: str, password: str):
 
@@ -85,7 +89,7 @@ def create_user(db_session, username: str, email: str, password: str):
     if email_exists:
         # If a user with the same email exists, return error message
         flash(f"Error: Email address '{email}' already exists.")
-        # return None
+        return None
     
     username_exists = db_session.query(User).filter((User.username == username)).first()
     if username_exists:
@@ -105,7 +109,7 @@ def get_user_by_id(db_session, user_id: int):
     
     user_exists = db_session.query(User).filter(User.id == user_id).first()
 
-    if Verbose == True:
+    if Verbose:
         if user_exists:
             flash(f"User ID {user_id}: {user_exists}")
         if not user_exists:
@@ -116,7 +120,7 @@ def get_user_by_id(db_session, user_id: int):
 # Function to get a user by username
 def get_user_by_username(db_session, username: str):
     user_exists = db_session.query(User).filter(User.username == username).first()
-    if Verbose == True:
+    if Verbose:
         flash(f"User with username {username}: {user_exists}")
         if not user_exists:
             flash(f'No user "{username}" exists.')

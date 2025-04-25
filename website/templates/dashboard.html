@@ -96,6 +96,16 @@
               <p>Join active group chats and reviews</p>
             </li>
           </ul>
+          <h4>Your Friends</h4>
+          <ul>
+            {% for friend in friends[:2] %}  {# Preview first 5 #}
+              <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+                {{ friend.username }}
+            </a>
+          </li>
+            {% endfor %}
+          </ul>
+          <a href="{{ url_for('friends') }}">See all friends</a>
         </aside>
         
       </div>

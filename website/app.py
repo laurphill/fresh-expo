@@ -94,7 +94,7 @@ def register():
 #dashboard route
 @app.route("/dashboard", methods = ["GET", "POST"])
 def dashboard():
-    return render_template("dashboard.html", username = current_user.username)
+    return render_template("dashboard.html", username = current_user.username, friends=current_user.friends)
 
 #all routes that can only be accessed when user is logged in
 @app.route("/settings")
@@ -123,11 +123,30 @@ def settings(username):
 @login_required
 def profile(username):
     form = SettingsForm()
+    user = get_user_by_username(db.session, username)
+
     if current_user.username == username:
-        return render_template('profile.html', user=current_user,form=form)
+        return render_template('profile.html', user = current_user, form=form)
+    elif user in current_user.friends:
+        return render_template('friend_profile.html', user = user, form=form)
+    elif user in db.session:
+        return render_template('other_profile.html', user = user, form=form)
     else:
         return "User not found", 404
         
+@app.route("/other_profile/<username>", methods=['GET', 'POST'])
+def other_profile(username):
+    user = get_user_by_username(db.session, username)
+    form = SettingsForm()
+    return render_template('other_profile.html', user = user, form=form)
+
+@app.route("/friend_profile/<username>", methods=['GET', 'POST'])
+def friend_profile(username):
+    user = get_user_by_username(db.session, username)
+    form = SettingsForm()
+    return render_template('other_profile.html', user = user, form=form)
+
+
 @app.route("/calendar", methods = ["GET", "POST"])
 @login_required
 def calendar():
@@ -137,6 +156,12 @@ def calendar():
 @login_required
 def chats():
     return render_template('chats.html')
+
+@app.route('/friends', methods = ["GET", "POST"])
+@login_required
+def friends():
+    return render_template('friends.html', friends=current_user.friends)
+
 
 @app.route('/events', methods = ["GET", "POST"])
 @login_required
@@ -202,31 +227,29 @@ def scanned():
 
     if not scanned_user_id:
         flash("Invalid QR code.")
-        return redirect(url_for('homepage'))
-
-    try:
-        scanned_user_id = int(scanned_user_id)
-    except ValueError:
-        flash("Invalid user ID format.")
         return redirect(url_for('connect'))
 
     if scanned_user_id == current_user.id:
         flash("You can't add yourself.")
-        return redirect(url_for('connect'))
-
-    db_session = SessionLocal()
-    friend = get_user_by_id(db_session, scanned_user_id)
+        return redirect(url_for('connect'))    
+    
+    print(current_user.friends)
+    friend = User.query.get(scanned_user_id)
 
     if not friend:
         flash(f"User ID {scanned_user_id} not found.")
         return redirect(url_for('connect'))
 
+    print(friend in current_user.friends)
     if friend in current_user.friends:
         flash(f"You are already connected with {friend.username}.")
         return redirect(url_for('connect'))
 
     current_user.friends.append(friend)
-    db_session.commit()
+    print(friend)
+    db.session.commit()
+    print(current_user.friends)
+
 
     flash(f"Success! You are now connected with {friend.username}.")
     return redirect(url_for('dashboard'))

@@ -9,31 +9,48 @@
             width: 300px;
             margin: 0 auto;
         }
+        .mirrored video {
+            transform: scaleX(-1);
+        }
     </style>
 </head>
 <body>
     <h2 style="text-align:center;">Scan QR Code to Connect</h2>
     <div id="reader"></div>
-
+    <!-- Back Button -->
+    <a href="/connect" class="back-button">Back to Connect Page</a>
+    
     <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log(`Scanned code: ${decodedText}`);
-            // Optionally verify decodedText is a valid URL or userId
-            // Example: decodedText = "https://yourdomain.com/connect?userId=123"
-            window.location.href = decodedText;
+        const currentFacingMode = "user"; // Always use front camera
+        const html5QrCode = new Html5Qrcode("reader");
+
+        function startScanner() {
+            html5QrCode.start(
+                { facingMode: currentFacingMode },
+                { fps: 10, qrbox: 250 },
+                onScanSuccess
+            ).then(() => {
+                // Apply mirror effect if front camera
+                if (currentFacingMode === "user") {
+                    document.getElementById("reader").classList.add("mirrored");
+                }
+            }).catch(err => {
+                console.error("QR Scanner Error:", err);
+            });
         }
 
-        const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" }, // or { facingMode: "user" } for front camera
-            {
-                fps: 10,
-                qrbox: 250
-            },
-            onScanSuccess
-        ).catch(err => {
-            console.error("QR Scanner Error:", err);
-        });
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Scanned code: ${decodedText}`);
+            html5QrCode.stop().then(() => {
+                window.location.href = decodedText;
+            }).catch(err => {
+                window.location.href = decodedText;
+            });
+        }
+
+        // Start scanning when page loads
+        startScanner();
     </script>
 </body>
 </html>
+

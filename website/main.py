@@ -14,6 +14,7 @@ engine = create_engine("sqlite:///database.db", connect_args={"check_same_thread
 
 # Create a sessionmaker instance to interact with the database
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+db_session = SessionLocal()
 
 #reload the user object from the user ID stored in the session
 @login_manager.user_loader
@@ -23,4 +24,7 @@ def load_user(user_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+    with SessionLocal() as session:
+        user = get_user_by_id(session, 1)
+        print(user)
     app.run(debug = True)

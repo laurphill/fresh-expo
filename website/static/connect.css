@@ -75,3 +75,33 @@ body {
     90% { opacity: 1; }
     100% { opacity: 0; }
   }
+
+  /* Styling for the QR code scanner */
+  #reader {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+  }
+
+  /* Mirrored video for front camera */
+  .mirrored video {
+      transform: scaleX(-1);
+  }
+
+  /* Back button styling */
+  .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+      text-decoration: none;
+  }
+
+  .back-button:hover {
+      background-color: #2980b9;
+  }
