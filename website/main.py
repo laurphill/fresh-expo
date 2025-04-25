@@ -24,7 +24,4 @@ def load_user(user_id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    with SessionLocal() as session:
-        user = get_user_by_id(session, 1)
-        print(user)
     app.run(debug = True)
