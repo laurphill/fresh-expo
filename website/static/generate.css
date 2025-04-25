@@ -139,7 +139,7 @@ h1 {
 
 /* Back button styling */
 .back-button {
-    margin-top: 20px;
+    margin-left: -220px;
     padding: 10px 20px;
     background-color: #3498db;
     color: white;
@@ -158,7 +158,7 @@ h1 {
   background-color: white;
   max-width: 500px;
   padding: 40px;
-  margin-top:-500px;
+  margin-top:-650px;
   flex: 1;
   padding: 40px;
   margin-left: 500px;

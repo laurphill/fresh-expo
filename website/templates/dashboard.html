@@ -13,6 +13,15 @@
       <script src="../static/dashboard.js" defer></script>
     </head>
     <body>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
         <div class="sidebar">
           <button id="toggleSidebar" class="toggle-btn">☰</button>
           <a href = "{{url_for('dashboard')}}">Dashboard</a>
@@ -34,6 +43,7 @@
           <div class="profile-dropdown" id="profileDropdown">
             <a href="{{url_for('profile', username=username)}}">View Profile</a>
             <a href="{{url_for('settings', username=username)}}">Settings</a>
+            <a href="{{ url_for('connect')}}">Connect</a>
             <a href="{{url_for('logout')}}">Log Out</a>
           </div>
         </div>
@@ -80,17 +90,16 @@
               <p>Join active group chats and reviews</p>
             </li>
           </ul>
-          <h2>Your friends</h2>
+          <h4>Your Friends</h4>
           <ul>
-            <li>
-              <h3>Lauren</h3>
-            </li>
-            <li>
-              <h3>Ashley</h3>
-            </li>
-            <li>
-              <h3>Jesse</h3>
-            </li>
+            {% for friend in friends[:2] %}  {# Preview first 5 #}
+              <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+                {{ friend.username }}
+            </a>
+          </li>
+            {% endfor %}
+          </ul>
+          <a href="{{ url_for('friends') }}">See all friends</a>
         </aside>
         
       </div>
