@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "stylesheet" href = "../static/sidebar/resources.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>Resources</title>
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class = "container">
+        <div class = "card1"><a href = "{{url_for('advising')}}">Advising and Classes</a></div>
+        <div class = "card2"><a href = "{{url_for('opportunities')}}">Organizations</a></div>
+        <div class = "card3"><a href = "{{url_for('spots')}}">Best Study Spots</a></div>
+        <div class = "card4"><a href = "{{url_for('oncampus')}}">On-Campus Living</a></div>
+        <div class = "card5"><a href = "{{url_for('offcampus')}}">Off-Campus Living</a></div>
+        <div class = "card6"><a href = "{{url_for('food')}}">Meal Plan/Declining Balance</a></div>
+    </div>
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
+    </div>
+</body>
+</html>

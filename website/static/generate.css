@@ -1,0 +1,168 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+
+}
+
+body {
+    font-family: 'Fredoka', sans-serif;
+    background-color: #f7f7f7;
+    text-align: center;
+  }
+  
+
+/* SIDEBAR */
+.sidebar {
+  width: 60px;
+  background-color: #647fe1;
+  color: white;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  font-size:0;
+}
+.sidebar.expanded{
+  width: 130px
+}
+
+.sidebar.expanded a{
+  opacity: 1;
+  font-size: 1rem;
+  text-align: left;
+  
+}
+.sidebar a:hover {
+  background-color: #506bd4;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+h1 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 30px;
+}
+
+.btn {
+  text-decoration: none;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.btn.scan {
+  background-color: #5170ef;
+}
+
+.btn.scan:hover {
+  background-color: #1976d2;
+}
+
+.btn.generate {
+  background-color: #4caf50;
+}
+
+.btn.generate:hover {
+  background-color: #388e3c;
+}
+
+.flash-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  font-weight: bold;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Styling for the QR code scanner */
+#reader {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Mirrored video for front camera */
+.mirrored video {
+    transform: scaleX(-1);
+}
+
+/* Back button styling */
+.back-button {
+    margin-left: -220px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #2980b9;
+}
+.container {
+  background-color: white;
+  max-width: 500px;
+  padding: 40px;
+  margin-top:-650px;
+  flex: 1;
+  padding: 40px;
+  margin-left: 500px;
+  width: 1000px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}

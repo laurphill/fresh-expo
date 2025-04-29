@@ -1,15 +1,132 @@
-<!--HTML for dashboard-->
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel = "stylesheet" href = "../static/dashboard.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
-<body>
-    <h1>This is your dashboard, you are logged in</h1>
-    <a href = "{{url_for('home')}}">Press here to logout</a>
-</body>
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>PawPoint Dashboard</title>
+      <link rel="stylesheet" href="../static/dashboard.css" />
+      <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+      <script src="../static/dashboard.js" defer></script>
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <div class="sidebar">
+          <button id="toggleSidebar" class="toggle-btn">☰</button>
+          <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <a href="{{url_for('logout')}}">Log Out</a>
+
+        </div>
+        
+        <div class="nav-content">
+          <div class="nav-left">
+            <img src="../static/images/PawPoint.png" alt="PawPoint Logo" class="logo" />
+            <span class="site-title">PawPoint</span>
+          </div>
+
+        <div class="profile-container">
+          <ion-icon name="person-circle" class="profile-icon" id="profileToggle"></ion-icon>
+          <div class="profile-dropdown" id="profileDropdown">
+            <a href="{{url_for('profile', username=username)}}">View Profile</a>
+            <a href="{{url_for('settings', username=username)}}">Settings</a>
+            <a href="{{ url_for('connect')}}">Connect</a>
+            <a href="{{url_for('logout')}}">Log Out</a>
+          </div>
+        </div>
+
+        </div>
+
+        <div class="main-content">
+          <div class="welcome">Hello, {{current_user.username}}!</div>
+      
+          <div class="dashboard-layout">
+            <div class="wrapper">
+                <header>
+                  <p class="current-date"></p>
+                  <div class="icons">
+                    <span id="prev" class="material-symbols-rounded">chevron_left</span>
+                    <span id="next" class="material-symbols-rounded">chevron_right</span>
+                  </div>
+                </header>
+                <div class="calendar">
+                  <ul class="weeks">
+                    <li>Sun</li>
+                    <li>Mon</li>
+                    <li>Tue</li>
+                    <li>Wed</li>
+                    <li>Thu</li>
+                    <li>Fri</li>
+                    <li>Sat</li>
+                  </ul>
+                  <ul class="days"></ul>
+                </div>
+              </div>         
+  
+      <nav>
+        
+        <aside class="weekly-highlights">
+          <h2>What's Hot This Week</h2>
+          <ul>
+            <li>
+              <h3>Featured Clubs/Organizations</h3>
+              <p>Get involved on campus!</p>
+            </li>
+            <li>
+              <h3>Study Group: CSC 132</h3>
+              <p>Join active group chats and reviews</p>
+            </li>
+          </ul>
+          <h4>Your Friends</h4>
+          <ul>
+            {% for friend in friends[:2] %}  {# Preview first 5 #}
+              <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+                {{ friend.username }}
+            </a>
+          </li>
+            {% endfor %}
+          </ul>
+          <a href="{{ url_for('friends') }}">See all friends</a>
+        </aside>
+        
+      </div>
+      
+      
+      <script>
+          const profileIcon = document.getElementById("profileToggle");
+          const dropdown = document.getElementById("profileDropdown");
+        
+          profileIcon.addEventListener("click", () => {
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+          });
+          
+          window.addEventListener("click", (e) => {
+            if (!profileIcon.contains(e.target) && !dropdown.contains(e.target)) {
+              dropdown.style.display = "none";
+            }
+          });
+      </script>
+      
+      <script>
+          const toggleBtn = document.getElementById("toggleSidebar");
+          const sidebar = document.querySelector(".sidebar");
+          
+          toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("expanded");
+          });
+      </script>
+  </body>
 </html>
