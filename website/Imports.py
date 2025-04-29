@@ -1,5 +1,5 @@
 # All imports
-from flask import Flask, render_template, redirect, url_for, flash, request #for taking user to pages without having to manually switch 
+from flask import Flask, Response, render_template, redirect, url_for, flash, request #for taking user to pages without having to manually switch 
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
@@ -18,8 +18,7 @@ from io import *
 from base64 import *
 import re 
 import os
-from werkzeug.utils import secure_filename
-import uuid as uuid
+
 
 #initialize app
 app = Flask(__name__)

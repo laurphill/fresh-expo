@@ -11,14 +11,16 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
 <body>
-    <div class="sidebar">
-        <button id="toggleSidebar" class="toggle-btn">☰</button>
-        <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('logout')}}">Log Out</a>
-    </div>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+    <a href="{{url_for('chats')}}">Chats</a>
+    <a href="{{url_for('resources')}}">Resources</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+    <a href="{{ url_for('connect')}}">Connect</a>
+    <a href="{{url_for('logout')}}">Log Out</a>
+
+  </div>
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");
         const sidebar = document.querySelector(".sidebar");
@@ -70,10 +72,10 @@
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                        My friends : 
+                      {{current_user.nickname}}'s Friends:
                         <br>
-                        {{current_user.friends}}
-                        <i>friends list here</i>
+                        {{current_user.friends.username}}
+                        
                     </div>
 
                     <input type = "radio" id = "tabAboutMe" name="mytabs">

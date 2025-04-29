@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advising Resources</title>
     <link rel = "stylesheet" href = "../static/resources/advising.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <div class="sidebar">
         <button id="toggleSidebar" class="toggle-btn">☰</button>
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('logout')}}">Log Out</a>
-    </div>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+
+      </div>
+
     <div class="wrapper">
         <header class="main-head">A How-To: Advise and Register for Classes</header>
         <article class="content">

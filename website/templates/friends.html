@@ -4,8 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Friends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/friends.css" />
+
 </head>
 <body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+
+      </div>
     Lol no friends 
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+          toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
 </body>
 </html>

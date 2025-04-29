@@ -16,7 +16,13 @@ class Follow(db.Model):
     following_id = db.Column(db.Integer,
                              db.ForeignKey('users.id'),
                              primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.now)
+
+class Img(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    img = db.Column(db.Text, unique=True, nullable=False)
+    name = db.Column(db.Text, nullable=False)
+    mimetype = db.Column(db.Text, nullable=False)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -35,17 +41,6 @@ class User(db.Model, UserMixin):
      secondaryjoin=id==friends_table.c.friend_id,
      backref='added_by'
  )
-    
-    # following = db.relationship('Follow',
-    #                            foreign_keys=[Follow.follower_id],
-    #                            backref=db.backref('follower', lazy='joined'),
-    #                            lazy='dynamic',
-    #                            cascade='all, delete-orphan')
-    # followers = db.relationship('Follow',
-    #                             foreign_keys=[Follow.following_id],
-    #                             backref=db.backref('following', lazy='joined'),
-    #                             lazy='dynamic',
-    #                             cascade='all, delete-orphan')
 
     def __init__(self, username, email, password, bio="About Me", nickname="nickname"):
         self.username = username
@@ -56,28 +51,6 @@ class User(db.Model, UserMixin):
 
         with app.app_context():
             db.create_all()
-
-    # def follow(self, user):
-    #     if not self.is_following(user):
-    #         f = Follow(follower=self, following=user)
-    #         db.session.add(f)
-
-    # def unfollow(self, user):
-    #     f = self.following.filter_by(following_id=user.id).first()
-    #     if f:
-    #         db.session.delete(f)
-
-    # def is_following(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.following.filter_by(
-    #         following_id=user.id).first() is not None
-
-    # def is_a_follower(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.followers.filter_by(
-    #         follower_id=user.id).first() is not None
 
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
