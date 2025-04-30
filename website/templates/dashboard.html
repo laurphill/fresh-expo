@@ -13,24 +13,23 @@
       <script src="../static/dashboard.js" defer></script>
     </head>
     <body>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <div class="flash-container">
-            {% for message in messages %}
-              <div class="flash-message">{{ message }}</div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-container">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
         <div class="sidebar">
           <button id="toggleSidebar" class="toggle-btn">☰</button>
           <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Study Groups</a>
-          <a href="{{url_for('calendar')}}">Calendar</a>
-          <a href="{{url_for('events')}}">Events</a>
-          <a href="{{url_for('organizations')}}">Organizations</a>
+          <a href="{{url_for('chats')}}">Chats</a>
           <a href="{{url_for('resources')}}">Resources</a>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
           <a href="{{url_for('logout')}}">Log Out</a>
+
         </div>
         
         <div class="nav-content">
@@ -48,7 +47,6 @@
             <a href="{{url_for('logout')}}">Log Out</a>
           </div>
         </div>
-        
 
         </div>
 
@@ -86,10 +84,6 @@
             <li>
               <h3>Featured Clubs/Organizations</h3>
               <p>Get involved on campus!</p>
-            </li>
-            <li>
-              <h3>Upcoming Events</h3>
-              <p>This Friday at 5PM, IESB lobby</p>
             </li>
             <li>
               <h3>Study Group: CSC 132</h3>

@@ -8,6 +8,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
+    is_teacher = BooleanField(render_kw={"place_holder":"is_teacher"})
 
 #Logging in 
 class LoginForm(FlaskForm):
@@ -35,6 +36,9 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first() #checks if user is in database
+        class_user = Class.query.filter_by(name=form.username.data).first() #checks if user is in database
+        
+        
         if user: #if the user is in the database
             if bcrypt.check_password_hash(user.password, form.password.data): #and if the password matches the user
                 login_user(user)
@@ -42,6 +46,9 @@ def login():
             else:
                 flash("Incorrect password.")
                 return render_template("login.html", form=form)
+        elif class_user:
+            login_user(class_user)
+            return redirect(url_for('dashboard'))
         else:
             flash("Invalid username or password.")
             return render_template("login.html", form=form)
@@ -63,7 +70,7 @@ def recover_pass():
 def register():
     form = RegisterForm()
 
-    if form.validate_on_submit(): #will hash password for secure registration then create new user with given username
+    if form.validate_on_submit(): #will hash password for secure registration then create new user with given username       
         # Check for existing username/email
         existing_user = User.query.filter_by(username=form.username.data).first()
         existing_email = User.query.filter_by(email=form.email.data).first()
@@ -76,13 +83,18 @@ def register():
             flash("Email already registered.", "error")
             return render_template("register.html", form=form)
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
+        
+        # If user is a student/class, add to appropriate database
+
         new_user = User(
-            username=form.username.data, 
-            email = form.email.data, 
-            password = hashed_password, 
-            nickname = "", 
-            bio = ""
-            ) #set up user in database format
+        username=form.username.data, 
+        email = form.email.data, 
+        password = hashed_password, 
+        nickname = "", 
+        bio = "",
+        is_teacher = form.is_teacher.data
+        ) #set up user in database format
+    
         db.session.add(new_user) #add new user to database
         db.session.commit() #commit changes
 
@@ -214,9 +226,14 @@ def connect():
     return render_template("connect.html")
 
 # QR code scanner route
-@app.route('/scan')
+@app.route('/qrscanner')
 def scan():
-    return render_template('scan.html')
+    return render_template('qrscanner.html')
+
+# QR code scanner route for classes
+@app.route('/classcode_scan')
+def class_scan():
+    return render_template('class_qrscanner.html')
 
 # Route to add user when qr code scanned
 @app.route('/scanned')
@@ -278,3 +295,27 @@ def generate():
     img_str = b64encode(buffered.getvalue()).decode()
 
     return render_template("generate.html", qr_code_data=img_str)
+
+@app.route('/join_class', methods=['POST'])
+def join_class():
+    # Get the user_id and class_id from the request body
+    data = request.get_json()
+    user_id = data.get('user_id')
+    class_id = data.get('class_id')
+
+    # Find the user and class
+    user = User.query.get(user_id)
+    class_ = Class.query.get(class_id)
+
+    if user and class_:
+        # Check if the user is already in the class
+        if class_ in user.class_list:
+            return jsonify({'success': False, 'message': 'User is already in the class.'})
+
+        # Add the user to the class
+        user.class_list.append(class_)
+        db.session.commit()
+
+        return jsonify({'success': True, 'message': 'User successfully added to class.'})
+    else:
+        return jsonify({'success': False, 'message': 'User or Class not found.'})

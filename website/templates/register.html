@@ -9,15 +9,7 @@
 
 </html>
 <body>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div class="flash-container">
-          {% for message in messages %}
-            <div class="flash-message">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
+    
     <section>
         <div class="wave wave1"></div>
         <div class="wave wave2"></div>
@@ -43,7 +35,19 @@
                 <div class = "btn">
                     {{form.submit(class="btn")}}
                 </div>
+                <div class = "teacher-btn">
+                    {{form.is_teacher}}{{form.is_teacher.label("Register as Teacher?")}}
+                </div>
             </form>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
         </div>
     </section>
 </body>

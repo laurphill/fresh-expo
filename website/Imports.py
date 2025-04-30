@@ -1,21 +1,25 @@
 # All imports
-from flask import Flask, render_template, redirect, url_for, flash, request #for taking user to pages without having to manually switch 
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify 
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, EmailField, DateTimeField, TextAreaField#appropriate inputs for username, password, and after submitting said inputs
 from wtforms.validators import InputRequired, Length, DataRequired #controlling properties of inputs
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, EmailField, DateTimeField, TextAreaField#appropriate inputs for username, password, and after submitting said inputs
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from flask_bcrypt import Bcrypt #secure passwords/information
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DateTime import DateTime
 from datetime import date, datetime
 from flask_migrate import Migrate
-from flask_bcrypt import Bcrypt #secure passwords/information
 from qrcode import *
 from io import *
 from base64 import *
-import re
+import re 
+import os
+from werkzeug.utils import secure_filename
+import uuid as uuid
 
 #initialize app
 app = Flask(__name__)

@@ -8,15 +8,20 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
-class Follow(db.Model):
-    __tablename__ = 'follows'
-    follower_id = db.Column(db.Integer,
-                            db.ForeignKey('users.id'),
-                            primary_key=True)
-    following_id = db.Column(db.Integer,
-                             db.ForeignKey('users.id'),
-                             primary_key=True)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+class Class(db.Model):
+    __tablename__ = 'classes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
+    users = db.relationship('User', secondary='user_classes', backref='classes')
+
+
+class UserClass(db.Model):
+    __tablename__ = 'user_classes'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
+
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -27,7 +32,8 @@ class User(db.Model, UserMixin):
     password = Column(String(100), nullable=False)  # Password field
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
-    
+    is_teacher = Column(Boolean, unique=False, nullable = False)  # Username field, must be unique
+
     friends = db.relationship(
      'User',
      secondary=friends_table,
@@ -35,49 +41,17 @@ class User(db.Model, UserMixin):
      secondaryjoin=id==friends_table.c.friend_id,
      backref='added_by'
  )
-    
-    # following = db.relationship('Follow',
-    #                            foreign_keys=[Follow.follower_id],
-    #                            backref=db.backref('follower', lazy='joined'),
-    #                            lazy='dynamic',
-    #                            cascade='all, delete-orphan')
-    # followers = db.relationship('Follow',
-    #                             foreign_keys=[Follow.following_id],
-    #                             backref=db.backref('following', lazy='joined'),
-    #                             lazy='dynamic',
-    #                             cascade='all, delete-orphan')
 
-    def __init__(self, username, email, password, bio="About Me", nickname="nickname"):
+    def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False):
         self.username = username
         self.email = email
         self.password = password
         self.nickname = nickname
         self.bio = bio
+        self.is_teacher = is_teacher
 
         with app.app_context():
             db.create_all()
-
-    # def follow(self, user):
-    #     if not self.is_following(user):
-    #         f = Follow(follower=self, following=user)
-    #         db.session.add(f)
-
-    # def unfollow(self, user):
-    #     f = self.following.filter_by(following_id=user.id).first()
-    #     if f:
-    #         db.session.delete(f)
-
-    # def is_following(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.following.filter_by(
-    #         following_id=user.id).first() is not None
-
-    # def is_a_follower(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.followers.filter_by(
-    #         follower_id=user.id).first() is not None
 
     def __repr__(self):
         return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
@@ -176,3 +150,28 @@ def delete_user(db_session, user_id: int):
         return user
     
     return None
+
+def add_class_to_user(db_session, user_id: int, class_name: str):
+    # First, check if the class exists in the Classes table
+    class_exists = db_session.query(Class).filter(Class.name == class_name).first()
+    if not class_exists:
+        # If the class doesn't exist, create it
+        new_class = Class(name=class_name)
+        db_session.add(new_class)
+        db_session.commit()
+        db_session.refresh(new_class)
+        class_exists = new_class
+
+    # Now, check if the user is already enrolled in the class
+    user = db_session.query(User).filter(User.id == user_id).first()
+    if user:
+        # Check if the relationship already exists
+        if class_exists not in user.classes:
+            user.classes.append(class_exists)
+            db_session.commit()
+            flash(f"Class '{class_name}' added to user {user.username}'s class list.")
+        else:
+            flash(f"User {user.username} is already enrolled in class '{class_name}'.")
+    else:
+        flash(f"User with ID {user_id} not found.")
+    return user

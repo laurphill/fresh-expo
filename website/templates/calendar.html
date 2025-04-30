@@ -4,44 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = 'stylesheet' href = 'https://cdnjs.cloudfare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
-    <link rel = 'stylesheet' href = '../static/calendar.css'>
+    <link rel = 'stylesheet' href = '../static/sidebar/calendar.css'>
     <title>Calendar</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script>
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar')
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth'
+        })
+        calendar.render()
+      })
+
+    </script>
 </head>
 <body>
     <div class="sidebar">
         <button id="toggleSidebar" class="toggle-btn">☰</button>
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
-        <a href="{{url_for('chats')}}">Study Groups</a>
-        <a href="{{url_for('calendar')}}">Calendar</a>
-        <a href="{{url_for('events')}}">Events</a>
-        <a href="{{url_for('organizations')}}">Organizations</a>
+        <a href="{{url_for('chats')}}">Chats</a>
         <a href="{{url_for('resources')}}">Resources</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <a href="{{url_for('logout')}}">Log Out</a>
-    </div>
-    <div class ='wrapped'>
-        <div class = 'calendar'>
-            <div class = 'header'>
-                <button id = 'prevBtn'>
-                    <i class='bx bxs-chevron-left'></i>
-                </button>
-                <div class = 'monthYear' id = 'monthYear'></div>
-                <button id = 'nextBtn'>
-                    <i class='bx bxs-chevron-right'></i>
-                </button>
-            </div>
-            <div class = "days">
-                <div class="day">Mon</div>
-                <div class="day">Tue</div>
-                <div class="day">Wed</div>
-                <div class="day">Thurs</div>
-                <div class="day">Fri</div>
-                <div class="day">Sat</div>
-                <div class="day">Sun</div>
-            </div>
-            <div class = "dates" id="dates"></div>
-        </div>
-    </div>
+
+      </div>
+        <div id='calendar'></div>
     <div class = "todo" id = "myDIV">
         <h1>To-do</h1>
         <div id="myDIV" class="header">
@@ -59,6 +49,6 @@
           sidebar.classList.toggle("expanded");
         });
     </script>
-    <script src = "../static/calendar.js"></script>
+    <script src = "../static/sidebar/calendar.js"></script>
 </body>
 </html>
