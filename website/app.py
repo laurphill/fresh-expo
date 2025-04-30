@@ -250,26 +250,29 @@ def scanned():
         flash("You can't add yourself.")
         return redirect(url_for('connect'))    
     
-    print(current_user.friends)
     friend = User.query.get(scanned_user_id)
-
+    
     if not friend:
         flash(f"User ID {scanned_user_id} not found.")
         return redirect(url_for('connect'))
 
-    print(friend in current_user.friends)
     if friend in current_user.friends:
         flash(f"You are already connected with {friend.username}.")
         return redirect(url_for('connect'))
-
-    current_user.friends.append(friend)
-    print(friend)
-    db.session.commit()
-    print(current_user.friends)
-
-
-    flash(f"Success! You are now connected with {friend.username}.")
+    
+    if friend.is_teacher():
+        flash(f"Success! You are now in {friend.username}'s class.")
+        current_user.classes.append(friend)
+        return redirect(url_for('dashboard'))
+        
+    else:
+        flash(f"Success! You are now connected with {friend.username}.")
+        current_user.friends.append(friend)
     return redirect(url_for('dashboard'))
+
+    
+    db.session.commit()
+
 
 # Generates a qr code with the user's id info
 @app.route('/generate')
@@ -303,9 +306,13 @@ def join_class():
     user_id = data.get('user_id')
     class_id = data.get('class_id')
 
+    print(class_id)
+
     # Find the user and class
     user = User.query.get(user_id)
     class_ = Class.query.get(class_id)
+
+    print(class_)
 
     if user and class_:
         # Check if the user is already in the class

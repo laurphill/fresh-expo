@@ -114,18 +114,6 @@ h1 {
   box-shadow: none;
   padding: 10px 20px;
   margin: 10px 0;
-  font-weight: bold;
-  opacity: 0;
-}
-
-.flash-message {
-  animation: fadeInOut 4s ease-in-out forwards;
-  font-size: 1rem;
-  color: #333;
-  background: none;
-  box-shadow: none;
-  padding: 10px 20px;
-  margin: 10px 0;
   opacity: 0;
 }
 
@@ -134,18 +122,6 @@ h1 {
   20% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
-}
-
-/* Styling for the QR code scanner */
-#reader {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* Mirrored video for front camera */
-.mirrored video {
-    transform: scaleX(-1);
 }
 
 /* Back button styling */
