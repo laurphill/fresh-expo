@@ -8,19 +8,6 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
-class Class(db.Model):
-    __tablename__ = 'classes'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
-    name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
-    users = db.relationship('User', secondary='user_classes', backref='classes')
-
-
-class UserClass(db.Model):
-    __tablename__ = 'user_classes'
-
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
 
 
 class User(db.Model, UserMixin):
@@ -32,7 +19,6 @@ class User(db.Model, UserMixin):
     password = Column(String(100), nullable=False)  # Password field
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
-    is_teacher = Column(Boolean, unique=False, nullable = False, server_default="teacher")  # Username field, must be unique
 
     friends = db.relationship(
      'User',
@@ -42,13 +28,12 @@ class User(db.Model, UserMixin):
      backref='added_by'
  )
 
-    def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False):
+    def __init__(self, username, email, password, bio="About Me", nickname="nickname"):
         self.username = username
         self.email = email
         self.password = password
         self.nickname = nickname
         self.bio = bio
-        self.is_teacher = is_teacher
 
         with app.app_context():
             db.create_all()
@@ -150,52 +135,3 @@ def delete_user(db_session, user_id: int):
         return user
     
     return None
-
-def add_class_to_user(db_session, user_id: int, class_name: str):
-    if not class_name == None:
-        # First, check if the class exists in the Classes table
-        class_exists = db_session.query(Class).filter(Class.name == class_name).first()
-        if not class_exists:
-            # If the class doesn't exist, create it
-            new_class = Class(name=class_name)
-            db_session.add(new_class)
-            db_session.commit()
-            db_session.refresh(new_class)
-            class_exists = new_class
-            
-def add_user_to_class(db_session, class_id: int, user_username: str):
-    # First, check if the class exists in the Classes table
-    class_exists = db_session.query(Class).filter(Class.id == class_id).first()
-    if not class_exists:
-        flash(f"Class with ID {class_id} does not exist.")
-        return None
-    
-    # Now, check if the user exists in the Users table
-    user = db_session.query(User).filter(User.username == user_username).first()
-    if not user:
-        flash(f"User with username '{user_username}' not found.")
-        return None
-    
-    # Check if the user is already enrolled in the class
-    if class_exists not in user.classes:
-        user.classes.append(class_exists)
-        db_session.commit()
-        flash(f"User '{user.username}' successfully added to class '{class_exists.name}'.")
-    else:
-        flash(f"User '{user.username}' is already enrolled in class '{class_exists.name}'.")
-    
-    return user
-
-    # Now, check if the user is already enrolled in the class
-    user = db_session.query(User).filter(User.id == user_id).first()
-    if user:
-        # Check if the relationship already exists
-        if class_exists not in user.classes:
-            user.classes.append(class_exists)
-            db_session.commit()
-            flash(f"Class '{class_name}' added to user {user.username}'s class list.")
-        else:
-            flash(f"User {user.username} is already enrolled in class '{class_name}'.")
-    else:
-        flash(f"User with ID {user_id} not found.")
-    return user

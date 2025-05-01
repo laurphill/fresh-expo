@@ -36,7 +36,36 @@
      <br>
     <a href="/connect" class="back-button">Back to Connect Page</a>
     </div>
-    
+    <script>
+        const currentFacingMode = "user"; // Always use front camera
+        const html5QrCode = new Html5Qrcode("reader");
+
+        function startScanner() {
+            html5QrCode.start(
+                { facingMode: currentFacingMode },
+                { fps: 10, qrbox: 250 },
+                onScanSuccess
+            ).then(() => {
+                // Apply mirror effect if front camera
+                if (currentFacingMode === "user") {
+                    document.getElementById("reader").classList.add("mirrored");
+                }
+            }).catch(err => {
+                console.error("QR Scanner Error:", err);
+            });
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Scanned code: ${decodedText}`);
+            html5QrCode.stop().then(() => {
+                window.location.href = decodedText;
+            }).catch(err => {
+                window.location.href = decodedText;
+            });
+        }
+
+        // Start scanning when page loads
+        startScanner();
     </script>
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");

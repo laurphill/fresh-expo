@@ -8,7 +8,6 @@ class RegisterForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
-    is_teacher = BooleanField(render_kw={"place_holder":"is_teacher"})
 
 #Logging in 
 class LoginForm(FlaskForm):
@@ -35,9 +34,7 @@ def homepage():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first() #checks if user is in database
-        class_user = Class.query.filter_by(name=form.username.data).first() #checks if user is in database
-        
+        user = User.query.filter_by(username=form.username.data).first() #checks if user is in database        
         
         if user: #if the user is in the database
             if bcrypt.check_password_hash(user.password, form.password.data): #and if the password matches the user
@@ -46,9 +43,7 @@ def login():
             else:
                 flash("Incorrect password.")
                 return render_template("login.html", form=form)
-        elif class_user:
-            login_user(class_user)
-            return redirect(url_for('dashboard'))
+        
         else:
             flash("Invalid username or password.")
             return render_template("login.html", form=form)
@@ -83,8 +78,6 @@ def register():
             flash("Email already registered.", "error")
             return render_template("register.html", form=form)
         hashed_password = bcrypt.generate_password_hash(form.password.data) #create the hashed password using bcrypt
-        
-        # If user is a student/class, add to appropriate database
 
         new_user = User(
         username=form.username.data, 
@@ -92,7 +85,6 @@ def register():
         password = hashed_password, 
         nickname = "", 
         bio = "",
-        is_teacher = form.is_teacher.data
         ) #set up user in database format
     
         db.session.add(new_user) #add new user to database
@@ -226,7 +218,7 @@ def connect():
     return render_template("connect.html")
 
 # QR code scanner route
-@app.route('/qrscanner')
+@app.route('/scan')
 def scan():
     return render_template('scan.html')
 
@@ -236,72 +228,37 @@ def scanned():
     url = request.url
     match = re.search(r'(\d+)(?!.*\d)', url)  # Last number match
     scanned_user_id = int(match.group(1)) if match else None
-    
-    # Extract the class name from the URL (e.g., after %class%)
-    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
-    class_name = class_match.group(1) if class_match else None
-    
-    if not scanned_user_id and not class_name:
+ 
+    if not scanned_user_id:
         flash("Invalid QR code.")
         return redirect(url_for('connect'))
     
-    if current_user.is_teacher:
-        add_class_to_user(db_session, friend.id, class_name)
-        friend.classes.append(current_user)
-        flash(f"Success! You are now in {friend.username}'s class.")
-        db.session.commit()
-        return redirect(url_for('scan'))
+    if scanned_user_id == current_user.id:
+         flash("You can't add yourself.")
+         return redirect(url_for('connect'))    
+ 
+    print(current_user.friends)
+    friend = User.query.get(scanned_user_id)
+ 
+    if not friend:
+        flash(f"User ID {scanned_user_id} not found.")
+        return redirect(url_for('connect'))
+
+    print(friend in current_user.friends)
+    if friend in current_user.friends:
+        flash(f"You are already connected with {friend.username}.")
+        return redirect(url_for('connect'))
     
-    if scanned_user_id is not None:
-        if scanned_user_id == current_user.id:
-            flash("You can't add yourself.")
-            return redirect(url_for('scan'))    
-        
-        friend = User.query.get(scanned_user_id)
-        
-        if not friend:
-            flash(f"User ID {scanned_user_id} not found.")
-            return redirect(url_for('scan'))
+    current_user.friends.append(friend)
+    print(friend)
+    print(current_user.friends)
 
-        if friend in current_user.friends:
-            flash(f"You are already connected with {friend.username}.")
-            return redirect(url_for('scan'))
-        else:
-            current_user.friends.append(friend)
-            flash(f"Success! You are now connected with {friend.username}.")
-            db.session.commit()
-            return redirect(url_for('scan'))
-
-    
-    db.session.commit()
-
-@app.route('/create_class')
-def create_class():
-    url = request.url
-
-    # Extract the class name from the URL (e.g., after %class%)
-    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
-    class_name = class_match.group(1) if class_match else None
-    
-    # First, check if the class exists in the Classes table
-    class_exists = db_session.query(Class).filter(Class.name == class_name).first()
-    if not class_exists:
-        # If the class doesn't exist, create it
-        new_class = Class(name=class_name)
-        db_session.add(new_class)
-        db_session.commit()
-        db_session.refresh(new_class)
-        flash(f"Success! You have created the class {class_name}.")
-        return redirect(url_for('profile'))
-    else:
-        flash(f"That class already exists.")
-
-        
-        
+    flash(f"Success! You are now connected with {friend.username}.")
+    return redirect(url_for('dashboard'))
 
 # Generates a qr code with the user's id info
 @app.route('/generate')
-def generate(class_name=None):
+def generate():
     user_id = current_user.id
     qr = QRCode(
     version=1,
@@ -311,9 +268,6 @@ def generate(class_name=None):
     )
 
     qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"  # Generates something like http://localhost:5000/connect?userId=4
-    
-    if current_user.is_teacher:
-        qr_data = f"http://127.0.0.1:5000/scanned?%class_name=%{class_name}"  # Generates something like http://localhost:5000/connect?userId=4
 
     # Add data to the QR code
     qr.add_data(qr_data)
@@ -327,31 +281,3 @@ def generate(class_name=None):
     img_str = b64encode(buffered.getvalue()).decode()
 
     return render_template("generate.html", qr_code_data=img_str)
-
-@app.route('/join_class', methods=['POST'])
-def join_class():
-    # Get the user_id and class_id from the request body
-    data = request.get_json()
-    user_id = data.get('user_id')
-    class_id = data.get('class_id')
-
-    print(class_id)
-
-    # Find the user and class
-    user = User.query.get(user_id)
-    class_ = Class.query.get(class_id)
-
-    print(class_)
-
-    if user and class_:
-        # Check if the user is already in the class
-        if class_ in user.class_list:
-            return jsonify({'success': False, 'message': 'User is already in the class.'})
-
-        # Add the user to the class
-        user.class_list.append(class_)
-        db.session.commit()
-
-        return jsonify({'success': True, 'message': 'User successfully added to class.'})
-    else:
-        return jsonify({'success': False, 'message': 'User or Class not found.'})
