@@ -17,14 +17,14 @@
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
 
-  </div>
-    <script>
-        const toggleBtn = document.getElementById("toggleSidebar");
-        const sidebar = document.querySelector(".sidebar");
-            
+      <script>
+          const toggleBtn = document.getElementById("toggleSidebar");
+          const sidebar = document.querySelector(".sidebar");
+          
           toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("expanded");
-        });
-    </script>
+            sidebar.classList.toggle("expanded");
+          });
+      </script>
+    </div>
 </body>
 </html>

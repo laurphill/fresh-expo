@@ -7,6 +7,9 @@
     font-family: "Poppins", sans-serif;
 }
 
+:root {
+  --fc-daygrid-event-dot-width: 5px;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -15,14 +18,21 @@ html, body {
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
 }
+.fc-next-button, .fc-prev-button {
+  background-color: #647fe1 !important;
+  border: none !important;
+}
+.fc-col-header {
+  border-radius: 16px !important;
+  font-family: 'Poppins', sans-serif !important;
 
+}
 #calendar {
   width: 1000px;
   margin-top: 50px;
   margin-left: -300px;
   max-height: 650px;
 }
-
 
 /* SIDEBAR */
 .sidebar {
@@ -36,6 +46,7 @@ html, body {
     gap: 15px;
     transition: width 0.3s ease;
     overflow: hidden;
+    
   }
 
   .toggle-btn {
@@ -57,9 +68,11 @@ html, body {
     transition: opacity 0.2s ease;
     opacity: 0;
     font-size:0;
+    font-family: "Poppins", sans-serif;
+
   }
   .sidebar.expanded{
-    width: 200px
+    width: 120px
   }
 
   .sidebar.expanded a{
@@ -93,14 +106,14 @@ html, body {
 }
 
 .todo{
-    width:300px;
-    height:500px;
-    margin-top:120px;
-    margin-right: 0px;
+    width:290px;
+    height:348px;
+    margin-top:350px;
+    margin-left: 1200px;
     display: flex;
+    position: absolute;
     flex-direction: column;
     padding:10px;
-    margin-left: -350px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 0 10px black;
@@ -203,3 +216,23 @@ input {
     background-color: #bbb;
 }
     
+#external-events {
+  margin-top: 108px;
+  margin-left: 1200px;
+  width:290px;
+  height: 200px;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  padding:10px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px black;
+}
+
+#external-events .fc-event {
+  cursor: move;
+  margin: 3px 0;
+  width: 220px;  
+  background-color: #647fe1;
+}

@@ -4,52 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel = "stylesheet" href = "../static/profile/profile.css">
+    <link rel = "stylesheet" href = "../static/profile/other_profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <title>{{ current_user.username }}'s Profile</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
 <body>
-  <div class="sidebar">
-    <button id="toggleSidebar" class="toggle-btn">☰</button>
-    <a href = "{{url_for('dashboard')}}">Dashboard</a>
-    <a href="{{url_for('chats')}}">Chats</a>
-    <a href="{{url_for('resources')}}">Resources</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
-    <a href="{{ url_for('connect')}}">Connect</a>
-    <a href="{{url_for('logout')}}">Log Out</a>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
 
-  </div>
-  <script>
-    const toggleBtn = document.getElementById("toggleSidebar");
-    const sidebar = document.querySelector(".sidebar");
-        
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("expanded");
-    });
+      </div>
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
 
-    function promptForClass() {
-      const className = prompt("Enter the name of the new class:");
-
-      if (className && className.trim() !== "") {
-        window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
-      } else {
-        flash("Class name cannot be empty.");
-      }
-    }
-
-    function startChat() {
-      const select = document.getElementById("friendSelect");
-      const selectedUsername = select.value;
-
-      if (selectedUsername) {
-        window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
-      } else {
-        alert("Please select a friend to start a chat with.");
-      }
-    }
-  </script>
+    </script>
 
     <div class="header__wrapper">
       <header></header>
@@ -70,10 +50,6 @@
               
             </p>
 
-            <ul>
-              <li><button>Add friend</button></li>
-              
-            </ul>
           </div>
         </div>
         <div class="right__col">
@@ -93,21 +69,23 @@
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                      {{current_user.nickname}}'s Friends:
-                        <br>
-                        {{current_user.friends.username}}
-                        
+                      <h4>My Friends</h4>
+                      {% if current_user.friends %}
+                        <ul>
+                          {% for friend in current_user.friends %}
+                            {% if friend.username != current_user.username %}
+                                <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+                            {{ friend.username }}
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p><em>No current friends.</em></p>
+                      {% endif %}
                     </div>
 
                     <input type = "radio" id = "tabAboutMe" name="mytabs">
-                    <label for="tabAboutMe">About Me</label>
-                    <div class = 'tab'>
-                        Major : Computer Science
-                        <br>
-                        Age : 19
-                        <br>
-                        Interests: Music, reading, gaming, outdoors
-                    </div>
+                    
                 </div>
             </ul>
           </nav>
@@ -116,6 +94,5 @@
         </div>
       </div>
     </div>
-    
 </body>
 </html>

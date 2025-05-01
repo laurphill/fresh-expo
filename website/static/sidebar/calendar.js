@@ -3,6 +3,60 @@ const datesElement = document.getElementById('dates');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var Draggable = FullCalendar.Draggable;
+  var containerEl = document.getElementById('external-events');
+  var checkbox = document.getElementById('drop-remove');
+  
+  new checkbox(containerEl, {
+    itemSelector: '.fc-checkbox'
+  });
+
+  new Draggable(containerEl, {
+    itemSelector: '.fc-event',
+    eventData: function(eventEl) {
+      return {
+        title: eventEl.innerText
+      };
+    },
+  });
+  
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    timezone: 'UTC',
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+    center: 'addEventButton'
+    },
+    editable: true,
+    droppable:true,
+    dayMaxEvents: true, // when too many events in a day, show the popover
+   
+    customButtons: {
+      addEventButton: {
+        text: 'Add event',
+        click: function() {
+          var dateStr = prompt('Enter a start date in YYYY-MM-DD format');
+          var date = new Date(dateStr + 'T00:00:00'); // will be in local time
+          var title = prompt('Event title...')
+
+          if (!isNaN(date.valueOf())) { // valid?
+            calendar.addEvent({
+              title: title,
+              start: date,
+              allDay: true
+            });
+          } else {
+            alert('Invalid date.');
+          }
+        } 
+    }
+  }
+});
+
+  calendar.render();
+});
+
 let currentDate = new Date()
 
 const updateCalendar = () => {
@@ -105,3 +159,4 @@ function newElement() {
     }
   }
 }
+
