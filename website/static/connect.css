@@ -41,13 +41,12 @@ body {
   text-decoration: none;
   font-weight: bold;
   white-space: nowrap;
-  overflow: hidden;
   transition: opacity 0.2s ease;
   opacity: 0;
   font-size:0;
 }
 .sidebar.expanded{
-  width: 130px
+  width: 120px
 }
 
 .sidebar.expanded a{

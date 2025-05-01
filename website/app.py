@@ -182,11 +182,6 @@ def organizations():
 def resources():
     return render_template('resources.html')
 
-@app.route('/resources/opportunities', methods = ['GET', 'POST'])
-@login_required 
-def opportunities():
-    return render_template('opportunities.html')
-
 @app.route('/resources/advising', methods = ['GET', 'POST'])
 @login_required 
 def advising():
