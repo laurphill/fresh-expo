@@ -27,26 +27,6 @@
           sidebar.classList.toggle("expanded");
         });
 
-        function promptForClass() {
-          const className = prompt("Enter the name of the new class:");
-
-          if (className && className.trim() !== "") {
-            window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
-          } else {
-            flash("Class name cannot be empty.");
-          }
-        }
-
-        function startChat() {
-          const select = document.getElementById("friendSelect");
-          const selectedUsername = select.value;
-
-          if (selectedUsername) {
-            window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
-          } else {
-            alert("Please select a friend to start a chat with.");
-          }
-        }
     </script>
 
     <div class="header__wrapper">
@@ -68,26 +48,6 @@
               
             </p>
 
-            <ul>
-              {% if current_user.is_authenticated and current_user.is_teacher %}
-                <li><button onclick="promptForClass()">Add Class</button></li>
-              {% else %}
-                {% if current_user.friends %}
-                  <li>
-                    <select id="friendSelect" style="padding: 8px; border-radius: 5px; margin-bottom: 10px; width: 250px;">
-                      <option disabled selected>Select a friend to chat</option>
-                      {% for friend in current_user.friends %}
-                        <option value="{{ friend.username }}">{{ friend.username }}</option>
-                      {% endfor %}
-                    </select>
-                    <button onclick="startChat()">Start Chat</button>
-                  </li>
-                {% else %}
-                  <a href="{{url_for('connect')}}">Add friends to chat!</a>
-                {% endif %}
-              {% endif %}
-              
-            </ul>
           </div>
         </div>
         <div class="right__col">
@@ -111,12 +71,14 @@
                       {% if current_user.friends %}
                         <ul>
                           {% for friend in current_user.friends %}
-                          <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+                            {% if friend.username != current_user.username}
+                                <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
                             {{ friend.username }}
+                            {% endif %}
                           {% endfor %}
                         </ul>
                       {% else %}
-                        <p><em>You have no friends added.</em></p>
+                        <p><em>No current friends.</em></p>
                       {% endif %}
                     </div>
 

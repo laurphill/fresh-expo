@@ -99,7 +99,7 @@
           </li>
             {% endfor %}
           </ul>
-          <a href="{{ url_for('friends') }}">See all friends</a>
+          <a href="{{ url_for('profile', username=current_user.username) }}">See all friends</a>
         </aside>
         
       </div>

@@ -97,6 +97,25 @@
       background-color: #ead975;
       color: #333;
     }
+
+    .flash-message {
+    animation: fadeInOut 4s ease-in-out forwards;
+    font-size: 1rem;
+    color: #333;
+    background: none;
+    box-shadow: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-weight: bold;
+    opacity: 0;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }
   </style>
 </head>
 <body>
@@ -108,9 +127,28 @@
   </nav>
 
   <div class="main-content">
+    {% if current_user.is_authenticated and not current_user.is_teacher %}
     <h2>Scan QR Code to Connect</h2>
+    {% endif %}
+    {% if current_user.is_authenticated and current_user.is_teacher %}
+    <h2>Scan QR Code to Join</h2>
+      <select id="classSelect" style="margin-bottom: 20px; padding: 8px 12px; border-radius: 5px; width: 300px;">
+        {% for c in current_user.classes %}
+          <option value="{{ c.name }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    {% endif %}
     <div id="reader"></div>
     <a href="/connect" class="back-button">Back to Connect Page</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
   </div>
 
   <script>
@@ -132,7 +170,15 @@
     }
 
     function onScanSuccess(decodedText, decodedResult) {
-      html5QrCode.stop().then(() => {
+      const classDropdown = document.getElementById("classSelect");
+      const className = classDropdown ? classDropdown.value : null;
+
+      // Append the class name to the URL as a query parameter if it exists
+      const destinationUrl = className 
+        ? `${decodedText}?class=${encodeURIComponent(className)}`
+        : decodedText;
+        
+    html5QrCode.stop().then(() => {
         window.location.href = decodedText;
       }).catch(() => {
         window.location.href = decodedText;

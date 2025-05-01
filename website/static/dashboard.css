@@ -279,9 +279,18 @@
     box-shadow: none;
     padding: 10px 20px;
     margin: 10px 0;
+    font-weight: bold;
     opacity: 0;
   }
-  
+
+  .flash-container {
+    position: fixed;
+    top: 20px;
+    left: 80;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+
   @keyframes fadeInOut {
     0% { opacity: 0; }
     20% { opacity: 1; }

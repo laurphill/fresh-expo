@@ -230,53 +230,78 @@ def connect():
 def scan():
     return render_template('qrscanner.html')
 
-# QR code scanner route for classes
-@app.route('/classcode_scan')
-def class_scan():
-    return render_template('class_qrscanner.html')
-
 # Route to add user when qr code scanned
 @app.route('/scanned')
 def scanned():
     url = request.url
     match = re.search(r'(\d+)(?!.*\d)', url)  # Last number match
     scanned_user_id = int(match.group(1)) if match else None
-
-    if not scanned_user_id:
+    
+    # Extract the class name from the URL (e.g., after %class%)
+    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
+    class_name = class_match.group(1) if class_match else None
+    
+    if not scanned_user_id and not class_name:
         flash("Invalid QR code.")
         return redirect(url_for('connect'))
-
-    if scanned_user_id == current_user.id:
-        flash("You can't add yourself.")
-        return redirect(url_for('connect'))    
     
-    friend = User.query.get(scanned_user_id)
-    
-    if not friend:
-        flash(f"User ID {scanned_user_id} not found.")
-        return redirect(url_for('connect'))
-
-    if friend in current_user.friends:
-        flash(f"You are already connected with {friend.username}.")
-        return redirect(url_for('connect'))
-    
-    if friend.is_teacher():
+    if current_user.is_teacher:
+        add_class_to_user(db_session, friend.id, class_name)
+        friend.classes.append(current_user)
         flash(f"Success! You are now in {friend.username}'s class.")
-        current_user.classes.append(friend)
-        return redirect(url_for('dashboard'))
+        db.session.commit()
+        return redirect(url_for('scan'))
+    
+    if scanned_user_id is not None:
+        if scanned_user_id == current_user.id:
+            flash("You can't add yourself.")
+            return redirect(url_for('scan'))    
         
-    else:
-        flash(f"Success! You are now connected with {friend.username}.")
-        current_user.friends.append(friend)
-    return redirect(url_for('dashboard'))
+        friend = User.query.get(scanned_user_id)
+        
+        if not friend:
+            flash(f"User ID {scanned_user_id} not found.")
+            return redirect(url_for('scan'))
+
+        if friend in current_user.friends:
+            flash(f"You are already connected with {friend.username}.")
+            return redirect(url_for('scan'))
+        else:
+            current_user.friends.append(friend)
+            flash(f"Success! You are now connected with {friend.username}.")
+            db.session.commit()
+            return redirect(url_for('scan'))
 
     
     db.session.commit()
 
+@app.route('/create_class')
+def create_class():
+    url = request.url
+
+    # Extract the class name from the URL (e.g., after %class%)
+    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
+    class_name = class_match.group(1) if class_match else None
+    
+    # First, check if the class exists in the Classes table
+    class_exists = db_session.query(Class).filter(Class.name == class_name).first()
+    if not class_exists:
+        # If the class doesn't exist, create it
+        new_class = Class(name=class_name)
+        db_session.add(new_class)
+        db_session.commit()
+        db_session.refresh(new_class)
+        flash(f"Success! You have created the class {class_name}.")
+        return redirect(url_for('profile'))
+    else:
+        flash(f"That class already exists.")
+
+        
+        
 
 # Generates a qr code with the user's id info
 @app.route('/generate')
-def generate():
+def generate(class_name=None):
     user_id = current_user.id
     qr = QRCode(
     version=1,
@@ -284,7 +309,11 @@ def generate():
     box_size=10,
     border=4,
     )
+
     qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"  # Generates something like http://localhost:5000/connect?userId=4
+    
+    if current_user.is_teacher:
+        qr_data = f"http://127.0.0.1:5000/scanned?%class_name=%{class_name}"  # Generates something like http://localhost:5000/connect?userId=4
 
     # Add data to the QR code
     qr.add_data(qr_data)
