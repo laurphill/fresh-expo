@@ -11,7 +11,6 @@ body {
     background-color: #f7f7f7;
     text-align: center;
   }
-  
 
 /* SIDEBAR */
 .sidebar {
@@ -48,7 +47,7 @@ body {
   font-size:0;
 }
 .sidebar.expanded{
-  width: 130px
+  width: 120px
 }
 
 .sidebar.expanded a{

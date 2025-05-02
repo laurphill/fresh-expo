@@ -1,3 +1,130 @@
-/* for some reason, the page only looks 
-like it does when all the styling stuuf 
-is in the html. someone pls help */
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500&family=Poppins&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  
+  }
+  
+  body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f7f7f7;
+      text-align: center;
+    }
+    
+  /* SIDEBAR */
+  .sidebar {
+    width: 60px;
+    background-color: #647fe1;
+    color: white;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    height: 100vh;
+  }
+  
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+    font-size:0;
+  }
+  .sidebar.expanded{
+    width: 120px
+  }
+  
+  .sidebar.expanded a{
+    opacity: 1;
+    font-size: 1rem;
+    text-align: left;
+    
+  }
+  .sidebar a:hover {
+    background-color: #506bd4;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+  .container {
+    background-color: white;
+    max-width: 500px;
+    padding: 40px;
+    margin-top: -700px;
+    flex: 1;
+    padding: 40px;
+    margin-left: 500px;
+    width: 1000px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+
+  body {
+    background: linear-gradient(to bottom, #f6f2ff 0%, #909fec 100%);
+    color: #3a3a3a;
+    min-height: 100vh;
+  }
+
+  .logo {
+    width: 35px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    color: #647fe1;
+    margin-bottom: 20px;
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .back-button {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background-color: #e74343;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+
+  .back-button:hover {
+    background-color: #ead975;
+    color: #333;
+  }
+
+  .flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  font-weight: bold;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}

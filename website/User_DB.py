@@ -22,6 +22,11 @@ class UserClass(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
 
+class Img(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     img = db.Column(db.Text, unique=True, nullable=False)
+     name = db.Column(db.Text, nullable=False)
+     mimetype = db.Column(db.Text, nullable=False)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -163,7 +168,7 @@ def add_class_to_user(db_session, user_id: int, class_name: str):
             db_session.refresh(new_class)
             class_exists = new_class
             
-def add_user_to_class(db_session, class_id: int, user_username: str):
+def add_user_to_class(db_session, class_name, class_id: int, user_id, user_username: str):
     # First, check if the class exists in the Classes table
     class_exists = db_session.query(Class).filter(Class.id == class_id).first()
     if not class_exists:
@@ -184,7 +189,7 @@ def add_user_to_class(db_session, class_id: int, user_username: str):
     else:
         flash(f"User '{user.username}' is already enrolled in class '{class_exists.name}'.")
     
-    return user
+        return user
 
     # Now, check if the user is already enrolled in the class
     user = db_session.query(User).filter(User.id == user_id).first()

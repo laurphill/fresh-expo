@@ -1,5 +1,5 @@
 # All imports
-from flask import Flask, render_template, redirect, url_for, flash, request, jsonify 
+from flask import Flask, Response, jsonify, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
