@@ -5,23 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advising Resources</title>
     <link rel = "stylesheet" href = "../static/resources/advising.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <div class="sidebar">
         <button id="toggleSidebar" class="toggle-btn">☰</button>
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('logout')}}">Log Out</a>
-    </div>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+
+      </div>
+
     <div class="wrapper">
         <header class="main-head">A How-To: Advise and Register for Classes</header>
         <article class="content">
           <p>
-            Advising can registering for classes can be stressful, especially for incoming students. 
+            <b>Advising can registering for classes can be stressful, especially for incoming students. 
             Here you will find only the necessary information that you should be aware of.
-            You will be taken through each step necessary in registering and advising for classes each quarter.
+            You will be taken through each step necessary in registering and advising for classes each quarter.</b>
           </p>
         </article>
         <article class="content2">
@@ -41,7 +47,7 @@
                 or print it yourself at this <a href = "https://www.latech.edu/documents/2018/05/advising-form.pdf/" target ="_blank"style="color: rgb(112, 102, 255);">link.</a></li></ul>
                 
                 <br><li><b>Create saved schedule on Workday</li></b>
-                <br><ul><li>Navigate to Workday -> Academics -> View Academic Plan -> Create Saved Schedule
+                <ul><li>Workday -> Academics -> View Academic Plan -> Create Saved Schedule
                 <br>
                 <br>Look up course sections as you have them written on advising form. When found, verify it is correct class and scroll down till you see "Add to saved schedule"
                 </li>
@@ -52,7 +58,7 @@
         <article class="content3">
             <h1 style = "font-size:20px;">STEP 2: MEET WITH ADVISOR TO CONFIRM SCHEDULE</h1>
             <p>
-                <br>
+                
                 <br><ol id = "list"><b><li>Schedule an appointment or attend open advising hours(if offered)</li></b>
                     <br><ul><li>When you meet with your advisor, make sure to <b>bring your advising form already filled out</b></li></ul>
                     
@@ -62,7 +68,7 @@
                     After you and your advisor both sign your advising form, your advisor will remove the hold on your account when they get the chance.
                     <br>
                     <br>    
-                    <br><b><li>Know when registration opens!</li></b>
+                    <b><li>Know when registration opens!</li></b>
                     <br> If you are honors or meet certain qualifications, you may be eligible for early registration(which means a better chance at getting in a class you want😏)
                     <br>
                     <br>The dates for open registration can be found in the <a href = "https://events.latech.edu/academic-calendar/all/search/registration" target="_blank" style="color: rgb(112, 102, 255);">academic calendar</a> 
@@ -81,10 +87,8 @@
                     When registration opens, there will be a "Start Registration" button underneath your saved schedule
                     <br>
                     <br>
-                    Click start, confirm classes are correct, and click "register"
-                    <br>
-                    <br>
-                    Make sure you see the "successful registration" message!
+                    Click start, confirm classes are correct, and click "register". <b>Make sure you see the "successful registration" message!</b>
+                    
             </p>
             
         </article>
@@ -110,7 +114,6 @@
                 <br>
                 <br>
                 <ul><li><i>Workday -> Profile -> Personal -> Additional Data -> Confirmation of Intent to Attend - {Quarter here}</i></li></ul>
-                <br>
                 <br>
                 <ul><li>Check the box and <b>click save!</b></li></ul>
             </p>

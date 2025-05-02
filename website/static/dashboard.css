@@ -48,7 +48,7 @@
     font-size:0;
   }
   .sidebar.expanded{
-    width: 200px
+    width: 120px
   }
 
   .sidebar.expanded a{
@@ -75,10 +75,8 @@
     font-size: 1.8rem;
     margin-bottom: 20px;
     font-family: 'Poppins', sans-serif;
-
-
   }
-
+  
 /*LOGO*/
   .logo {
     width: 35px;

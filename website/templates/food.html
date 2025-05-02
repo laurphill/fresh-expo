@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food</title>
-  <link rel = "stylesheet" href = "../static/resources/food.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food</title>
+    <link rel = "stylesheet" href = "../static/resources/food.css">
 </head>
 <body>
   <div class="sidebar">
@@ -12,35 +12,36 @@
     <a href = "{{url_for('dashboard')}}">Dashboard</a>
     <a href="{{url_for('chats')}}">Chats</a>
     <a href="{{url_for('resources')}}">Resources</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
 
   </div>
-  <div class="wrapper">
-      <header class="main-head">Meal Plan and Declining Balance</header>
-      <article class="content">
-        <h1>food</h1>
+    <div class="wrapper">
+        <header class="main-head">Meal Plan and Declining Balance</header>
+        <article class="content">
+          <h1>food</h1>
+          <p>
+            🍔🍔🍔🍔
+          </p>
+        </article>
+        <aside class="side"><img src="../static/images/PawPoint.png"></aside>
+        <div class="ad"><img src="../static/images/PawPoint.png"></div>
+      </div>
+      <article class="content2">
+        <h1></h1>
         <p>
-          🍔🍔🍔🍔
+            Bomb
         </p>
       </article>
-      <aside class="side"><img src="../static/images/PawPoint.png"></aside>
-      <div class="ad"><img src="../static/images/PawPoint.png"></div>
-    </div>
-    <article class="content2">
-      <h1></h1>
-      <p>
-          Bomb
-      </p>
-    </article>
-  <script>
-      const toggleBtn = document.getElementById("toggleSidebar");
-      const sidebar = document.querySelector(".sidebar");
-      
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("expanded");
-      });
-  </script>
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+        
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
 </body>
 </html>

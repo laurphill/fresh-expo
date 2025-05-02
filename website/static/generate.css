@@ -12,7 +12,6 @@ body {
     text-align: center;
   }
   
-
 /* SIDEBAR */
 .sidebar {
   width: 60px;
@@ -114,6 +113,7 @@ h1 {
   box-shadow: none;
   padding: 10px 20px;
   margin: 10px 0;
+  font-weight: bold;
   opacity: 0;
 }
 

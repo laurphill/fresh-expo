@@ -6,11 +6,13 @@
     <link rel = 'stylesheet' href = 'https://cdnjs.cloudfare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
     <link rel = 'stylesheet' href = '../static/sidebar/calendar.css'>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    
     <title>Calendar</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script src='fullcalendar/dist/index.global.js'></script>
+    
+    
     <script>
 
       document.addEventListener('DOMContentLoaded', function() {
@@ -29,11 +31,44 @@
     <a href = "{{url_for('dashboard')}}">Dashboard</a>
     <a href="{{url_for('chats')}}">Chats</a>
     <a href="{{url_for('resources')}}">Resources</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
+
   </div>
+    <div id='external-events'>
+      <p>
+        <strong>Draggable Events</strong>
+      </p>
+    
+      <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+        <div class='fc-event-main'>My Event 1</div>
+      </div>
+      <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+        <div class='fc-event-main'>My Event 2</div>
+      </div>
+      <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+        <div class='fc-event-main'>My Event 3</div>
+      </div>
+      <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+        <div class='fc-event-main'>My Event 4</div>
+      </div>
+      <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+        <div class='fc-event-main'>My Event 5</div>
+      </div>
+    
+      <p>
+        <input type='checkbox' id='drop-remove' />
+        <label for='drop-remove'>remove after drop</label>
+      </p>
+    </div>
+    
+    <div id='calendar-container'>
       <div id='calendar'></div>
+    </div>
+  </div>
+        <div id='calendar'></div>
     <div class = "todo" id = "myDIV">
         <h1>To-do</h1>
         <div id="myDIV" class="header">
@@ -42,7 +77,7 @@
         </div>
             <ul id="myUL"></ul>
     </div>
-  
+    
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");
         const sidebar = document.querySelector(".sidebar");

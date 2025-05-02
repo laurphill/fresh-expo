@@ -13,12 +13,14 @@
     <div class="sidebar">
         <button id="toggleSidebar" class="toggle-btn">☰</button>
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('logout')}}">Log Out</a>
-
-    </div>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+    
+      </div>
     <div class = "wrapper">        
         <form method = "POST" action="" enctype="multipart/form-data">
             {{form.hidden_tag()}}
@@ -42,7 +44,7 @@
                 
                 <br>
                 <h2>Bio</h2>
-                {{form.bio(placeholder="About Me")}}
+                    {{form.bio(placeholder="About Me")}}
                 <br>
                 <!-- <h2>Profile Pic</h2>
                 {{form.profile_pic}}

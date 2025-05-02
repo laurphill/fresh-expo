@@ -46,9 +46,6 @@ def login():
             else:
                 flash("Incorrect password.")
                 return render_template("login.html", form=form)
-        elif class_user:
-            login_user(class_user)
-            return redirect(url_for('dashboard'))
         else:
             flash("Invalid username or password.")
             return render_template("login.html", form=form)
@@ -139,8 +136,6 @@ def profile(username):
 
     if current_user.username == username:
         return render_template('profile.html', user = current_user, form=form)
-    elif user in current_user.friends:
-        return render_template('friend_profile.html', user = user, form=form)
     elif user in db.session:
         return render_template('other_profile.html', user = user, form=form)
     else:
@@ -151,13 +146,6 @@ def other_profile(username):
     user = get_user_by_username(db.session, username)
     form = SettingsForm()
     return render_template('other_profile.html', user = user, form=form)
-
-@app.route("/friend_profile/<username>", methods=['GET', 'POST'])
-def friend_profile(username):
-    user = get_user_by_username(db.session, username)
-    form = SettingsForm()
-    return render_template('other_profile.html', user = user, form=form)
-
 
 @app.route("/calendar", methods = ["GET", "POST"])
 @login_required

@@ -27,10 +27,11 @@
           <a href = "{{url_for('dashboard')}}">Dashboard</a>
           <a href="{{url_for('chats')}}">Chats</a>
           <a href="{{url_for('resources')}}">Resources</a>
+          <a href="{{url_for('calendar')}}">Calendar</a>
           <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('connect')}}">Connect</a>
+          <a href="{{ url_for('connect')}}">Connect</a>
           <a href="{{url_for('logout')}}">Log Out</a>
-
+      
         </div>
         
         <div class="nav-content">
@@ -93,7 +94,7 @@
           <h4>Your Friends</h4>
           <ul>
             {% for friend in friends[:2] %}  {# Preview first 5 #}
-              <li><a href="{{ url_for('friend_profile', username=friend.username) }}">
+              <li><a href="{{ url_for('other_profile', username=friend.username) }}">
                 {{ friend.username }}
             </a>
           </li>
@@ -119,7 +120,7 @@
             }
           });
       </script>
-      
+        
       <script>
           const toggleBtn = document.getElementById("toggleSidebar");
           const sidebar = document.querySelector(".sidebar");
