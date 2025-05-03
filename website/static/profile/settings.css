@@ -3,27 +3,15 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/lauren_test
 }
 
 body {
   font-family: 'Poppins', sans-serif;
-<<<<<<< HEAD
-  background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
-  color: #3a3a3a;
-  display: flex;
-  min-height: 100vh;
-} 
-=======
   background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);    
   color: #3a3a3a;
   display: flex;
   min-height: 100vh;
 }
->>>>>>> origin/lauren_test
 
 /* SIDEBAR */
 .sidebar {
@@ -59,23 +47,14 @@ body {
   font-size:0;
 }
 .sidebar.expanded{
-<<<<<<< HEAD
-  width: 200px
-=======
   width: 120px
->>>>>>> origin/lauren_test
 }
 
 .sidebar.expanded a{
   opacity: 1;
   font-size: 1rem;
-<<<<<<< HEAD
-}
-
-=======
   
 }
->>>>>>> origin/lauren_test
 .sidebar a:hover {
   background-color: #506bd4;
   padding: 8px;
@@ -84,10 +63,6 @@ body {
   color:white;
   text-decoration: none;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/lauren_test
 .wrapper {
   margin: 0 auto;
   font-family: 'Poppins', sans-serif;
@@ -101,15 +76,9 @@ body {
   background: white;
   width: 800px;
   height: 550px;
-<<<<<<< HEAD
-  border-radius: 5px;
-  padding: 10px;
-  border: 1px solid #647fe1;
-=======
   border-style: dashed;
   padding: 10px;
   border: 5px solid #647fe1;
->>>>>>> origin/lauren_test
 }
 
 .main-head {
@@ -122,11 +91,7 @@ body {
 .content {
   grid-area: content;
   height: 100px;
-<<<<<<< HEAD
-  font-size: 20px;
-=======
   font-size: 20px;  
->>>>>>> origin/lauren_test
   text-align: center;
 }
 .content h2{
@@ -154,23 +119,38 @@ body {
     "btn"
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/lauren_test
 @media (min-width: 700px) {
   .wrapper {
     grid-template-columns: 1fr 4fr 1fr;
     grid-template-areas:
       "header header header"
       "side content content"
-<<<<<<< HEAD
-      "side btn btn";
-      
-
-      
-=======
       "side btn btn";      
->>>>>>> origin/lauren_test
   }
+}
+
+.flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  opacity: 0;
+}
+
+.flash-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }

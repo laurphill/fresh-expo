@@ -280,3 +280,21 @@ display: block;
 .mytabs input[type='radio']:checked + label{
 background: fixed;
 }
+
+.flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}

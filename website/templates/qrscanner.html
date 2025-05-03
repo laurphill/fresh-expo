@@ -37,9 +37,11 @@
     {% if current_user.is_authenticated and current_user.is_teacher %}
       <h2 style="text-align:center;">Scan QR Code to Join</h2>
       <select id="classSelect" style="margin-bottom: 20px; padding: 8px 12px; border-radius: 5px; width: 300px;">
-      {% for c in current_user.classes %}
-        <option value="{{ c.name }}">{{ c.name }}</option>
-      {% endfor %}
+        {% for c in current_user.classes %}
+          <option value="{{ c.name }}" {% if c.name == selected_class %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
       </select>
     {% endif %}
     <div id="reader"></div>
@@ -80,13 +82,13 @@
 
       // Append the class name to the URL as a query parameter if it exists
       const destinationUrl = className 
-        ? `${decodedText}?class=${encodeURIComponent(className)}`
+        ? `${decodedText}&class=${encodeURIComponent(className)}`
         : decodedText;
         
     html5QrCode.stop().then(() => {
-        window.location.href = decodedText;
+        window.location.href = destinationUrl;
       }).catch(() => {
-        window.location.href = decodedText;
+        window.location.href = destinationUrl;
       });
     }
 
