@@ -126,7 +126,7 @@
                   {% if current_user.friends %}
                     <ul>
                       {% for friend in current_user.friends %}
-                      <li><a href="{{ url_for('other_profile', username=friend.username) }}">
+                      <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a>
                         {{ friend.username }}
                       {% endfor %}
                     </ul>
