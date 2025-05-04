@@ -2,6 +2,7 @@
 
 ## To-do:
    -profile customization
+   -update to-do list
 ## My completed tasks:
    - set up routes
    - set up SQL database and created functionality to store user and passwords(hashed)
