@@ -1,12 +1,7 @@
 ﻿# Lauren's Branch for Design Project 
 
 ## To-do:
-   - Work on errors with duplicate users, incorrect inputs, etc
-   - user profile design and functionality
-   - forgot password functionality
-   - connecting canvas account
-   - user interactivity with planning, courses, calendars, etc.
-
+   -profile customization
 ## My completed tasks:
    - set up routes
    - set up SQL database and created functionality to store user and passwords(hashed)
@@ -15,4 +10,6 @@
    - created resources page and advising page
    - upgraded database with profile features
    - created calendar and to do designs
+   - created events for the calendar that can be deleted, created, dragged, and automatically updated without refresh
+   - made events unique to the logged in user
 
