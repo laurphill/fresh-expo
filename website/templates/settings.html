@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href = "../static/profile/settings.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <title>{{ current_user.username }}'s Profile</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 </head>
@@ -16,7 +15,7 @@
         <a href="{{url_for('chats')}}">Chats</a>
         <a href="{{url_for('resources')}}">Resources</a>
         <a href="{{url_for('calendar')}}">Calendar</a>
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <a href="{{ url_for('connect')}}">Connect</a>
         <a href="{{url_for('logout')}}">Log Out</a>
     
@@ -26,7 +25,15 @@
             {{form.hidden_tag()}}
             <header class="main-head">Settings</header>
             <div class="content">            
-                <br>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-container">
+                        {% for message in messages %}
+                            <div class="flash-message">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}<br>
                 <h2>Username</h2>
                 {{form.username(placeholder = "Username")}}
                 <i class='bx bxs-user'></i>
@@ -44,12 +51,12 @@
                 
                 <br>
                 <h2>Bio</h2>
-                    {{form.bio(placeholder="About Me")}}
+                    {{form.bio(style='height: 100px; max-height:200px; min-height:100px;', placeholder=" About Me")}}
                 <br>
                 <!-- <h2>Profile Pic</h2>
                 {{form.profile_pic}}
                 {{current_user.profile_pic}} -->
-                <br>
+                
                 <div class = "btn">
                     {{form.submit(class="btn")}}</div>
             </div>
@@ -67,4 +74,4 @@
     </script>
     
 </body>
-</html>
+</html> 

@@ -9,7 +9,9 @@
 
 :root {
   --fc-daygrid-event-dot-width: 5px;
+
 }
+
 body {
   margin: 0;
   padding: 0;
@@ -72,12 +74,15 @@ body {
   font-size:0;
 }
 .sidebar.expanded{
-  width: 350px
+  width: 350px;
+  font-family: "Poppins", sans-serif;
+
 }
 
 .sidebar.expanded a{
   opacity: 1;
   font-size: 1rem;
+  font-family: "Poppins", sans-serif;
 }
 .sidebar a:hover {
   background-color: #506bd4;
@@ -108,9 +113,9 @@ body {
 
 .todo{
     width:290px;
-    height:348px;
-    margin-top:350px;
-    margin-left: 1200px;
+    height:590px;
+    margin-top:110px;
+    margin-left: 1160px;
     display: flex;
     position: absolute;
     flex-direction: column;
@@ -215,25 +220,4 @@ input {
   
 .addBtn:hover {
     background-color: #bbb;
-}
-    
-#external-events {
-  margin-top: 108px;
-  margin-left: 1200px;
-  width:290px;
-  height: 200px;
-  display: flex;
-  position: absolute;
-  flex-direction: column;
-  padding:10px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px black;
-}
-
-#external-events .fc-event {
-  cursor: move;
-  margin: 3px 0;
-  width: 220px;  
-  background-color: #647fe1;
 }

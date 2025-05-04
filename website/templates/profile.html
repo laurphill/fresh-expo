@@ -22,35 +22,35 @@
     <a href="{{url_for('logout')}}">Log Out</a>
 
   </div>
-  <script>
-    const toggleBtn = document.getElementById("toggleSidebar");
-    const sidebar = document.querySelector(".sidebar");
-        
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("expanded");
-    });
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
 
-    function promptForClass() {
-      const className = prompt("Enter the name of the new class:");
+        function promptForClass() {
+          const className = prompt("Enter the name of the new class:");
 
-      if (className && className.trim() !== "") {
-        window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
-      } else {
-        flash("Class name cannot be empty.");
-      }
-    }
+          if (className && className.trim() !== "") {
+            window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
+          } else {
+            flash("Class name cannot be empty.");
+          }
+        }
 
-    function startChat() {
-      const select = document.getElementById("friendSelect");
-      const selectedUsername = select.value;
+        function startChat() {
+          const select = document.getElementById("friendSelect");
+          const selectedUsername = select.value;
 
-      if (selectedUsername) {
-        window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
-      } else {
-        alert("Please select a friend to start a chat with.");
-      }
-    }
-  </script>
+          if (selectedUsername) {
+            window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
+          } else {
+            alert("Please select a friend to start a chat with.");
+          }
+        }
+    </script>
 
     <div class="header__wrapper">
       <header></header>
@@ -72,7 +72,23 @@
             </p>
 
             <ul>
-              <li><button>Add friend</button></li>
+              {% if current_user.is_authenticated and current_user.is_teacher %}
+                <li><button onclick="promptForClass()">Add Class</button></li>
+              {% else %}
+                {% if current_user.friends %}
+                  <li>
+                    <select id="friendSelect" style="padding: 8px; border-radius: 5px; margin-bottom: 10px; width: 250px;">
+                      <option disabled selected>Select a friend to chat</option>
+                      {% for friend in current_user.friends %}
+                        <option value="{{ friend.username }}">{{ friend.username }}</option>
+                      {% endfor %}
+                    </select>
+                    <button onclick="startChat()">Start Chat</button>
+                  </li>
+                {% else %}
+                  <a href="{{url_for('connect')}}">Add friends to chat!</a>
+                {% endif %}
+              {% endif %}
               
             </ul>
           </div>
@@ -94,10 +110,17 @@
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                      {{current_user.nickname}}'s Friends:
-                        <br>
-                        {{current_user.friends.username}}
-                        
+                      <h4>My Friends</h4>
+                      {% if current_user.friends %}
+                        <ul>
+                          {% for friend in current_user.friends %}
+                          <li><a href="{{ url_for('other_profile', username=friend.username) }}">{{ friend.username }}</a>
+
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p><em>You have no friends added.</em></p>
+                      {% endif %}
                     </div>
 
                     <input type = "radio" id = "tabAboutMe" name="mytabs">
@@ -117,6 +140,5 @@
         </div>
       </div>
     </div>
-    
 </body>
 </html>

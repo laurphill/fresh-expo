@@ -8,7 +8,51 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
+class Events(db.Model):
+    __tablename__ = 'events'
 
+    id = db.Column(db.Integer, primary_key=True)  # Primary key
+    title = db.Column(db.String(100), nullable=False)  # Event title
+    start = db.Column(db.DateTime, nullable=False)  # Event start date and time
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
+        nullable=False  # Set to False to enforce NOT NULL constraint
+    )
+
+    # Relationship to the User model
+    user = db.relationship('User', backref='events')
+
+    def __init__(self, title, start, user_id):
+        self.title = title
+        self.start = start
+        self.user_id = user_id
+        with app.app_context():
+            db.create_all() 
+    
+    def __repr__(self):
+        return f"<Event(id={self.id}, title={self.title}, start={self.start}, user_id={self.user_id})>"   # Prints event info
+     
+
+class Class(db.Model):
+    __tablename__ = 'classes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
+    users = db.relationship('User', secondary='user_classes', backref='classes')
+
+
+class UserClass(db.Model):
+    __tablename__ = 'user_classes'
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
+
+class Img(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     img = db.Column(db.Text, unique=True, nullable=False)
+     name = db.Column(db.Text, nullable=False)
+     mimetype = db.Column(db.Text, nullable=False)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -19,6 +63,7 @@ class User(db.Model, UserMixin):
     password = Column(String(100), nullable=False)  # Password field
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
+    is_teacher = Column(Boolean, unique=False, nullable = False)  # Username field, must be unique
 
     friends = db.relationship(
      'User',
@@ -28,12 +73,13 @@ class User(db.Model, UserMixin):
      backref='added_by'
  )
 
-    def __init__(self, username, email, password, bio="About Me", nickname="nickname"):
+    def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False):
         self.username = username
         self.email = email
         self.password = password
         self.nickname = nickname
         self.bio = bio
+        self.is_teacher = is_teacher
 
         with app.app_context():
             db.create_all()
@@ -87,16 +133,16 @@ def get_user_by_username(db_session, username: str):
 
 # Function to update user information
 def update_user(db_session, user_id: int, new_username: str, new_email: str, new_password: str, new_nickname: str, new_bio:str):
-    user = db_session.query(User).filter(User.id == user_id).first()
+    user = db.session.query(User).filter(User.id == user_id).first()
     user_former = user
     
-    email_exists = db_session.query(User).filter((User.email == new_email)).first()
+    email_exists = db.session.query(User).filter((User.email == new_email)).first()
     if email_exists:
         # If a user with the same email exists, return error message
         flash(f"Error: Email address '{new_email}' already exists.")
         return None
     
-    username_exists = db_session.query(User).filter((User.username == new_username)).first()
+    username_exists = db.session.query(User).filter((User.username == new_username)).first()
     if username_exists:
         # If a user with the same username exists, return error message
         flash(f"Error: Username '{new_username}' already exists.")
@@ -135,3 +181,32 @@ def delete_user(db_session, user_id: int):
         return user
     
     return None
+            
+def add_user_to_class(db_session, class_name, user_id):
+    # First, check if the class exists in the Classes table
+    user = get_user_by_id(db_session, user_id)
+    class_exists = db_session.query(Class).filter(Class.name == class_name).first()
+        
+    # Now, check if the user exists in the Users table
+    if not user:
+        flash(f"User with ID '{user_id}' not found.")
+        return None
+    
+    # Check if the user is already enrolled in the class
+    if not class_exists:
+        # If the class doesn't exist, create it
+        new_class = Class(name=class_name)
+        db_session.add(new_class)
+        db_session.commit()
+        db_session.refresh(new_class)
+        class_exists = new_class
+        
+    if class_exists not in user.classes:
+        user.classes.append(class_exists)
+        class_exists.users.append(user)
+        db_session.commit()
+        flash(f"User '{user.username}' successfully added to '{class_exists.name}'.")
+    else:
+        flash(f"User {user.username} is already enrolled in '{class_exists.name}'.")
+    
+        return user

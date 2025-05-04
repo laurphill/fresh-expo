@@ -68,7 +68,7 @@
     background-color: white;
     max-width: 500px;
     padding: 40px;
-    margin-top:-500px;
+    margin-top: -700px;
     flex: 1;
     padding: 40px;
     margin-left: 500px;
@@ -76,3 +76,55 @@
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
   }
+
+  body {
+    background: linear-gradient(to bottom, #f6f2ff 0%, #909fec 100%);
+    color: #3a3a3a;
+    min-height: 100vh;
+  }
+
+  .logo {
+    width: 35px;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    color: #647fe1;
+    margin-bottom: 20px;
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .back-button {
+    margin-top: 25px;
+    padding: 10px 20px;
+    background-color: #e74343;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+
+  .back-button:hover {
+    background-color: #ead975;
+    color: #333;
+  }
+
+  .flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  font-weight: bold;
+  opacity: 0;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}

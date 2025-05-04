@@ -119,21 +119,9 @@ h1 {
 
 @keyframes fadeInOut {
   0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
   100% { opacity: 0; }
-}
-
-/* Styling for the QR code scanner */
-#reader {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* Mirrored video for front camera */
-.mirrored video {
-    transform: scaleX(-1);
 }
 
 /* Back button styling */

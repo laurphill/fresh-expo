@@ -154,3 +154,39 @@ section .wave.wave4{
     }
 }
 
+/*wrapper for log-in link*/
+.wrapper .login-link {
+    font-size: 14.5px;
+    text-align: center;
+    margin: 20px 0 15px;
+}
+/* appearance of log-in page link*/
+.login-link p a{
+    text-decoration: none;
+    font-weight: 600;
+    color: rgb(91, 80, 80);  
+
+}
+/*change color of register link when hovered*/
+.login-link p a:hover{
+    text-decoration: underline;
+    color: rgb(188, 139, 237)   ;
+}
+
+.flash-message {
+    animation: fadeInOut 4s ease-in-out forwards;
+    font-size: 1rem;
+    color: #333;
+    background: none;
+    box-shadow: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+  }

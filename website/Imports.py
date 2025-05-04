@@ -7,7 +7,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, EmailField, DateTimeField, TextAreaField#appropriate inputs for username, password, and after submitting said inputs
 from wtforms.validators import InputRequired, Length, DataRequired #controlling properties of inputs
 from flask_bcrypt import Bcrypt #secure passwords/information
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, PickleType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from DateTime import DateTime
@@ -18,10 +18,13 @@ from io import *
 from base64 import *
 import re 
 import os
-
+import json
+from flask_cors import CORS #
+#to allow database to be accessed from other domains
 
 #initialize app
 app = Flask(__name__)
+CORS(app)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.cache = {}
