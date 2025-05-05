@@ -1,0 +1,144 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family:"Poppins", sans-serif;
+    background: linear-gradient(135deg, #f2f0ff, #e3e4fa);
+    display: flex;
+    color: #333;
+    min-height: 100vh;
+}
+p{
+    font-size: 1rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+  /* SIDEBAR */
+  .sidebar {
+    width: 60px;
+    background-color: #647fe1;
+    color: white;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: fixed;
+  }
+  
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+    font-size:0;
+  }
+  .sidebar.expanded{
+    width: 120px;
+    overflow: hidden;
+  }
+  
+  .sidebar.expanded a{
+    opacity: 1;
+    font-size: 1rem;
+  }
+  .sidebar a:hover {
+    background-color: #506bd4;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+  /*MAIN CONTENT*/
+  .wrapper{
+    margin-left: 140px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin-top: 20px;
+  }
+  /*PAGE HEADER*/
+.main-head{
+    font-size: 2.5rem;
+    color: #6f82e4;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+/* ARTICLE CONTENT */
+.content{
+    background-color: #ffffffcc;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+}
+.content h1{
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #4b3f72;
+}
+.content h2{
+    font-size: 1.4rem;
+    margin-top: 25px;
+    color: #7070db;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+.content h3{
+  font-size: 1.4rem;
+  margin-top: 25px;
+  color: #7070db;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+.content p{
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+.content ul{
+    list-style-type: disc;
+    padding-left: 25px;
+    margin-bottom: 20px;
+}
+.content ul li{
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+.content ul li p{
+    font-style: italic;
+    color: #555;
+    font-size: 0.95rem;
+}
+/* IMAGE STYLES */
+.apt-img{
+    width: 70%;
+    height: auto;
+    max-width: 500px;
+    border-radius: 10px;
+    margin: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.image-row{
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+}

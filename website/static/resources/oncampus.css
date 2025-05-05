@@ -4,16 +4,107 @@
     box-sizing: border-box;
   }
 
+  
   body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
-    color: #3a3a3a;
-    display: flex;
+    display: block;
+    background-color: #d0d6ea;
+    background: linear-gradient(135deg, #f2f0ff, #e3e4fa);
+    margin: 0;
+    padding: 20px;
+    color: #333;
     min-height: 100vh;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #6f82e4;
+  }
+  
+  .category {
+    border-left: 6px solid #7070db;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 0 auto 20px auto;
+    margin-bottom: 15px;
+    max-width: 400px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .category input {
+    display: none;
+  }
 
-  } 
-/* SIDEBAR */
-.sidebar {
+  .label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #fdfcfa;
+  }
+  
+  .label:hover {
+    background-color: #f2eef1;
+  }
+  
+  .label ion-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  input:checked + .label ion-icon {
+    transform: rotate(180deg);
+  }
+  
+  .content {
+    max-height: 150px;
+    overflow: hidden;
+    padding: 0 16px;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+  .wrapper{
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  input:checked ~ .content {
+    max-height: 150px;
+    padding: 10px 14px;
+  }
+  
+  .housing-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .housing-list li {
+    margin-bottom: 5px;
+  }
+  
+  .housing-list a {
+    text-decoration: none;
+    color: #737ee9;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+  }
+  
+  .housing-list a:hover {
+    color: #5a6cde;
+    background-color: #f7efff;
+    padding-left: 8px;
+    border-radius: 8px;
+  }
+  /* SIDEBAR */
+  .sidebar {
     width: 60px;
     background-color: #647fe1;
     color: white;
@@ -23,8 +114,12 @@
     gap: 15px;
     transition: width 0.3s ease;
     overflow: hidden;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: fixed;
   }
-
+  
   .toggle-btn {
     background: none;
     border: none;
@@ -34,7 +129,7 @@
     margin-bottom: 20px;
     align-self: flex-start;
   }
-
+  
   .sidebar a {
     color: white;
     text-decoration: none;
@@ -48,7 +143,7 @@
   .sidebar.expanded{
     width: 200px
   }
-
+  
   .sidebar.expanded a{
     opacity: 1;
     font-size: 1rem;
@@ -81,7 +176,7 @@
   }
   .content {
     grid-area: content;
-    height: 388px;
+    height: 250px;
   }
   .main-nav {
     grid-area: nav;

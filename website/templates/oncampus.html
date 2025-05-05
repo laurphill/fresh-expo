@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href = "../static/resources/oncampus.css">
+    <link rel="stylesheet" href="../static/organizations.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <title>On-Campus Housing</title>
 </head>
 <body>
@@ -12,26 +16,51 @@
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
           <a href="{{url_for('chats')}}">Chats</a>
           <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <div style="flex-grow: 1;"></div>
           <a href="{{url_for('logout')}}">Log Out</a>
     </div>
-    <div class="wrapper">
-        <header class="main-head">On-Campus Living</header>
-        <article class="content">
-          <h1>information for On-Campus Living</h1>
-          <p>
-            
-          </p>
-        </article>
-        <article class="content2">
-            <h1></h1>
-            <p>
-                Bomb
-            </p>
-        </article>
-        <aside class="side"><img src="../static/images/PawPoint.png"></aside>
-        <div class="ad"><img src="../static/images/PawPoint.png"></div>
-      </div>
+  </div class="wrapper">
+  <h1>On-Campus Housing Information</h1>
+
+  <div class="category">
+    <input type="checkbox" id="cat1" />
+    <label for="cat1" class="label">🏡 Apartments <ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="housing-list">
+        <li><a href="{{ url_for('legacy_park') }}">Legacy Park</a></li>
+        <li><a href="{{ url_for('university_park_phase_one') }}">University Park - Phase I</a></li>
+        <li><a href="{{ url_for('university_park_phase_two') }}">University Park - Phase II</a></li>
+        <li><a href="{{ url_for('park_place') }}">Park Place</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat2" />
+    <label for="cat2" class="label">🏢 Traditional Residence Halls <ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="housing-list">
+        <li><a href="{{ url_for('adams_hall') }}">Adams Hall</a></li>
+        <li><a href="{{ url_for('aswell_hall') }}">Aswell Hall</a></li>
+        <li><a href="{{ url_for('dudley_hall') }}">Dudley Hall</a></li>
+        <li><a href="{{ url_for('cottingham_hall') }}">Cottingham Hall</a></li>
+        <li><a href="{{ url_for('graham_hall') }}">Graham Hall</a></li>
+        <li><a href="{{ url_for('mitchell_hall') }}">Mitchell Hall</a></li>
+        <li><a href="{{ url_for('richardson_hall') }}">Richardson Hall</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat3" />
+    <label for="cat3" class="label"> 🛋️ Suites<ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="housing-list">
+        <li><a href="{{ url_for('robinson_suite') }}">Robinson Suites</a></li>
+        <li><a href="{{ url_for('potts_suite') }}">Potts Suites</a></li>
+      </ul>
+    </div>
+  </div>
 
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");

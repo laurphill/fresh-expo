@@ -1,46 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organizations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <link rel = "stylesheet" href = "../static/sidebar/organizations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Organizations Page</title>
+  <link rel="stylesheet" href="../static/organizations.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
-    <!-- list organizations by category (Culture/Diversity, Engineering, Poetry, etc) -->
-    <div class="sidebar">
-        <button id="toggleSidebar" class="toggle-btn">☰</button>
-        <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-          <a href="{{url_for('logout')}}">Log Out</a>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+      <a href="{{url_for('chats')}}">Chats</a>
+      <a href="{{url_for('resources')}}">Resources</a>
+      <div style="flex-grow: 1;"></div>
+      <a href="{{url_for('logout')}}">Log Out</a>
     </div>
-    <div class="wrapper">
-        <header class="main-head">Organizations</header>
-        <article class="content">
-          <h1>info</h1>
-          <p>
-            
-          </p>
-        </article>
-        <aside class="side"><img src="../static/images/PawPoint.png"></aside>
-        <div class="ad"><img src="../static/images/PawPoint.png"></div>
-      </div>
-      <article class="content2">
-        <h1></h1>
-        <p>
-            Bomb
-        </p>
-      </article>
-    <script>
-        const toggleBtn = document.getElementById("toggleSidebar");
-        const sidebar = document.querySelector(".sidebar");
-        
-        toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("expanded");
-        });
-    </script>
+
+</div class="wrapper">
+  <h1>🌐 Organizations by Category</h1>
+
+  <div class="category">
+    <input type="checkbox" id="cat1" />
+    <label for="cat1" class="label">📚 Academic / Educational <ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="club-list">
+        <li><a href="https://www.latech.edu/student-organizations/asce-aisc-american-society-of-civil-engineers/">American Society of Civil Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/american-society-of-mechanical-engineers/">American Society of Mechanical Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/association-of-cyber-engineers/">Association of Cyber Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/biomedical-engineering-society/">Biomedical Engineering Society</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-university-vexu-robotics/">Boltdog Robotics</a></li>            <li><a href="#">CSEC</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/ltsec/">Cyber Security Defense Club</a></li>                <li><a href="#">Greek Women in STEM</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/institute-of-electrical-engineers/">Institute of Electrical and Electronics Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-aerospace-club/">Louisiana Tech Aerospace Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-car-club/">Louisiana Tech Car Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-eco-car-team/">Louisiana Tech Eco-Car Team</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-precision-flight-team/">Louisiana Tech Precision Flight Team</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/pre-veterinary-medicine-club/">Louisiana Tech University Pre-Veterinary Medicine Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/minority-association-of-premedical-students-maps/">Minority Association of Premedical Students (MAPS)</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/national-society-of-black-engineers/">National Society of Black Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/ostem-at-louisiana-tech-university/">oStem at Louisiana Tech University</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/society-of-physics-students/">Society of Physics Students</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/society-of-women-engineers/">Society of Women Engineers</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/student-nurses-association/">Student Nurses Association</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/women-in-cyber-security-wicys/">Women in Cyber Security (WiCyS)</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/women-in-stem/">Women in STEM</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat2" />
+    <label for="cat2" class="label">🏐 Club Sports <ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="club-list">
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-university-vexu-robotics/">Boltdog Robotics</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/la-tech-wakeboarding-club/">Louisiana Tech Wakeboarding Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-club-tennis/">Louisiana Tech Club Tennis</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-esports/">Louisiana Tech Esports</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-fencing/">Louisiana Tech Fencing</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-mens-lacrosse-club/">Louisiana Tech Lacrosse Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-mens-bowling-club/">Louisiana Tech Bowling Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-powerlifting/">Louisiana Tech Powerlifting</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-precision-flight-team/">Louisiana Tech Precision Flight Team</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-roller-hockey/">Louisiana Tech Roller Hockey</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-swim-club/">Louisiana Tech Swim Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-wrestling-club/">Louisiana Tech Wrestling Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/mens-club-volleyball/">Louisiana Tech Club Volleyball</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/mountain-bike-club/">Mountain Bike Club</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat3" />
+    <label for="cat3" class="label"> 💼 Institutional Advancement<ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="club-list">
+        <li><a href="https://www.latech.edu/student-organizations/ltsec/">Cyber Security Defense Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/minority-association-of-premedical-students-maps/">Minority Association of Premedical Students (MAPS)</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/orientation-student-leaders/">Orientation Student Leaders</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/peer-leadership-council/">Peer Leadership Council</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/student-advancement-team/">Student Advancement Team</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/student-recruiters/">Student Recruiters</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/union-board/">Union Board</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat4" />
+    <label for="cat4" class="label"> 🌎 Multicultural/Diversity<ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="club-list">
+        <li><a href="https://www.latech.edu/student-organizations/african-students-association/">African Student Association</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/black-student-union/">Black Student Union</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/french-club/">French Club</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/international-student-association/">International Student Association</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/minority-association-of-premedical-students-maps/">Minority Association of Premedical Students (MAPS)</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/namaste-nepal-organization/">Namaste Nepal Association</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/national-association-of-black-accountants/">National Association of Black Accountants</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/national-society-of-black-engineers/">National Society of Black Engineers</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/students-association-of-bangladesh/">Students' Association of Bangladesh</a></li>
+          <li><a href="https://www.latech.edu/student-organizations/transgender-advocacy-group/">Transgender Advocacy Group</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="category">
+    <input type="checkbox" id="cat5" />
+    <label for="cat5" class="label">🎨 Recreational / Special Interest <ion-icon name="chevron-down-outline"></ion-icon></label>
+    <div class="content">
+      <ul class="club-list">
+        <li><a href="https://www.latech.edu/student-organizations/amateur-radio-club/">Amateur Radio Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/bulldog-entrepreneurs/">Bulldog Entrepreneurs</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/bulldogs-outdoor-club/">Bulldog's Outdoor Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/chess-club/">Chess Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/debate-team/">Debate Team</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/fashion-society/">Fashion Society</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/film-club/">Film Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/klpi/">KLPI</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-chapter-of-wildlife-society/">Louisiana Tech Chapter of Wildlife Society</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-esports/">Louisiana Tech Esports</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-music-society/">Louisiana Tech Music Society</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-university-equestrian-club/">Louisiana Tech University Equestrian Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/louisiana-tech-womens-book-club/">Louisiana Tech Women's Book Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/mountain-bike-club/">Mountain Bike Club</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/poetry-society/">Poetry Society</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/residence-hall-association/">Residence Hall Association</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/student-chapter-of-the-society-of-american-foresters/">Student Chapter of the Society of American Foresters</a></li>
+        <li><a href="https://www.latech.edu/student-organizations/tech-theatre-players/">Tech Theatre Players</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<script>
+  const toggleBtn = document.getElementById("toggleSidebar");
+  const sidebar = document.querySelector(".sidebar");
+  
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("expanded");
+  });
+</script>
 </body>
 </html>

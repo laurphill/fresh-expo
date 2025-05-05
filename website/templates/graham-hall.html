@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graham Hall</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <div style="flex-grow: 1;"></div>
+          <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class="wrapper">
+        <header class="main-head">Graham Hall</header>
+        <article class="content">
+            <p>Graham Hall is one of Louisiana Tech's traditional residence halls that offers a classic
+                 college living experience. Known for its strong sense of community, Graham is a place where 
+                 many first-year students form lasting friendships. The building has shared bedrooms and 
+                 community bathrooms, with common areas that often become social spots for residents. Graham 
+                 is a great fit for students who want to stay active on campus and enjoy a lively, supportive environment.</p>
+            <h2>✨ Features:</h2>
+            <ul>
+                <li>Twin-sized beds</li>
+                <li>Built in desks and drawers with a big mirror above</li>
+                <li>On-site laundry (75 cents per wash/dry)</li>
+                <li>Wifi and wired internet</li>
+                <li>Central AC/Heat</li>
+                <li>Community lounge/lobby</li>
+                <li>Community bathroom</li>
+                <li>Community kitchen</li>
+                <li>Community study rooms</li>
+            </ul>
+            <h2>💰 Cost (per quarter)</h2>
+            <ul>
+                <li>9-month lease $1,000</li>
+            <h2>✅ Pros and Cons</h2>
+            <p>Pros:</p>
+            <ul>
+                <li>Affordable Housing</li>
+                <li>Central location</li>
+                <li>Great for first-year students to meet new people</li>
+                <li>Spacious lobby</li>
+                <li>Close to other residence halls for an easy social network</li>
+                <li>Community atmosphere</li>
+                <li>Vibrant environment</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Shared rooms and community bathrooms</li>
+                <li>Less privacy</li>
+                <li>Older building, so fewer modern features</li>
+                <li>Oldest building</li>
+            </ul>
+
+            <h2>📍 Location:</h2>
+            <p>Graham Hall is located near Adams Hall, close to the dining hall, library, and classrooms.</p>
+            <h2>🖼️ Gallery: </h2>
+        <div class="image-row">
+            <img src="../static/images/grahambedroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/grahamcabinets.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/grahamlobby.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/grahamoutdoor.png" alt="Legacy Park Apartments" class="apt-img">
+        </div>
+    </article>
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
+</body>
+</html>

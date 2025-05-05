@@ -203,11 +203,64 @@ def oncampus():
 def spots():
     return render_template('spots.html')
 
-@app.route('/resources/food', methods = ['GET', 'POST'])
+@app.route('/resources/dining', methods = ['GET', 'POST'])
 @login_required 
-def food():
-    return render_template('food.html')
+def dining():
+    return render_template('dining.html')
+#on campus housing routes
 
+@app.route('/legacy-park')
+def legacy_park():
+    return render_template('legacy-park.html')
+
+@app.route('/university-park-phase1')
+def university_park_phase_one():
+    return render_template('university-park-phase1.html')
+
+@app.route('/university-park-phase2')
+def university_park_phase_two():
+    return render_template('university-park-phase2.html')
+
+@app.route('/park-place')
+def park_place():
+    return render_template('park-place.html')
+
+@app.route('/adams-hall')
+def adams_hall():
+    return render_template('adams-hall.html')
+
+@app.route('/aswell-hall')
+def aswell_hall():
+    return render_template('aswell-hall.html')
+
+@app.route('/dudley-hall')
+def dudley_hall():
+    return render_template('dudley-hall.html')
+
+@app.route('/cottingham-hall')
+def cottingham_hall():
+    return render_template('cottingham-hall.html')
+
+@app.route('/graham-hall')
+def graham_hall():
+    return render_template('graham-hall.html')
+
+@app.route('/mitchell-hall')
+def mitchell_hall():
+    return render_template('mitchell-hall.html')
+
+@app.route('/richardson-hall')
+def richardson_hall():
+    return render_template('richardson-hall.html')
+
+@app.route('/robinson-suite')
+def robinson_suite():
+    return render_template('robinson-suite.html')
+
+@app.route('/potts-suite')
+def potts_suite():
+    return render_template('potts-suite.html')
+# Connect with other users via QR code
 # Connect with other users via QR code
 @app.route("/connect")
 def connect():

@@ -13,8 +13,9 @@
         <a href = "{{url_for('dashboard')}}">Dashboard</a>
           <a href="{{url_for('chats')}}">Chats</a>
           <a href="{{url_for('resources')}}">Resources</a>
-          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <div style="flex-grow: 1;"></div>
           <a href="{{url_for('logout')}}">Log Out</a>
+
         <script>
             const toggleBtn = document.getElementById("toggleSidebar");
             const sidebar = document.querySelector(".sidebar");
@@ -24,5 +25,6 @@
             });
         </script>
     </div>
+    
 </body>
 </html>

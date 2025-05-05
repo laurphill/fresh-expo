@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robinson Suites</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <div style="flex-grow: 1;"></div>
+          <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class="wrapper">
+        <header class="main-head">Robinson Suites</header>
+        <article class="content">
+            <p>Robinson Suites at Louisiana Tech University offer students a more modern living experience.
+                 Each suite typically includes single bedrooms connected by a shared living area and bathroom.
+                  It's a great option for students who want more privacy than a traditional dorm but still want 
+                  to stay close to campus and be part of a residential community.</p>
+            <h2>✨ Features:</h2>
+            <ul>
+                <li>Fully furnished bedroom (Twin XL bed, 1 dresser, 1 drawer, 1 desk, 1 chair, wardrobe)</li>
+                <li>High-speed internet access</li>
+                <li>On-site laundry facilities for each floor</li>
+                <li>2 Bed 1 Bath</li>
+                <li>Community lobby</li>
+                <li>Central AC/Heat (controlled in unit)</li>
+                <li>Community Kitchen with full size refrigerator, microwave, and oven</li>
+                <li>One bathroom with two sinks</li>
+                <li>Shared bathroom with roommate</li>
+            </ul>
+            <h2>💰 Cost (per quarter)</h2>
+            <ul>
+                <li>9-month lease $1,730</li>
+            </ul>
+            <h2>✅ Pros and Cons</h2>
+            <p>Pros:</p>
+            <ul> 
+                <li>Affordable housing compared to apartments</li>
+                <li>Convenient location</li>
+                <li>Modern furnishing</li>
+                <li>Proximity to dining halls, classrooms, library</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Limited parking</li>
+                <li>Noise from the street</li>
+                <li>Only available to freshmen students</li>
+            </ul>
+
+            <h2>📍 Location:</h2>
+            <p>Robinson Suite is located on the heart of campus along Adams Boulevard and California Ave.</p>
+            <h2>🖼️ Gallery: </h2>
+        <div class="image-row">
+            <img src="../static/images/robinsondorm.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/robinsondormagain.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/robinsonlobby.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/robinsonoutdoor.png" alt="Legacy Park Apartments" class="apt-img">
+        </div>
+    </article>
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
+</body>
+</html>

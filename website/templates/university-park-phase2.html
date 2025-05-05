@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Park Phase II Apartments</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <div style="flex-grow: 1;"></div>
+          <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class="wrapper">
+        <header class="main-head">University Park Phase II Apartments</header>
+        <article class="content">
+            <p>University Park Phase II Apartments are made up of the Neilson and Caruthers D Commons. They provide students with 
+                a comfortable and convenient on-campus living experience. These apartments offer the perfect blend of independence and campus life.</p>
+            <h2>✨ Features:</h2>
+            <ul>
+                <li>Fully furnished bedroom (Full size bed, 1 drawer, 1 desk, 1 chair, wardrobe)</li>
+                <li>Loveseat & chair (2 bedroom apartment)</li>
+                <li>Loveseat, couch, chair, end table & coffee table (4 bedroom apartment)</li>
+                <li>Washer and dryer included</li>
+                <li>Wifi and wired internet</li>
+                <li>Central AC/Heat (controlled in unit)</li>
+                <li>Outdoor Patio</li>
+                <li>Kitchen with full size refrigerator and oven</li>
+                <li>Grassy quad area that has permanent grills</li>
+            </ul>
+            <h2>💰 Cost (per quarter)</h2>
+            <ul>
+                <li>9-month lease (private bedroom, two or four bedroom apartments) $2,600</li>
+                <li>12-month lease (private bedroom, two or four bedroom apartments) $2,130</li>
+            </ul>
+            <h2>✅ Pros and Cons</h2>
+            <p>Pros:</p>
+            <ul>
+                <li>Private bedrooms for personal space</li>
+                <li>Modern furnishing</li>
+                <li>Proximity to Lambright</li>
+                <li>Spacious living areas</li>
+                <li>Outdoor areas</li>
+                <li>Full sized bed</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Expensive</li>
+                <li>Limited parking</li>
+                <li>Noise from the street/games</li>
+                <li>Far from classrooms</li>
+                <li>Limited social interaction opportunities due to lack of shared common areas within the apartments</li>
+            </ul>
+
+            <h2>📍 Location:</h2>
+            <p>University Park Phase II is located on the west side of campus, right next to University Park phase I.</p>
+            <h2>🖼️ Gallery: </h2>
+        <div class="image-row">
+            <img src="../static/images/phase1bedroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/phase1boybedroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/phase2livingroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/phase2outdoor.png" alt="Legacy Park Apartments" class="apt-img">
+        </div>
+    </article>
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
+</body>
+</html>

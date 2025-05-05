@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adams Hall</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+          <a href="{{url_for('chats')}}">Chats</a>
+          <a href="{{url_for('resources')}}">Resources</a>
+          <div style="flex-grow: 1;"></div>
+          <a href="{{url_for('logout')}}">Log Out</a>
+    </div>
+    <div class="wrapper">
+        <header class="main-head">Adams Hall</header>
+        <article class="content">
+            <p>Adams Hall is a traditional residence hall at Louisiana Tech University, 
+                offering students a classic on-campus living experience. It typically features shared bedrooms, 
+                community bathrooms, and common areas where residents can study or relax. Located near the center of campus, 
+                Adams Hall provides easy access to classrooms, the library, and dining facilities. It's a popular choice 
+                for first-year students who want to be close to campus life and meet new people.</p>
+            <h2>✨ Features:</h2>
+            <ul>
+                <li>Twin-sized beds with built in closets</li>
+                <li>3 built in desks with cabinets and a sink with a mirror above it for the bedrooms</li>
+                <li>On-site laundry (75 cents per wash/dry)</li>
+                <li>Ethernet connection for internet and wifi (routers not permitted)</li>
+                <li>Central AC/Heat</li>
+                <li>Community lounge/lobby</li>
+                <li>Community bathroom</li>
+                <li>Community kitchen</li>
+                <li>Community study rooms</li>
+            </ul>
+            <h2>💰 Cost (per quarter)</h2>
+            <ul>
+                <li>9-month lease $1,000</li>
+            <h2>✅ Pros and Cons</h2>
+            <p>Pros:</p>
+            <ul>
+                <li>Affordable Housing</li>
+                <li>Central location</li>
+                <li>Great for first-year students to meet new people</li>
+                <li>Spacious lobby with ping pong table</li>
+                <li>Spacious outdoor area</li>
+                <li>Community atmosphere</li>
+                <li>Vibrant environment</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Shared rooms and community bathrooms</li>
+                <li>Less privacy</li>
+                <li>Older building, so fewer modern features</li>
+                <li> Shares laundry site with Aswell and Dudley Hall</li>
+            </ul>
+
+            <h2>📍 Location:</h2>
+            <p>Adams Hall is located near the heart of campus, close to the dining hall, library, and classrooms.</p>
+            <h2>🖼️ Gallery: </h2>
+        <div class="image-row">
+            <img src="../static/images/adamshallbedroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/adamskitchen.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/adamslivingarea.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/adamsporch.png" alt="Legacy Park Apartments" class="apt-img">
+        </div>
+    </article>
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
+</body>
+</html>
