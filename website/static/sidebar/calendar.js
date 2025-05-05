@@ -5,8 +5,17 @@ const nextBtn = document.getElementById('nextBtn');
  
 document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
+  var containerEl = document.getElementById('myUL');
 
-
+  // Make to-do list items draggable
+  new FullCalendar.Draggable(containerEl, {
+    itemSelector: 'li', // Select draggable items
+    eventData: function(eventEl) {
+      return {
+        title: eventEl.getAttribute('data-title'), // Use the data-title attribute for the event title
+      };
+    }
+  });
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     headerToolbar: {
@@ -17,12 +26,14 @@ document.addEventListener('DOMContentLoaded', function() {
     editable: true,
     droppable: true, // this allows things to be dropped onto the calendar
     events: eventsData, // Pass events from Flask to FullCalendar
-        
+    
+    
+
     // Handle event drag and drop
     eventDrop: function(info) {
     // Log the updated event details for debugging
       console.log('Event dropped:', info.event);
-    
+
       // Send an UPDATE request to the backend
       fetch(`/api/events/${info.event.id}`, {
         method: 'PUT',
@@ -64,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     },
+    
     // Handle event creation
     customButtons: {
       addEventButton: {
@@ -109,10 +121,68 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 },
-});
+    // Handle event drop from to-do list
+    drop: function(info) {
+      console.log('To-do item dropped:', info.draggedEl);
+
+      // Save the dropped event to the backend
+      fetch('/api/events', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: info.draggedEl.getAttribute('data-title'), // Get the title from the dragged element
+          start: info.dateStr // Use the date where the event was dropped
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          alert(data.message);
+        } else {
+          alert('Error saving event to the database.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to connect to the server.');
+      });
+    }
+  });
   calendar.render();
-});
- 
+  // Add new to-do list items
+  window.newElement = function() {
+    const inputValue = document.getElementById("myInput").value;
+
+    if (inputValue === "") {
+      alert("You must write something!");
+      return;
+    }
+
+    const li = document.createElement("li");
+    li.textContent = inputValue;
+    li.setAttribute("data-title", inputValue); // Set a data attribute for FullCalendar
+    
+    // Create a delete button
+    const deleteBtn = document.createElement("span");
+    deleteBtn.textContent = "X"; // Text for the delete button
+    deleteBtn.className = "delete-btn"; // Add a class for styling
+    deleteBtn.onclick = function() {
+    li.remove(); // Remove the list item when the delete button is clicked
+    };
+      // Prevent dragging when clicking the delete button
+    deleteBtn.addEventListener("click", function(event) {
+    event.stopPropagation(); // Prevent the drag event from being triggered
+    li.remove(); // Remove the list item when the delete button is clicked
+  });
+    li.appendChild(deleteBtn);
+
+    document.getElementById("myUL").appendChild(li);
+
+    document.getElementById("myInput").value = ""; // Clear the input field
+  };
+}); 
 let currentDate = new Date()
  
 const updateCalendar = () => {
@@ -158,6 +228,3 @@ nextBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth()+1);
     updateCalendar();
 })
- 
-updateCalendar();
- 

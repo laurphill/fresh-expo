@@ -37,6 +37,7 @@ def calendar():
             'id': event.id,  # Include the event ID
             'title': event.title,
             'start': event.start.strftime('%Y-%m-%d'),  # Convert datetime to string
+            'end' : event.end.strftime('%Y-%m-%d') if event.end else None,  # Convert datetime to string
         }
         for event in events
     ]
@@ -50,7 +51,12 @@ def create_event():
     try:
         # Convert the 'start' string to a datetime object
         start_datetime = datetime.strptime(data['start'], '%Y-%m-%d')
-        new_event = Events(title=data['title'], start=start_datetime, user_id=current_user.id)
+        end_datetime = datetime.fromisoformat(data['end']) if data.get('end') else None 
+        new_event = Events(
+            title=data['title'], 
+            start=start_datetime, 
+            end=end_datetime,
+            user_id=current_user.id)
         db.session.add(new_event)
         db.session.commit()
         return jsonify({'message': 'Event added successfully!'}), 201
@@ -80,12 +86,42 @@ def update_event(event_id):
             # Update the event details
             event.title = data['title']
             event.start = datetime.fromisoformat(data['start'])  # Convert ISO string to datetime
+            event.end = datetime.fromisoformat(data.get('end')) if data.get('end') else None 
             db.session.commit()
             return jsonify({'message': 'Event updated successfully!'}), 200
+        
         except ValueError:
             return jsonify({'error': 'Invalid date format.'}), 400
     else:
         return jsonify({'error': 'Event not found.'}), 404
+
+@app.route('/upload_profile_picture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    if 'profile_picture' not in request.files:
+        flash('No file part', 'error')
+        return redirect(request.url)
+
+    file = request.files['profile_picture']
+
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        # Update the user's profile picture in the database
+        current_user.profile_picture = filename
+        db.session.commit()
+
+        flash('Profile picture updated successfully!', 'success')
+        return redirect(url_for('profile', username=current_user.username))
+    else:
+        flash('Invalid file type. Please upload an image file.', 'error')
+        return redirect(request.url)
     
 @app.route('/')
 def homepage():
@@ -167,18 +203,19 @@ def dashboard():
 @app.route("/settings/<username>", methods = ["GET", "POST"])
 @login_required
 def settings(username):
-    form = SettingsForm()
-    if current_user.username == username:
-        if form.validate_on_submit():
-            user = User.query.first()
-            if user:
-                update_user(user_id=user.id, 
-                            new_username=form.username.data,
-                            new_email = form.email.data,
-                            new_nickname = form.nickname.data,
-                            new_bio = form.bio.data)
-                db.session.commit()
-        return render_template('settings.html', user=current_user, form=form)
+    form = SettingsForm(obj=current_user)  # Pre-fill the form with the current user's data
+
+    if form.validate_on_submit():
+        # Update the user's data only for the fields that were changed
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.nickname = form.nickname.data
+        current_user.bio = form.bio.data
+
+        db.session.commit()
+        flash('Settings updated successfully!', 'success')
+
+    return render_template('settings.html', form=form, user=current_user)
 
 @app.route("/profile/<username>", methods=['GET', 'POST'])
 @login_required
@@ -198,11 +235,6 @@ def other_profile(username):
     user = get_user_by_username(db.session, username)
     form = SettingsForm()
     return render_template('other_profile.html', user = user, form=form)
-
-@app.route("/calendar", methods = ["GET", "POST"])
-@login_required
-def calendar():
-    return render_template('calendar.html', events = events)
 
 @app.route('/events', methods = ["GET", "POST"])
 @login_required
@@ -259,7 +291,60 @@ def spots():
 @login_required 
 def dining():
     return render_template('dining.html')
+#on campus housing routes
 
+@app.route('/legacy-park')
+def legacy_park():
+    return render_template('legacy-park.html')
+
+@app.route('/university-park-phase1')
+def university_park_phase_one():
+    return render_template('university-park-phase1.html')
+
+@app.route('/university-park-phase2')
+def university_park_phase_two():
+    return render_template('university-park-phase2.html')
+
+@app.route('/park-place')
+def park_place():
+    return render_template('park-place.html')
+
+@app.route('/adams-hall')
+def adams_hall():
+    return render_template('adams-hall.html')
+
+@app.route('/aswell-hall')
+def aswell_hall():
+    return render_template('aswell-hall.html')
+
+@app.route('/dudley-hall')
+def dudley_hall():
+    return render_template('dudley-hall.html')
+
+@app.route('/cottingham-hall')
+def cottingham_hall():
+    return render_template('cottingham-hall.html')
+
+@app.route('/graham-hall')
+def graham_hall():
+    return render_template('graham-hall.html')
+
+@app.route('/mitchell-hall')
+def mitchell_hall():
+    return render_template('mitchell-hall.html')
+
+@app.route('/richardson-hall')
+def richardson_hall():
+    return render_template('richardson-hall.html')
+
+@app.route('/robinson-suite')
+def robinson_suite():
+    return render_template('robinson-suite.html')
+
+@app.route('/potts-suite')
+def potts_suite():
+    return render_template('potts-suite.html')
+# Connect with other users via QR code
 # Connect with other users via QR code
 @app.route("/connect")
 def connect():

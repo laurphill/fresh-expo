@@ -37,8 +37,12 @@
       <div class="cols__container">
         <div class="left__col">
           <div class="img__container">
-            <img src="../static/images/hippo.jpg" alt="{{user.username}}" />
-            <span></span>
+            {% if user.profile_picture %}
+              <img src="{{ url_for('static', filename='/profile_pictures/' + user.profile_picture) }}" alt="Profile Picture">
+            {% else %}
+              <img src="{{ url_for('static', filename='/profile_pictures/def.jpg') }}" alt="Default Profile Picture">
+            {% endif %}    
+          <span></span>
           </div>
           <h2>{{user.nickname}}</h2>
           <p>{{user.major}}Computer Science</p>
