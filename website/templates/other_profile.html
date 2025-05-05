@@ -70,8 +70,10 @@
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                      <h4>My Friends</h4>
+                      <h4>{{current_user.friends.username}} Friends</h4>
+
                       {% if user.friends %}
+
                         <ul>
                           {% for friend in user.friends %}
                             {% if friend.username != user.username %}

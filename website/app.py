@@ -26,6 +26,67 @@ class SettingsForm(FlaskForm):
     submit = SubmitField('Update')
     
 
+@app.route("/calendar", methods = ["GET", "POST"])
+@login_required
+def calendar():
+   #Fetch all events from the database
+    events = Events.query.filter_by(user_id=current_user.id).all()
+    # Convert events to a format FullCalendar can understand
+    events_data = [
+        {
+            'id': event.id,  # Include the event ID
+            'title': event.title,
+            'start': event.start.strftime('%Y-%m-%d'),  # Convert datetime to string
+        }
+        for event in events
+    ]
+    return render_template('calendar.html', events=events_data)
+
+#for creating events
+@app.route('/api/events', methods=['POST'])
+@login_required
+def create_event():
+    data = request.json
+    try:
+        # Convert the 'start' string to a datetime object
+        start_datetime = datetime.strptime(data['start'], '%Y-%m-%d')
+        new_event = Events(title=data['title'], start=start_datetime, user_id=current_user.id)
+        db.session.add(new_event)
+        db.session.commit()
+        return jsonify({'message': 'Event added successfully!'}), 201
+    except ValueError:
+        return jsonify({'error': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+        
+#for deleting events
+@app.route('/api/events/<int:event_id>', methods=['DELETE'])
+@login_required
+def delete_event(event_id):
+    event = Events.query.filter_by(id=event_id, user_id=current_user.id).first()
+    if event:
+        db.session.delete(event)
+        db.session.commit()
+        return jsonify({'message': 'Event deleted successfully!'}), 200
+    else:
+        return jsonify({'error': 'Event not found.'}), 404
+    
+#for dragging events
+@app.route('/api/events/<int:event_id>', methods=['PUT'])
+@login_required
+def update_event(event_id):
+    data = request.json
+    event = Events.query.filter_by(id=event_id, user_id=current_user.id).first()
+    if event:
+        try:
+            # Update the event details
+            event.title = data['title']
+            event.start = datetime.fromisoformat(data['start'])  # Convert ISO string to datetime
+            db.session.commit()
+            return jsonify({'message': 'Event updated successfully!'}), 200
+        except ValueError:
+            return jsonify({'error': 'Invalid date format.'}), 400
+    else:
+        return jsonify({'error': 'Event not found.'}), 404
+    
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
@@ -143,6 +204,11 @@ def other_profile(username):
 def calendar():
     return render_template('calendar.html', events = events)
 
+@app.route('/events', methods = ["GET", "POST"])
+@login_required
+def events():
+    return render_template('events.html')
+
 @app.route('/start_chat', methods = ["GET", "POST"])
 @login_required
 def start_chat():
@@ -158,11 +224,6 @@ def start_chat():
 @login_required
 def chats():
     return render_template('chats.html')
-
-@app.route('/events', methods = ["GET", "POST"])
-@login_required
-def events():
-    return render_template('events.html')
 
 @app.route('/organizations', methods = ["GET", "POST"])
 @login_required
@@ -194,10 +255,10 @@ def oncampus():
 def spots():
     return render_template('spots.html')
 
-@app.route('/resources/food', methods = ['GET', 'POST'])
+@app.route('/resources/dining', methods = ['GET', 'POST'])
 @login_required 
-def food():
-    return render_template('food.html')
+def dining():
+    return render_template('dining.html')
 
 # Connect with other users via QR code
 @app.route("/connect")

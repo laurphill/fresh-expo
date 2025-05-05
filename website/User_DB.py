@@ -8,6 +8,32 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
+class Events(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)  # Primary key
+    title = db.Column(db.String(100), nullable=False)  # Event title
+    start = db.Column(db.DateTime, nullable=False)  # Event start date and time
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
+        nullable=False  # Set to False to enforce NOT NULL constraint
+    )
+
+    # Relationship to the User model
+    user = db.relationship('User', backref='events')
+
+    def __init__(self, title, start, user_id):
+        self.title = title
+        self.start = start
+        self.user_id = user_id
+        with app.app_context():
+            db.create_all() 
+    
+    def __repr__(self):
+        return f"<Event(id={self.id}, title={self.title}, start={self.start}, user_id={self.user_id})>"   # Prints event info
+     
+
 class Class(db.Model):
     __tablename__ = 'classes'
 

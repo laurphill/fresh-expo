@@ -104,22 +104,43 @@
         </div>
         <div class="right__col">
           <nav>
-            <div class="mytabs">
-              <input type="radio" id="tabPosts" name="mytabs" checked>
-              <input type="radio" id="tabFriends" name="mytabs">
-              <input type="radio" id="tabAboutMe" name="mytabs">
-            
-              <label for="tabPosts">Posts</label>
-              <label for="tabFriends">Friends</label>
-              <label for="tabAboutMe">About Me</label>
-            
-              <div class="tab-content">
-                <div class="tab" id="contentPosts">
-                  <div class="photos">
-                    <img src="../static/images/kit.jpg" alt="Photo" />
-                    <img src="../static/images/cat.jpg" alt="Photo" />
-                    <img src="../static/images/duck.jpg" alt="Photo" />
-                  </div>
+            <ul>
+                <div class = "mytabs">
+                    <input type = "radio" id = "tabPosts" name="mytabs" checked="checked">
+                    <label for="tabPosts">Posts</label>
+                    <div class = 'tab'>
+                        <div class="photos">
+                            <img src="../static/images/kit.jpg" alt="Photo" />
+                            <img src="../static/images/cat.jpg" alt="Photo" />
+                            <img src="../static/images/duck.jpg" alt="Photo" />
+                          </div>
+                    </div>
+
+                    <input type = "radio" id = "tabFriends" name="mytabs">
+                    <label for="tabFriends">Friends</label>
+                    <div class = 'tab'>
+                      <h4>My Friends</h4>
+                      {% if current_user.friends %}
+                        <ul>
+                          {% for friend in current_user.friends %}
+                          <li><a href="{{ url_for('other_profile', username=friend.username) }}">{{ friend.username }}</a>
+
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p><em>You have no friends added.</em></p>
+                      {% endif %}
+                    </div>
+
+                    <input type = "radio" id = "tabAboutMe" name="mytabs">
+                    <label for="tabAboutMe">About Me</label>
+                    <div class = 'tab'>
+                        Major : Computer Science
+                        <br>
+                        Age : 19
+                        <br>
+                        Interests: Music, reading, gaming, outdoors
+                    </div>
                 </div>
                 <div class="tab" id="contentFriends">
                   <h3>My Friends</h3>
