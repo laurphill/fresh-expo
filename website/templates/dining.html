@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food</title>
-    <link rel = "stylesheet" href = "../static/resources/dining.css">
+    <title>Campus Dining</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="sidebar">
@@ -13,35 +14,70 @@
     <a href="{{url_for('chats')}}">Chats</a>
     <a href="{{url_for('resources')}}">Resources</a>
     <a href="{{url_for('calendar')}}">Calendar</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div style = "flex-grow: 1;"></div>
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
 
   </div>
     <div class="wrapper">
-        <header class="main-head">Meal Plan and Declining Balance</header>
+        <header class="main-head">Campus Dining</header>
         <article class="content">
-          <h1>food</h1>
-          <p>
-            🍔🍔🍔🍔
-          </p>
-        </article>
-        <aside class="side"><img src="../static/images/PawPoint.png"></aside>
-        <div class="ad"><img src="../static/images/PawPoint.png"></div>
-      </div>
-      <article class="content2">
-        <h1></h1>
-        <p>
-            Bomb
-        </p>
-      </article>
-    <script>
-        const toggleBtn = document.getElementById("toggleSidebar");
-        const sidebar = document.querySelector(".sidebar");
-        
-        toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("expanded");
-        });
-    </script>
+            <h2>🍽️ Tech Table</h2>
+            <p>Tech Table is an All-You-Care-to-Eat residential dining hall located in 
+                the Student Center at Louisiana Tech University. It offers freshly prepared
+                 meals including homestyle dishes, international options, and chef-inspired specials.
+                  Students can enjoy a variety of healthy, customizable menu choices. The casual setting features 
+                  TVs, music, and lounge-style seating. Tech Table also hosts special events with themed meals and provides allergen-friendly options through the True Balance station.</p>
+            </p>
+            <h2>🍔 Meal Plans</h2>
+            <h3>What is a meal plan?</h3>
+            <ul>
+                <li>All you can eat (with 1 hour cooldown between each swipe)</li>
+                <li>Expires at the end of quarter</li>
+            </ul>
+            <h3>Declining Balance (DB)</h3>
+            <ul>
+                <li>Can be used at on-campus dining locations</li>
+                <li>Tax free</li>
+                <li>Unused DB rolls over to the next quarter but expires at the end of the academic year</li>
+            <h2>🍗 On-campus Meal Plans</h2>
+            <h3>All Access Super Premium Plan</h3>
+            <ul>
+                <li>Unlimited swipes at Tech Table</li>
+                <li>1 Buddy Swipe per week</li>
+                <li>$550 Declining Balance (DB)</li>
+                <li>Cost: $1,853 per quarter</li>
+            </ul>
+            <h3>All Access Premium Plan (Default Plan)</h3>
+            <ul>
+                <li>Unlimited swipes at Tech Table</li>
+                <li>1 Buddy Swipe per week</li>
+                <li>$400 Declining Balance (DB)</li>
+                <li>Cost: $1,690 per quarter</li>
+            </ul>
+           <h3>All Access Basic Plan</h3>
+            <ul>
+                <li>Unlimited swipes at Tech Table</li>
+                <li>1 Buddy Swipe per week</li>
+                <li>$225 Declining Balance (DB)</li>
+                <li>Cost: $1,525 per quarter</li>
+            </ul>
+
+            <h3>Weekly 12</h3>
+            <ul>
+                <li>12 meals swipes per week at Tech Table</li>
+                <li>$375 Declining Balance per quarter</li>
+            </ul>
+            <h2>🍛 For more info!</h2>
+            <p>For more information on meal plans, visit the <a href="https://latech.campusdish.com/en/mealplans/">Louisiana Tech Dining Services</a> website.</p>
+            
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
 </body>
 </html>

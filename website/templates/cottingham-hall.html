@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cottingham Hall</title>
+    <link rel = "stylesheet" href = "../static/resources/general.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <div style = "flex-grow: 1;"></div>
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+    
+      </div>
+    <div class="wrapper">
+        <header class="main-head">Cottingham Hall</header>
+        <article class="content">
+            <p>Cottingham Hall is one of Louisiana Tech's traditional residence halls, popular with first-year students. 
+                It features shared bedrooms, community bathrooms, and cozy common spaces for studying or socializing. 
+                Cottingham has a strong sense of community and often hosts events to help residents connect and make 
+                the most of their college experience.</p>
+            <h2>✨ Features:</h2>
+            <ul>
+                <li>A suite style option where two students share a bathroom in their room</li>
+                <li>A single bedroom option where 6-7 residents share a community restroom of two showers and two toilets</li>
+                <li>A flex private bedroom that boasts a larger private bedroom (only offered as an option to returning residents)</li>
+                <li>A two-person flex bedroom where two residents share a room (freshman-only floors)</li>
+                <li>Wifi in common areas and in the rooms (personal routers are not allowed)</li>
+                <p>The flex bedroom options share a community restroom of two showers and two toilets with 7-14 residents</p>
+            </ul>
+            <h2>🛌 Suite Style:</h2>
+            <ul>
+                <li>Study spaces on the hall's wing</li>
+                <li>Community kitchen and laundry room on each floor</li>
+                <li>An adjustable height twin XL bed, desk and chair, and two of the two-drawer stackable chests or one three-drawer chest per resident (dependent on room) </li>
+                <li>Adjustable height twin XL bed dimensions:  38.5W x 85.75D x 36H</li>
+                <li>Bathroom in the room (two residents share a bathroom).  Bathrooms include a toilet, shower and sink with cabinets underneath</li>
+                <li>Built in closet nook</li>
+            </ul>
+            <h2>🙋‍♀️ Single Bedroom:</h2>
+            <ul>
+                <li>Study spaces on the hall's wing</li>
+                <li>Community kitchen and laundry room on each floor</li>
+                <li>Community bathrooms (no more than 10 sharing a restroom of two toilets and two showers) </li>
+                <li>Wardrobe in each room for hanging and storing clothes/personal items</li>
+                <li>Adjustable height twin XL bed dimensions:  38.5W x 85.75D x 36H</li>
+                <li>An adjustable height twin XL bed, wardrobe, desk and chair and three-drawer chest</li>
+                <li>There is no sink or mirror in the room</li>
+            </ul>
+            <h2>🧩 Flex Bedrooms:</h2>
+            <ul>
+                <li>Study spaces on the hall's wing</li>
+                <li>Community kitchen and laundry room on each floor</li>
+                <li>Community bathrooms (no more than 14 sharing a restroom of two toilets and two showers) </li>
+                <li>A Twin XL loft bed and two of the two-drawer stackable chests in the Flex Private room</li>
+                <li>A Twin XL loft bed and a two-drawer stackable chest per resident in the Two-person Flex Bedroom</li>
+                <li>These rooms do not have a sink, mirror or desk.</li>
+            </ul>
+            <h2>💰 Cost (per quarter)</h2>
+            <ul>
+                <li>Suites 9-month lease $1,610</li>
+                <li>Single private bedroom 9-month lease $1,630</li>
+                <li>Flex private bedroom 9-month lease $1,740</li>
+                <li>Two-person flex bedroom 9-month lease $1,410</li>
+            <h2>✅ Pros and Cons</h2>
+            <p>Pros:</p>
+            <ul>
+                <li>Affordable housing compared to apartments</li>
+                <li>Social environment that's great for making friends</li>
+                <li>Modern furnishing</li>
+                <li>Spacious lobby</li>
+                <li>Flex dorms on 4th floor have a porch</li>
+                <li>Community atmosphere</li>
+                <li>Vibrant environment</li>
+            </ul>
+            <p>Cons:</p>
+            <ul>
+                <li>Shared rooms and community bathrooms</li>
+                <li>Less privacy</li>
+            </ul>
+
+            <h2>📍 Location:</h2>
+            <p>Cottingham Hall is located on the northeast side of campus,  a bit farther from the Quad but still within walking distance to classes and campus resources.</p>
+            <h2>🖼️ Gallery: </h2>
+        <div class="image-row">
+            <img src="../static/images/cottinghambedrom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/cottinghamlivingroom.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/cottinghamlobby.png" alt="Legacy Park Apartments" class="apt-img">
+            <img src="../static/images/cottinghamoutdoor.png" alt="Legacy Park Apartments" class="apt-img">
+        </div>
+    </article>
+        <script>
+            const toggleBtn = document.getElementById("toggleSidebar");
+            const sidebar = document.querySelector(".sidebar");
+            
+            toggleBtn.addEventListener("click", () => {
+              sidebar.classList.toggle("expanded");
+            });
+        </script>
+</body>
+</html>

@@ -8,6 +8,8 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
+
+
 class Events(db.Model):
     __tablename__ = 'events'
 
