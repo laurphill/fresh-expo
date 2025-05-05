@@ -13,6 +13,7 @@ class Events(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)  # Primary key
     title = db.Column(db.String(100), nullable=False)  # Event title
+    end = db.Column(db.DateTime, nullable=True)  # Event end date and time (optional)
     start = db.Column(db.DateTime, nullable=False)  # Event start date and time
     user_id = db.Column(
         db.Integer,
@@ -23,15 +24,16 @@ class Events(db.Model):
     # Relationship to the User model
     user = db.relationship('User', backref='events')
 
-    def __init__(self, title, start, user_id):
+    def __init__(self, title, start, end, user_id):
         self.title = title
         self.start = start
+        self.end = end  
         self.user_id = user_id
         with app.app_context():
             db.create_all() 
     
     def __repr__(self):
-        return f"<Event(id={self.id}, title={self.title}, start={self.start}, user_id={self.user_id})>"   # Prints event info
+        return f"<Event(id={self.id}, title={self.title}, start={self.start}, end={self.end} user_id={self.user_id})>"   # Prints event info
      
 
 class Class(db.Model):
@@ -48,12 +50,6 @@ class UserClass(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
 
-class Img(db.Model):
-     id = db.Column(db.Integer, primary_key=True)
-     img = db.Column(db.Text, unique=True, nullable=False)
-     name = db.Column(db.Text, nullable=False)
-     mimetype = db.Column(db.Text, nullable=False)
-
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
 
@@ -64,7 +60,7 @@ class User(db.Model, UserMixin):
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
     is_teacher = Column(Boolean, unique=False, nullable = False)  # Username field, must be unique
-
+    profile_picture = db.Column(db.String(100), nullable=True)  # Profile picture field
     friends = db.relationship(
      'User',
      secondary=friends_table,

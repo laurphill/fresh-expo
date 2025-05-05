@@ -22,43 +22,47 @@
     <a href="{{url_for('logout')}}">Log Out</a>
 
   </div>
-    <script>
-        const toggleBtn = document.getElementById("toggleSidebar");
-        const sidebar = document.querySelector(".sidebar");
-            
-        toggleBtn.addEventListener("click", () => {
-          sidebar.classList.toggle("expanded");
-        });
+  <script>
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const sidebar = document.querySelector(".sidebar");
+        
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("expanded");
+    });
 
-        function promptForClass() {
-          const className = prompt("Enter the name of the new class:");
+    function promptForClass() {
+      const className = prompt("Enter the name of the new class:");
 
-          if (className && className.trim() !== "") {
-            window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
-          } else {
-            flash("Class name cannot be empty.");
-          }
-        }
+      if (className && className.trim() !== "") {
+        window.location.href = `/create_class?class=${encodeURIComponent(className.trim())}`;
+      } else {
+        flash("Class name cannot be empty.");
+      }
+    }
 
-        function startChat() {
-          const select = document.getElementById("friendSelect");
-          const selectedUsername = select.value;
+    function startChat() {
+      const select = document.getElementById("friendSelect");
+      const selectedUsername = select.value;
 
-          if (selectedUsername) {
-            window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
-          } else {
-            alert("Please select a friend to start a chat with.");
-          }
-        }
-    </script>
+      if (selectedUsername) {
+        window.location.href = `/start_chat?username=${encodeURIComponent(selectedUsername)}`;
+      } else {
+        alert("Please select a friend to start a chat with.");
+      }
+    }
+  </script>
 
     <div class="header__wrapper">
       <header></header>
       <div class="cols__container">
         <div class="left__col">
           <div class="img__container">
-            <img src="../static/images/hippo.jpg" alt="{{current_user.username}}" />
-            <span></span>
+            {% if user.profile_picture %}
+              <img src="{{ url_for('static', filename='/profile_pictures/' + user.profile_picture) }}" alt="Profile Picture">
+            {% else %}
+              <img src="{{ url_for('static', filename='profile_pictures/def.jpg') }}" alt="Default Profile Picture" >
+            {% endif %}            
+          <span></span>
           </div>
           <h2>{{current_user.nickname}}</h2>
           <p>{{current_user.major}}Computer Science</p>
@@ -89,6 +93,16 @@
                   <a href="{{url_for('connect')}}">Add friends to chat!</a>
                 {% endif %}
               {% endif %}
+
+              {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                  <div class="flash-container">
+                    {% for message in messages %}
+                      <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endwith %}
               
             </ul>
           </div>

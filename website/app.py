@@ -37,6 +37,7 @@ def calendar():
             'id': event.id,  # Include the event ID
             'title': event.title,
             'start': event.start.strftime('%Y-%m-%d'),  # Convert datetime to string
+            'end' : event.end.strftime('%Y-%m-%d') if event.end else None,  # Convert datetime to string
         }
         for event in events
     ]
@@ -50,7 +51,12 @@ def create_event():
     try:
         # Convert the 'start' string to a datetime object
         start_datetime = datetime.strptime(data['start'], '%Y-%m-%d')
-        new_event = Events(title=data['title'], start=start_datetime, user_id=current_user.id)
+        end_datetime = datetime.fromisoformat(data['end']) if data.get('end') else None 
+        new_event = Events(
+            title=data['title'], 
+            start=start_datetime, 
+            end=end_datetime,
+            user_id=current_user.id)
         db.session.add(new_event)
         db.session.commit()
         return jsonify({'message': 'Event added successfully!'}), 201
@@ -80,12 +86,42 @@ def update_event(event_id):
             # Update the event details
             event.title = data['title']
             event.start = datetime.fromisoformat(data['start'])  # Convert ISO string to datetime
+            event.end = datetime.fromisoformat(data.get('end')) if data.get('end') else None 
             db.session.commit()
             return jsonify({'message': 'Event updated successfully!'}), 200
+        
         except ValueError:
             return jsonify({'error': 'Invalid date format.'}), 400
     else:
         return jsonify({'error': 'Event not found.'}), 404
+
+@app.route('/upload_profile_picture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    if 'profile_picture' not in request.files:
+        flash('No file part', 'error')
+        return redirect(request.url)
+
+    file = request.files['profile_picture']
+
+    if file.filename == '':
+        flash('No selected file', 'error')
+        return redirect(request.url)
+
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+
+        # Update the user's profile picture in the database
+        current_user.profile_picture = filename
+        db.session.commit()
+
+        flash('Profile picture updated successfully!', 'success')
+        return redirect(url_for('profile', username=current_user.username))
+    else:
+        flash('Invalid file type. Please upload an image file.', 'error')
+        return redirect(request.url)
     
 @app.route('/')
 def homepage():
@@ -167,18 +203,19 @@ def dashboard():
 @app.route("/settings/<username>", methods = ["GET", "POST"])
 @login_required
 def settings(username):
-    form = SettingsForm()
-    if current_user.username == username:
-        if form.validate_on_submit():
-            user = User.query.first()
-            if user:
-                update_user(user_id=user.id, 
-                            new_username=form.username.data,
-                            new_email = form.email.data,
-                            new_nickname = form.nickname.data,
-                            new_bio = form.bio.data)
-                db.session.commit()
-        return render_template('settings.html', user=current_user, form=form)
+    form = SettingsForm(obj=current_user)  # Pre-fill the form with the current user's data
+
+    if form.validate_on_submit():
+        # Update the user's data only for the fields that were changed
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        current_user.nickname = form.nickname.data
+        current_user.bio = form.bio.data
+
+        db.session.commit()
+        flash('Settings updated successfully!', 'success')
+
+    return render_template('settings.html', form=form, user=current_user)
 
 @app.route("/profile/<username>", methods=['GET', 'POST'])
 @login_required
