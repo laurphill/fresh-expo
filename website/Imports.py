@@ -5,7 +5,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, log
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, EmailField, DateTimeField, TextAreaField#appropriate inputs for username, password, and after submitting said inputs
-from wtforms.validators import InputRequired, Length, DataRequired #controlling properties of inputs
+from wtforms.validators import InputRequired, Optional, Length, DataRequired #controlling properties of inputs
 from flask_bcrypt import Bcrypt #secure passwords/information
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, Boolean, PickleType
 from sqlalchemy.ext.declarative import declarative_base

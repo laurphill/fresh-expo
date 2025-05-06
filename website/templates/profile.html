@@ -17,7 +17,7 @@
     <a href="{{url_for('chats')}}">Chats</a>
     <a href="{{url_for('resources')}}">Resources</a>
     <a href="{{url_for('calendar')}}">Calendar</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div style = "flex-grow: 1;"></div>
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
 
@@ -52,26 +52,72 @@
       }
     </script>
     <div class="header__wrapper">
-      <header></header>
+      <header><img src="{{ url_for('static', filename='images/clouds.jpg') }}" alt="Display" width="150">
+      </header>
       <div class="cols__container">
         <div class="left__col">
-          <div class="img__container">
-            {% if user.profile_picture %}
-              <img src="{{ url_for('static', filename='/profile_pictures/' + user.profile_picture) }}" alt="Profile Picture">
+          <div class="img__container" onclick="triggerFileInput()" onmouseover="showTooltip()" onmouseout="hideTooltip()">
+            {% if current_user.profile_picture %}
+              <img src="{{ url_for('static', filename='profile_pictures/' + current_user.profile_picture) }}" alt="Profile Picture" width="150">
             {% else %}
-              <img src="{{ url_for('static', filename='profile_pictures/def.jpg') }}" alt="Default Profile Picture" >
-            {% endif %}            
-          <span></span>
+              <img src="{{ url_for('static', filename='profile_pictures/def.jpg') }}" alt="Default Profile Picture" width="150" >
+            {% endif %}
+            <span1></span>
+            <span id="tooltip" class="tooltip">Click to update</span>
           </div>
+          <script>
+            function showTooltip() {
+              document.getElementById('tooltip').style.visibility = 'visible';
+              document.getElementById('tooltip').style.opacity = '1';
+            }
+          
+            function hideTooltip() {
+              document.getElementById('tooltip').style.visibility = 'hidden';
+              document.getElementById('tooltip').style.opacity = '0';
+            }
+          </script>
+          <!-- Hidden file input -->
+          <form id="uploadForm" action="{{ url_for('upload_profile_picture') }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="profile_picture" id="profile_picture" accept="image/*" style="display: none;" onchange="submitForm()">
+          </form>
+
+          <script>
+            // Trigger the hidden file input when the profile picture is clicked
+            function triggerFileInput() {
+              document.getElementById('profile_picture').click();
+            }
+          
+            // Submit the form when a file is selected
+            function submitForm() {
+              document.getElementById('uploadForm').submit();
+            }
+          </script>
+
+          {%if current_user.nickname%}
           <h2>{{current_user.nickname}}</h2>
-          <p>{{current_user.major}}Computer Science</p>
+          {%else%}
+          <h2> No nickname</h2>
+          {%endif%}
+          {% if current_user.is_authenticated and current_user.is_teacher %}
+            <p>Teacher</p>
+            {% else %}
+              {%if current_user.major%}
+              {{current_user.major}}
+              {%else%}
+              <p> No major</p>
+              {%endif%}
+          {% endif %}
+        
           <p>{{current_user.email}}</p>
 
           <div class="content">
             <p>
                 <br>
-              {{current_user.bio}}
-              
+                {%if current_user.bio%}
+                {{current_user.bio}}
+                {%else%}
+                <p> No bio</p>
+                {%endif%}
             </p>
 
             <ul>
@@ -79,15 +125,16 @@
                 <li><button onclick="promptForClass()">Add Class</button></li>
               {% else %}
                 {% if current_user.friends %}
-                  <li>
-                    <select id="friendSelect" style="padding: 8px; border-radius: 5px; margin-bottom: 10px; width: 250px;">
-                      <option disabled selected>Select a friend to chat</option>
-                      {% for friend in current_user.friends %}
-                        <option value="{{ friend.username }}">{{ friend.username }}</option>
-                      {% endfor %}
-                    </select>
-                    <button onclick="startChat()">Start Chat</button>
-                  </li>
+                <div class="friend-chat-container">
+                  <select id="friendSelect" style="padding: 8px; border-radius: 5px; margin-right: 10px;">
+                    <option disabled selected>Select a friend to chat</option>
+                    {% for friend in current_user.friends %}
+                      <option value="{{ friend.username }}">{{ friend.username }}</option>
+                    {% endfor %}
+                  </select>
+                  <button class="startchatbtn" onclick="startChat()">Start Chat</button>
+                </div>
+              </li> 
                 {% else %}
                   <a href="{{url_for('connect')}}">Add friends to chat!</a>
                 {% endif %}
@@ -113,16 +160,40 @@
                     <input type = "radio" id = "tabPosts" name="mytabs" checked="checked">
                     <label for="tabPosts">Posts</label>
                     <div class = 'tab'>
-                        <div class="photos">
-                            <img src="../static/images/kit.jpg" alt="Photo" />
-                            <img src="../static/images/cat.jpg" alt="Photo" />
-                            <img src="../static/images/duck.jpg" alt="Photo" />
-                          </div>
-                    </div>
-
-                    <input type = "radio" id = "tabFriends" name="mytabs">
-                    <label for="tabFriends">Friends</label>
-                    <div class = 'tab'>
+                      <div class="photos">
+                        
+                          <form id="photoForm1" action="{{ url_for('upload_photo', photo_id=1) }}" method="POST" enctype="multipart/form-data">
+                            <img src="{{ url_for('static', filename='profile_pictures/' + (user.photo1 or 'photodef.jpg')) }}" alt="Photo" onclick="triggerPhotoInput(1)" style="cursor: pointer;" />
+                            <input type="file" name="photo" id="photoInput1" accept="image/*" style="display: none;" onchange="submitPhotoForm(1)">
+                          </form>
+                        
+                          <form id="photoForm2" action="{{ url_for('upload_photo', photo_id=2) }}" method="POST" enctype="multipart/form-data">
+                            <img src="{{ url_for('static', filename='profile_pictures/' + (user.photo2 or 'photodef.jpg')) }}" alt="Photo" onclick="triggerPhotoInput(2)" style="cursor: pointer;" />
+                            <input type="file" name="photo" id="photoInput2" accept="image/*" style="display: none;" onchange="submitPhotoForm(2)">
+                          </form>
+                        
+                          <form id="photoForm3" action="{{ url_for('upload_photo', photo_id=3) }}" method="POST" enctype="multipart/form-data">
+                            <img src="{{ url_for('static', filename='profile_pictures/' + (user.photo3 or 'photodef.jpg')) }}" alt="Photo" onclick="triggerPhotoInput(3)" style="cursor: pointer;" />
+                            <input type="file" name="photo" id="photoInput3" accept="image/*" style="display: none;" onchange="submitPhotoForm(3)">
+                          </form>
+                        </div>
+                          <script>
+                            // Trigger the hidden file input when a photo is clicked
+                            function triggerPhotoInput(photoId) {
+                              document.getElementById(`photoInput${photoId}`).click();
+                            }
+                          
+                            // Submit the form when a file is selected
+                            function submitPhotoForm(photoId) {
+                              document.getElementById(`photoForm${photoId}`).submit();
+                            }
+                          </script>
+                        </div>
+                        
+                    
+                      <input type="radio" id="tabFriends" name="mytabs">
+                      <label for="tabFriends">Friends</label>
+                      <div class="tab">
                       <h4>My Friends</h4>
                       {% if current_user.friends %}
                         <ul>
@@ -137,13 +208,17 @@
                     </div>
 
                     <input type = "radio" id = "tabAboutMe" name="mytabs">
-                    <label for="tabAboutMe">About Me</label>
+                    <label for="tabAboutMe">Classes</label>
                     <div class = 'tab'>
-                        Major : Computer Science
-                        <br>
-                        Age : 19
-                        <br>
-                        Interests: Music, reading, gaming, outdoors
+                        {{current_user.username}}'s Classes
+                        <ul>
+                          {% if current_user.classes %}
+                            {% for class in current_user.classes %}
+                              <li>{{ class.name }}</a></li>
+                            {% endfor %}
+                          {% else %}
+                            <p><em>No classes added.</em></p>
+                          {% endif %}
                     </div>
                 </div>
             </ul>

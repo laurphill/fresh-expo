@@ -30,6 +30,33 @@
     <div id='calendar-container'>
       <div id='calendar'></div>
     </div>
+        <button id="deleteAllEventsBtn" class="delete-btn">Delete All Events</button>
+        <script>
+          document.getElementById('deleteAllEventsBtn').addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete all events? This action cannot be undone.')) {
+              fetch('/api/events/delete_all', {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+                .then(response => response.json())
+                .then(data => {
+                  if (data.message) {
+                    alert(data.message);
+                    // Optionally, refresh the page or update the calendar
+                    location.reload();
+                  } else if (data.error) {
+                    alert(data.error);
+                  }
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                  alert('An error occurred while deleting events.');
+                });
+            }
+          });
+        </script>
 
     <div class="todo" id="myDIV">
       <h1>Create Event</h1>

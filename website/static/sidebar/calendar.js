@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 },
+
     // Handle event drop from to-do list
     drop: function(info) {
       console.log('To-do item dropped:', info.draggedEl);

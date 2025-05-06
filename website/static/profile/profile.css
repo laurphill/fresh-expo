@@ -72,11 +72,10 @@ a {
 text-decoration: none;
 }
 
-.header__wrapper header {
+.header__wrapper header img {
 width: 1480px;
 margin:0;
 padding:0;
-background: url("../images/clouds.jpg") no-repeat 100% 60% / cover;
 height:200px;
     
 }
@@ -101,7 +100,7 @@ border-radius: 50%;
 display: block;
 box-shadow: 1px 3px 12px rgba(0, 0, 0, 0.18);
 }
-.header__wrapper .cols__container .left__col .img__container span {
+.header__wrapper .cols__container .left__col .img__container span1 {
 position: absolute;
 background: #2afa6a;
 width: 16px;
@@ -315,4 +314,85 @@ display: block;
   20% { opacity: 1; }
   80% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+
+.img__container img {
+  transition: filter 0.3s ease; /* Smooth transition for the blur effect */
+  
+}
+
+
+.tooltip {
+  visibility: hidden;
+  background-color: rgb(121, 110, 237);
+  color: white;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  width: 110px;
+  position: absolute;
+  bottom: 100%; /* Position above the image */
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.img__container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.friend-chat-container {
+  display: flex; /* Use flexbox for horizontal alignment */
+  align-items: center; /* Vertically align items */
+  gap: 10px; /* Add spacing between the selector and button */
+}
+
+#friendSelect {
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.startchatbtn {
+  padding: 8px 15px;
+  border-radius: 5px;
+  background-color: #647fe1;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.startchatbtn:hover {
+  background-color: #506bd4; /* Darker shade on hover */
+}
+.friends-list {
+  list-style-type: none; /* Remove bullet points */
+  padding-left: 0px; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  display: flex; /* Use flexbox for horizontal layout */
+  gap: 10px; /* Add spacing between items */
+}
+
+.friends-list li {
+  display: inline; /* Ensure list items are inline */
+}
+
+.friends-list a {
+  text-decoration: none; /* Remove underline from links */
+  color: #007bff; /* Set link color */
+  padding: 5px 10px; /* Add padding for better spacing */
+  border: 1px solid #ddd; /* Optional: Add a border around links */
+  border-radius: 5px; /* Optional: Add rounded corners */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.friends-list a:hover {
+  background-color: #f0f0f0; /* Change background color on hover */
 }

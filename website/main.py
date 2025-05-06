@@ -21,6 +21,15 @@ db_session = SessionLocal()
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Configure upload folder and allowed extensions
+UPLOAD_FOLDER = 'static/profile_pictures/'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# Helper function to check allowed file extensions
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 if __name__ == "__main__":
     with app.app_context():
         #db.drop_all()

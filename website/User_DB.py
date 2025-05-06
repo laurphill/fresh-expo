@@ -67,20 +67,28 @@ class User(db.Model, UserMixin):
      secondaryjoin=id==friends_table.c.friend_id,
      backref='added_by'
  )
+    display_picture = db.Column(db.String(100), nullable=True)  # Display picture field
+    major = db.Column(db.String(100), nullable=True)  # Major field
+    photo1 = db.Column(db.String(150), nullable=True)
+    photo2 = db.Column(db.String(150), nullable=True)
+    photo3 = db.Column(db.String(150), nullable=True)
 
-    def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False):
+
+    def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False, major = major):
         self.username = username
         self.email = email
         self.password = password
         self.nickname = nickname
         self.bio = bio
         self.is_teacher = is_teacher
+        self.major = major
+    
 
         with app.app_context():
             db.create_all()
 
     def __repr__(self):
-        return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio})>"    # Prints user info
+        return f"<User(id={self.id}, username={self.username}, email={self.email}, nickname = {self.nickname}, bio = {self.bio}, major = {self.major})>"    # Prints user info
 
 # Function to add a new user
 def create_user(db_session, username: str, email: str, password: str):

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advising Resources</title>
-    <link rel = "stylesheet" href = "../static/resources/advising.css">
+    <link rel = "stylesheet" href = "../static/resources/general.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 
 </head>
@@ -20,45 +20,43 @@
         <a href="{{url_for('logout')}}">Log Out</a>
 
       </div>
-
-    <div class="wrapper">
+      
+      <div class="wrapper">
         <header class="main-head">A How-To: Advise and Register for Classes</header>
         <article class="content">
-          <p>
-            <b>Advising can registering for classes can be stressful, especially for incoming students. 
-            Here you will find only the necessary information that you should be aware of.
-            You will be taken through each step necessary in registering and advising for classes each quarter.</b>
-          </p>
-        </article>
-        <article class="content2">
-            <h1 style = "font-size:20px;">STEP 1: CREATE SCHEDULE AND COMPLETE HOLDS</h1>
-            <br>
+            <p><b>Advising can registering for classes can be stressful, especially for incoming students. 
+                Here you will find only the necessary information that you should be aware of.
+                You will be taken through each step necessary in registering and advising for classes each quarter.</b></p>
+            <h2>✨ STEP 1: CREATE SCHEDULE AND COMPLETE HOLDS:</h2>
+            <ul>
+                <p>
+                    <b><li>Check for account holds</li></b>
+                    <br><ul><li>Navigate to academics on workday, then make sure there is a 0 for both
+                        holds and actions to do. <i><b>(There should be only one hold left that only your advisor can remove,
+                        it will be removed after you meet with them)</b></i></li></ul>
+                    <br>
+                    <li><b>Create a schedule plan</li></b>
+                    <br><ul><li>Find your major's curriculum sheet to determine which classes you need to take.
+                        Find information about your major's curriculum at <a href = "https://www.latech.edu/academic-programs/" target="_blank" style="color: rgb(112, 102, 255);">this link.</a>
+                    </li>
+                    <br><li>Fill out the advising form. Can be picked up in person (locations may vary, will be sent in email)
+                    or print it yourself at this <a href = "https://www.latech.edu/documents/2018/05/advising-form.pdf/" target ="_blank"style="color: rgb(112, 102, 255);">link.</a></li></ul>
+                    
+                    <br><li><b>Create saved schedule on Workday</li></b>
+                    <ul><li>Workday -> Academics -> View Academic Plan -> Create Saved Schedule
+                    <br>
+                    <br>Look up course sections as you have them written on advising form. When found, verify it is correct class and scroll down till you see "Add to saved schedule"
+                    </li>
+            
+                </p>
+            </ul>
+            <div class="image-row">
+                <img src="../static/images/advisinghold.png" alt="Advising Hold" class="apt-img" style="width: 500px; height: 400px;">
+                <img src="../static/images/advisingform.png" alt="Advising Form" class="apt-img" style="width: 500px; height: 400px;">
+            </div>
+            <h2>STEP 2: MEET WITH ADVISOR TO CONFIRM SCHEDULE</h2>
             <p>
-                <ol id = "list"><b><li>Check for account holds</li></b>
-                <br><ul><li>Navigate to academics on workday, then make sure there is a 0 for both
-                    holds and actions to do. <i><b>(There should be only one hold left that only your advisor can remove,
-                    it will be removed after you meet with them)</b></i></li></ul>
-                <br>
-                <li><b>Create a schedule plan</li></b>
-                <br><ul><li>Find your major's curriculum sheet to determine which classes you need to take.
-                    Find information about your major's curriculum at <a href = "https://www.latech.edu/academic-programs/" target="_blank" style="color: rgb(112, 102, 255);">this link.</a>
-                </li>
-                <br><li>Fill out the advising form. Can be picked up in person (locations may vary, will be sent in email)
-                or print it yourself at this <a href = "https://www.latech.edu/documents/2018/05/advising-form.pdf/" target ="_blank"style="color: rgb(112, 102, 255);">link.</a></li></ul>
-                
-                <br><li><b>Create saved schedule on Workday</li></b>
-                <ul><li>Workday -> Academics -> View Academic Plan -> Create Saved Schedule
-                <br>
-                <br>Look up course sections as you have them written on advising form. When found, verify it is correct class and scroll down till you see "Add to saved schedule"
-                </li>
-        
-                </ol>
-            </p>
-        </article>
-        <article class="content3">
-            <h1 style = "font-size:20px;">STEP 2: MEET WITH ADVISOR TO CONFIRM SCHEDULE</h1>
-            <p>
-                
+            <ul>
                 <br><ol id = "list"><b><li>Schedule an appointment or attend open advising hours(if offered)</li></b>
                     <br><ul><li>When you meet with your advisor, make sure to <b>bring your advising form already filled out</b></li></ul>
                     
@@ -75,12 +73,15 @@
                     <br>
                     <br>    
                     Before registration, make sure your advisor has lifted your hold. If they have not within the next few days, shoot them an email.    
-                </ol>
+                </ul>
             </p>
-        </article>
-        <article class="content4">
-            <h1 style = "font-size:20px;">STEP 3: REGISTRATION DAY </h1><br>
-            <p>
+            <div class="image-row">
+                <img src="../static/images/holds.png" alt="Advising" class="apt-img">
+                <img src="../static/images/registration.png" alt="Advising 2" class="apt-img">
+            </div>
+            <h2>STEP 3: REGISTRATION DAY </h2>
+            <ul>
+                <p>
                     Navigate to your Saved Schedules on Workday
                     <br>
                     <br>
@@ -88,14 +89,15 @@
                     <br>
                     <br>
                     Click start, confirm classes are correct, and click "register". <b>Make sure you see the "successful registration" message!</b>
-                    
-            </p>
-            
-        </article>
-        
-        <article class="content5">
-            <h1 style = "font-size:20px;">STEP 4: DON'T GET PURGED!! PAY AND CONFIRM INTENT</h1>
-            <p>
+                </p>
+            </ul>
+            <div class="image-row">
+                <img src="../static/images/register.png" alt="Register" class="apt-img">
+                <img src="../static/images/success.jpg" alt="Success" class="apt-img">
+            </div>
+
+            <h2>STEP 4: DON'T GET PURGED!! PAY AND CONFIRM INTENT</h2>
+            <ul><p>
                 <br>
                 If you do not confirm intent to attend nor pay your due now balance, you will be purged!
                 <br>
@@ -117,20 +119,15 @@
                 <br>
                 <ul><li>Check the box and <b>click save!</b></li></ul>
             </p>
-        </article>
-
-        <aside class="side"><img src="../static/images/advisinghold.png"style="width: 380px;height:200px"></aside>
-        <div class = "side2"><img src = "../static/images/advisingform.png"style="width: 380px;height:200px"></a></div>
-        <div class="ad"></div>
-        <div class="ad2"></div>
-        <div class="ad3"></div>
-        <div class="ad5"><img src="../static/images/holds.png" style="width: 380px;height:200px"></div>'
-        <div class = "ad6"><img src="../static/images/confirm.png"style="width: 380px;height:200px"></div>
-        <div class = "ad7"><img src="../static/images/duenow.png"style="width: 380px;height:200px"></div>
+        </ul>
+        <div class="image-row">
+            <img src="../static/images/duenow.png" alt="Due Now" class="apt-img">
+            <img src="../static/images/confirm.png" alt="Confirm" class="apt-img">
+        </div>
 
 
-      </div>
-      
+        </div>
+    </article>
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");
         const sidebar = document.querySelector(".sidebar");

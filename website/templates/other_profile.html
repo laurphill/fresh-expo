@@ -17,7 +17,7 @@
     <a href="{{url_for('chats')}}">Chats</a>
     <a href="{{url_for('resources')}}">Resources</a>
     <a href="{{url_for('calendar')}}">Calendar</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div style = "flex-grow: 1;"></div>
     <a href="{{ url_for('connect')}}">Connect</a>
     <a href="{{url_for('logout')}}">Log Out</a>
 
@@ -44,16 +44,29 @@
             {% endif %}    
           <span></span>
           </div>
+          {%if user.nickname%}
           <h2>{{user.nickname}}</h2>
-          <p>{{user.major}}Computer Science</p>
+          {%else%}
+          <h2> No nickname</h2>
+          {%endif%}
+          {%if user.major%}
+          {{user.major}}
+          {%else%}
+          <p> No major</p>
+          {%endif%}
+        
           <p>{{user.email}}</p>
 
           <div class="content">
             <p>
                 <br>
-              {{user.bio}}
-              
+                {%if user.bio%}
+                {{user.bio}}
+                {%else%}
+                <p> No bio</p>
+                {%endif%}
             </p>
+
 
           </div>
         </div>
@@ -64,24 +77,35 @@
                     <input type = "radio" id = "tabPosts" name="mytabs" checked="checked">
                     <label for="tabPosts">Posts</label>
                     <div class = 'tab'>
-                        <div class="photos">
-                            <img src="../static/images/kit.jpg" alt="Photo" />
-                            <img src="../static/images/cat.jpg" alt="Photo" />
-                            <img src="../static/images/duck.jpg" alt="Photo" />
-                          </div>
+                      <div class="photos" >
+                        {% if user.photo1 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo1)) }}" alt = "Post 1" style="height:300px;">
+                        {% else %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 1" style="height:300px;">
+                        {% endif %}
+                        {% if user.photo2 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo2)) }}" alt = "Post 2" style="height:300px;">
+                        {% else %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 2" style="height:300px;">
+                        {% endif %}
+                        {% if user.photo3 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo3)) }}" alt = "Post 3" style="height:300px;">
+                        {% else %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 3" style="height:300px;">
+                        {% endif %}
+                      </div>
                     </div>
 
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                      <h4>{{current_user.friends.username}} Friends</h4>
+                      <h4>Friends</h4>
 
                       {% if user.friends %}
-
-                        <ul>
+                        <ul class = "friends-list">
                           {% for friend in user.friends %}
                             {% if friend.username != user.username %}
-                                <li><a href="{{ url_for('other_profile', username=friend.username) }}">
+                                <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a></li>
                             {{ friend.username }}
                             {% endif %}
                           {% endfor %}
@@ -90,17 +114,20 @@
                         <p><em>No current friends.</em></p>
                       {% endif %}
                     </div>
-
                     <input type = "radio" id = "tabAboutMe" name="mytabs">
-                    <label for="tabAboutMe">About Me</label>
+                    <label for="tabAboutMe">Classes</label>
                     <div class = 'tab'>
-                        Major : Computer Science
-                        <br>
-                        Age : 19
-                        <br>
-                        Interests: Music, reading, gaming, outdoors
+                        {{user.username}}'s Classes
+                        <ul>
+                          {% if user.classes %}
+                            {% for class in current_user.classes %}
+                              <li>{{ class.name }}</a></li>
+                            {% endfor %}
+                          {% else %}
+                            <p><em>No classes added.</em></p>
+                          {% endif %}
                     </div>
-                </div>
+              </div>
             </ul>
           </nav>
           
