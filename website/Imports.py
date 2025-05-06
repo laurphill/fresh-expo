@@ -1,5 +1,5 @@
 # All imports
-from flask import Flask, Response, jsonify, render_template, redirect, url_for, flash, request #for taking user to pages without having to manually switch 
+from flask import Flask, Response, jsonify, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
@@ -22,6 +22,7 @@ from werkzeug.utils import secure_filename #to save files to the server
 import json
 from flask_cors import CORS #
 #to allow database to be accessed from other domains
+import uuid as uuid
 
 #initialize app
 app = Flask(__name__)

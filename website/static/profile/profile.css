@@ -242,6 +242,12 @@ object-fit: cover;
 display: block;
 }
 
+#tabPosts:checked ~ .tab-content #contentPosts,
+#tabFriends:checked ~ .tab-content #contentFriends,
+#tabAboutMe:checked ~ .tab-content #contentAboutMe {
+  display: block;
+}
+
 @media (min-width: 1017px) {
 .header__wrapper .cols__container .left__col {
   margin: 0;

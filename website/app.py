@@ -341,7 +341,6 @@ def robinson_suite():
 def potts_suite():
     return render_template('potts-suite.html')
 # Connect with other users via QR code
-# Connect with other users via QR code
 @app.route("/connect")
 def connect():
     return render_template("connect.html")

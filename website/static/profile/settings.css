@@ -3,7 +3,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-
 }
 
 body {
@@ -120,7 +119,6 @@ body {
     "btn"
 }
 
-
 @media (min-width: 700px) {
   .wrapper {
     grid-template-columns: 1fr 4fr 1fr;
@@ -129,4 +127,30 @@ body {
       "side content content"
       "side btn btn";      
   }
+}
+
+.flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  opacity: 0;
+}
+
+.flash-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
