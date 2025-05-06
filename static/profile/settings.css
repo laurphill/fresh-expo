@@ -1,0 +1,156 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);    
+  color: #3a3a3a;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 60px;
+  background-color: #647fe1;
+  color: white;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  font-size:0;
+}
+.sidebar.expanded{
+  width: 120px
+}
+
+.sidebar.expanded a{
+  opacity: 1;
+  font-size: 1rem;
+  
+}
+.sidebar a:hover {
+  background-color: #506bd4;
+  padding: 8px;
+  border-radius: 8px;
+  transition: 0.2s;
+  color:white;
+  text-decoration: none;
+}
+.wrapper {
+  margin: 0 auto;
+  font-family: 'Poppins', sans-serif;
+  width: 1000px;
+  margin-top: 100px;
+  margin-left:250px;
+  justify-content: space-evenly;
+}
+
+.wrapper > * {
+  background: white;
+  width: 800px;
+  height: 550px;
+  border-style: dashed;
+  padding: 10px;
+  border: 2px solid #647fe1;
+}
+
+.main-head {
+  grid-area: header;
+  margin-top: 30px;
+  font-size: 35px;
+  text-align: center;
+}
+
+.content {
+  grid-area: content;
+  height: 100px;
+  font-size: 20px;  
+  text-align: center;
+}
+.content h2{
+  font-family: "Poppins", sans-serif;
+  font-size: 15px;
+}
+
+.side {
+  grid-area: side;
+  height: 400px;
+  width: 400px;
+  border: 2px solid black;
+}
+.btn{
+  grid-area: btn;
+}
+
+.wrapper {
+  display: grid;
+  gap: 20px;
+  grid-template-areas:
+    "header"
+    "content"
+    "side"
+    "btn"
+}
+
+@media (min-width: 700px) {
+  .wrapper {
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-areas:
+      "header header header"
+      "side content content"
+      "side btn btn";      
+  }
+}
+
+.flash-message {
+  animation: fadeInOut 4s ease-in-out forwards;
+  font-size: 1rem;
+  color: #333;
+  background: none;
+  box-shadow: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  opacity: 0;
+}
+
+.flash-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}

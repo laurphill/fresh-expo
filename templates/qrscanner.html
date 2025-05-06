@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QR Code Scanner</title>
+    <link rel = "stylesheet" href = "../static/qrscanner.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&family=Poppins&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <style>
+        #reader {
+            width: 300px;
+            margin: 0 auto;
+        }
+        .mirrored video {
+            transform: scaleX(-1);
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href = "{{url_for('dashboard')}}">Dashboard</a>
+        <a href="{{url_for('chats')}}">Chats</a>
+        <a href="{{url_for('resources')}}">Resources</a>
+        <a href="{{url_for('calendar')}}">Calendar</a>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <a href="{{ url_for('connect')}}">Connect</a>
+        <a href="{{url_for('logout')}}">Log Out</a>
+    
+      </div>
+
+  <div class = "container">
+    {% if current_user.is_authenticated and not current_user.is_teacher %}
+      <h2 style="text-align:center;">Scan QR Code to Connect</h2>
+    {% endif %}
+    {% if current_user.is_authenticated and current_user.is_teacher %}
+      <h2 style="text-align:center;">Scan QR Code to Join</h2>
+      <select id="classSelect" style="margin-bottom: 20px; padding: 8px 12px; border-radius: 5px; width: 300px;">
+        {% for c in current_user.classes %}
+          <option value="{{ c.name }}" {% if c.name == selected_class %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+    {% endif %}
+    <div id="reader"></div>
+    <!-- Back Button -->
+    <br>
+    <a href="/connect" class="back-button">Back to Connect Page</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <script>
+    const currentFacingMode = "user";
+    const html5QrCode = new Html5Qrcode("reader");
+
+    function startScanner() {
+      html5QrCode.start(
+        { facingMode: currentFacingMode },
+        { fps: 10, qrbox: 250 },
+        onScanSuccess
+      ).then(() => {
+        if (currentFacingMode === "user") {
+          document.getElementById("reader").classList.add("mirrored");
+        }
+      }).catch(err => {
+        console.error("QR Scanner Error:", err);
+      });
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+      const classDropdown = document.getElementById("classSelect");
+      const className = classDropdown ? classDropdown.value : null;
+
+      // Append the class name to the URL as a query parameter if it exists
+      const destinationUrl = className 
+        ? `${decodedText}&class=${encodeURIComponent(className)}`
+        : decodedText;
+        
+    html5QrCode.stop().then(() => {
+        window.location.href = destinationUrl;
+      }).catch(() => {
+        window.location.href = destinationUrl;
+      });
+    }
+
+    startScanner();
+  </script>
+  <script>
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const sidebar = document.querySelector(".sidebar");
+        
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("expanded");
+    });
+  </script>
+</body>
+</html>

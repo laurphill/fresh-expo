@@ -1,0 +1,41 @@
+<!-- templates/generate_qr.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your QR Code</title>
+  <link rel="stylesheet" href="../static/generate.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+    <a href="{{url_for('chats')}}">Chats</a>
+    <a href="{{url_for('resources')}}">Resources</a>
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="{{ url_for('connect')}}">Connect</a>
+    <a href="{{url_for('logout')}}">Log Out</a>
+
+  </div>
+  <div class="container">
+    <h1>Your QR Code</h1>
+    <p>Scan this code to connect with others:</p>
+    <img src="data:image/png;base64,{{ qr_code_data }}" alt="Your QR Code" />
+    <br><br>
+    <a href="/home" class="btn">⬅ Back to Homepage</a>
+    <a href="/connect" class="back-button">Back to Connect Page</a>
+  </div>
+  <!-- Sidebar Toggle Script -->
+  <script>
+    const toggleBtn = document.getElementById("toggleSidebar");
+    const sidebar = document.querySelector(".sidebar");
+
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("expanded");
+    });
+  </script>
+
+</body>
+</html>

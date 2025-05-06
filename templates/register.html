@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang = en>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="../static/register.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</html>
+<body>
+    
+    <section>
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+        <div class="wave wave4"></div>
+
+        <div class="wrapper">
+            <form method = "POST" action="">
+                {{form.hidden_tag()}}
+                <h1>Register</h1>
+                <div class = "input-box">
+                    {{form.username(placeholder = "Username")}}
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class = "input-box">
+                    {{form.email(placeholder="Email")}}
+                    <i class='bx bxs-envelope'></i>
+                </div>  
+                <div class = "input-box">
+                    {{form.password(placeholder="Password")}}
+                    <i class='bx bxs-lock-alt' ></i>
+                </div>
+                <div class = "btn">
+                    {{form.submit(class="btn")}}
+                </div>
+                <div class = "teacher-btn">
+                    {{form.is_teacher}}{{form.is_teacher.label("Register as Teacher?")}}
+                </div>
+            </form>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="flash-container">
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </section>
+</body>
+</html>

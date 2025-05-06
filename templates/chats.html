@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel = "stylesheet" href = "../static/sidebar/chats.css">
+</head>
+<body>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+    <a href="{{url_for('chats')}}">Chats</a>
+    <a href="{{url_for('resources')}}">Resources</a>
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="{{ url_for('connect')}}">Connect</a>
+    <a href="{{url_for('logout')}}">Log Out</a>
+
+  </div>
+      <script>
+          const toggleBtn = document.getElementById("toggleSidebar");
+          const sidebar = document.querySelector(".sidebar");
+          
+          toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("expanded");
+          });
+      </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = 'stylesheet' href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'>
+    <link rel = 'stylesheet' href = '../static/sidebar/calendar.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>Calendar</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script type = "text/javascript" src = "http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  
+    
+</head>
+<body>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+    <a href="{{url_for('chats')}}">Chats</a>
+    <a href="{{url_for('resources')}}">Resources</a>
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
+    <a href="{{ url_for('connect')}}">Connect</a>
+    <a href="{{url_for('logout')}}">Log Out</a>
+
+  </div>
+
+    
+    <div id='calendar-container'>
+      <div id='calendar'></div>
+    </div>
+
+    <div class="todo" id="myDIV">
+      <h1>Create Event</h1>
+      <div class="header">
+        <input type="text" id="myInput" placeholder="Title...">
+        <span onclick="newElement()" class="addBtn">Add</span>
+      </div>
+      <ul id="myUL"></ul>
+    </div>
+       
+            
+    </div>
+    
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+        
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+    </script>
+    <script>
+      const eventsData = {{ events|tojson }};
+    </script>
+    <script src = "../static/sidebar/calendar.js"></script>
+</body>
+</html>

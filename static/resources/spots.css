@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@500&family=Poppins&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
+    color: #3a3a3a;
+    display: flex;
+    min-height: 100vh;
+
+  } 
+/* SIDEBAR */
+.sidebar {
+    width: 60px;
+    background-color: #647fe1;
+    color: white;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: width 0.3s ease;
+    overflow: hidden;
+  }
+
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+    font-size:0;
+  }
+  .sidebar.expanded{
+    width: 120px
+  }
+
+  .sidebar.expanded a{
+    opacity: 1;
+    font-size: 1rem;
+  }
+  .sidebar a:hover {
+    background-color: #506bd4;
+    padding: 8px;
+    border-radius: 8px;
+    transition: 0.2s;
+  }
+  .wrapper {
+    margin: 0 auto;
+    font-family: 'Poppins', sans-serif;
+    width: 1000px;
+  }
+  
+  .wrapper > * {
+    border: 2px solid #a9a5f6;
+    background-color: #ffffff;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .main-head {
+    grid-area: header;
+    margin-top: 30px;
+    font-size: 50px;
+    text-align: center;
+  }
+  .content {
+    grid-area: content;
+    height: 388px;
+  }
+  .content2 {
+    grid-area: content2;
+    height: 388px;
+  }
+  .main-nav {
+    grid-area: nav;
+  }
+  .side {
+    grid-area: sidebar;
+  }
+  .ad {
+    grid-area: ad;
+  }
+  .main-footer {
+    grid-area: footer;
+  }
+  
+  .wrapper {
+    display: grid;
+    gap: 20px;
+    grid-template-areas:
+      "header"
+      "content"
+      "sidebar"
+      "ad"
+  }
+  
+  @media (min-width: 500px) {
+    .wrapper {
+      grid-template-columns: 1fr 3fr;
+      grid-template-areas:
+        "header  header"
+        "sidebar content"
+        "ad content2";
+    }
+
+  }
+  
+  @media (min-width: 700px) {
+    .wrapper {
+      grid-template-columns: 1fr 4fr 1fr;
+      grid-template-areas:
+        "header header header"
+        "content content sidebar"
+        "content2 content2 ad"
+    
+    }
+  }
+  
