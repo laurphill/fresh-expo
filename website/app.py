@@ -397,7 +397,7 @@ def scanned():
 @app.route('/create_class')
 def create_class():
     url = request.url
-    form = SettingsForm
+    form = SettingsForm()
     # Extract the class name from the URL (e.g., after %class%)
     class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
     class_name = class_match.group(1) if class_match else None
