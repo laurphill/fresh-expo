@@ -421,7 +421,9 @@ def create_class():
 # Generates a qr code with the user's id info
 @app.route('/generate')
 def generate(class_name=None):
+    
     user_id = current_user.id
+    
     qr = QRCode(
     version=1,
     error_correction=ERROR_CORRECT_L,
@@ -429,10 +431,10 @@ def generate(class_name=None):
     border=4,
     )
 
-    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"
+    qr_data = f"/scanned?userId={user_id}"
 
     if current_user.is_teacher and class_name:
-        qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}&class={class_name}"
+        qr_data = f"/scanned?userId={user_id}&class={class_name}"
 
     # Add data to the QR code
     qr.add_data(qr_data)
