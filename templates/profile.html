@@ -146,26 +146,6 @@
                         Interests: Music, reading, gaming, outdoors
                     </div>
                 </div>
-                <div class="tab" id="contentFriends">
-                  <h3>My Friends</h3>
-                  {% if current_user.friends %}
-                    <ul>
-                      {% for friend in current_user.friends %}
-                      <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a>
-                        {{ friend.username }}
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    <p><em>You have no friends added.</em></p>
-                  {% endif %}
-                </div>
-                <div class="tab" id="contentAboutMe">
-                  Major : Computer Science
-                  <br>
-                  Age : 19
-                  <br>
-                  Interests: Music, reading, gaming, outdoors
-                </div>
               </div>
             </div>
           </nav>

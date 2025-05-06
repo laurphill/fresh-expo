@@ -22,7 +22,6 @@ from werkzeug.utils import secure_filename
 import uuid as uuid
 import json
 from flask_cors import CORS
-#to allow database to be accessed from other domains
 
 #initialize app
 app = Flask(__name__)
@@ -46,3 +45,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+#For hashing passwords
+bcrypt = Bcrypt(app)

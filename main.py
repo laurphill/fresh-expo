@@ -1,9 +1,6 @@
 from Imports import *
-from User_DB import *
 from app import *
-
-#For hashing passwords
-bcrypt = Bcrypt(app)
+from User_DB import User
 
 #reload user id from database
 login_manager = LoginManager()
@@ -26,4 +23,4 @@ if __name__ == "__main__":
         #db.drop_all()
         #app.jinja_env.cache = {}
         db.create_all()
-    app.run(debug = True)
+    app.run(debug=True)

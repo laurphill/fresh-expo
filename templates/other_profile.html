@@ -81,7 +81,7 @@
                         <ul>
                           {% for friend in user.friends %}
                             {% if friend.username != user.username %}
-                                <li><a href="{{ url_for('other_profile', username=friend.username) }}">
+                          <li><a href="{{ url_for('other_profile', username=friend.username) }}">{{ friend.username }}</a>
                             {{ friend.username }}
                             {% endif %}
                           {% endfor %}
