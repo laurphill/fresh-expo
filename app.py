@@ -1,6 +1,5 @@
 from Imports import *
-from User_DB import *
-from main import *
+from User_DB import Events, Class, User, get_user_by_id, get_user_by_username, add_user_to_class
 
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
@@ -244,6 +243,7 @@ def register():
 
 #dashboard route
 @app.route("/dashboard", methods = ["GET", "POST"])
+@login_required
 def dashboard():
     return render_template("dashboard.html", username = current_user.username, friends=current_user.friends)
 
@@ -287,13 +287,12 @@ def profile(username):
 
     if current_user.username == username:
         return render_template('profile.html', user = current_user, form=form)
-    elif user in db.session:
-        return render_template('other_profile.html', user = user, form=form)
     else:
-        return "User not found", 404
+        return "Not your account bud🍔🍔🦛"
 
         
 @app.route("/other_profile/<username>", methods=['GET', 'POST'])
+@login_required
 def other_profile(username):
     user = get_user_by_username(db.session, username)
     form = SettingsForm()
@@ -352,68 +351,84 @@ def dining():
 #on campus housing routes
 
 @app.route('/legacy-park')
+@login_required
 def legacy_park():
     return render_template('legacy-park.html')
 
 @app.route('/university-park-phase1')
+@login_required
 def university_park_phase_one():
     return render_template('university-park-phase1.html')
 
 @app.route('/university-park-phase2')
+@login_required
 def university_park_phase_two():
     return render_template('university-park-phase2.html')
 
 @app.route('/park-place')
+@login_required
 def park_place():
     return render_template('park-place.html')
 
 @app.route('/adams-hall')
+@login_required
 def adams_hall():
     return render_template('adams-hall.html')
 
 @app.route('/aswell-hall')
+@login_required
 def aswell_hall():
     return render_template('aswell-hall.html')
 
 @app.route('/dudley-hall')
+@login_required
 def dudley_hall():
     return render_template('dudley-hall.html')
 
 @app.route('/cottingham-hall')
+@login_required
 def cottingham_hall():
     return render_template('cottingham-hall.html')
 
 @app.route('/graham-hall')
+@login_required
 def graham_hall():
     return render_template('graham-hall.html')
 
 @app.route('/mitchell-hall')
+@login_required
 def mitchell_hall():
     return render_template('mitchell-hall.html')
 
 @app.route('/richardson-hall')
+@login_required
 def richardson_hall():
     return render_template('richardson-hall.html')
 
 @app.route('/robinson-suite')
+@login_required
 def robinson_suite():
     return render_template('robinson-suite.html')
 
 @app.route('/potts-suite')
+@login_required
 def potts_suite():
     return render_template('potts-suite.html')
 # Connect with other users via QR code
 @app.route("/connect")
+@login_required
 def connect():
     return render_template("connect.html")
 
 # QR code scanner route
 @app.route('/qrscanner')
+@login_required
 def scan():
     return render_template('qrscanner.html')
 
 # Route to add user when qr code scanned
 @app.route('/scanned')
+@login_required
 def scanned():
     print(request.url)
     scanned_user_id = request.args.get('userId', type=int)
@@ -452,6 +467,7 @@ def scanned():
     db.session.commit()
 
 @app.route('/create_class')
+@login_required
 def create_class():
     url = request.url
     form = SettingsForm()
@@ -478,8 +494,11 @@ def create_class():
 
 # Generates a qr code with the user's id info
 @app.route('/generate')
+@login_required
 def generate(class_name=None):
+    
     user_id = current_user.id
+    
     qr = QRCode(
     version=1,
     error_correction=ERROR_CORRECT_L,
@@ -487,10 +506,10 @@ def generate(class_name=None):
     border=4,
     )
 
-    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"
+    qr_data = f"/scanned?userId={user_id}"
 
     if current_user.is_teacher and class_name:
-        qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}&class={class_name}"
+        qr_data = f"/scanned?userId={user_id}&class={class_name}"
 
     # Add data to the QR code
     qr.add_data(qr_data)
@@ -506,6 +525,7 @@ def generate(class_name=None):
     return render_template("generate.html", qr_code_data=img_str)
 
 @app.route('/join_class', methods=['POST'])
+@login_required
 def join_class():
     # Get the user_id and class_id from the request body
     data = request.get_json()

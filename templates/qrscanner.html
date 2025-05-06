@@ -80,6 +80,23 @@
       const classDropdown = document.getElementById("classSelect");
       const className = classDropdown ? classDropdown.value : null;
 
+      // Only allow redirect if decoded text begins with "/scanned"
+      let path = "";
+
+      try {
+        const url = new URL(decodedText);
+        path = url.pathname + url.search;
+      } catch (e) {
+        // If it's a relative path
+        path = decodedText.startsWith("/") ? decodedText : "/" + decodedText;
+      }
+
+      if (!path.startsWith("/scanned")) {
+        console.warn("Invalid QR code: must begin with /scanned");
+        flash("Invalid QR code.");
+        return;
+      }
+
       // Append the class name to the URL as a query parameter if it exists
       const destinationUrl = className 
         ? `${decodedText}&class=${encodeURIComponent(className)}`
