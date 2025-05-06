@@ -8,13 +8,13 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
+
 class Class(db.Model):
     __tablename__ = 'classes'
 
     id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
     name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
     users = db.relationship('User', secondary='user_classes', backref='classes')
-
 
 class Events(db.Model):
     __tablename__ = 'events'

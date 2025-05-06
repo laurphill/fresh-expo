@@ -252,7 +252,6 @@ def start_chat():
 def chats():
     return render_template('chats.html')
 
-
 @app.route('/organizations', methods = ["GET", "POST"])
 @login_required
 def organizations():

@@ -102,77 +102,12 @@
                   </div>
                 {% endif %}
               {% endwith %}
-              {% if current_user.is_authenticated and current_user.is_teacher %}
-                <li><button onclick="promptForClass()">Add Class</button></li>
-              {% else %}
-                {% if current_user.friends %}
-                  <li>
-                    <select id="friendSelect" style="padding: 8px; border-radius: 5px; margin-bottom: 10px; width: 250px;">
-                      <option disabled selected>Select a friend to chat</option>
-                      {% for friend in current_user.friends %}
-                        <option value="{{ friend.username }}">{{ friend.username }}</option>
-                      {% endfor %}
-                    </select>
-                    <button onclick="startChat()">Start Chat</button>
-                  </li>
-                {% else %}
-                  <a href="{{url_for('connect')}}">Add friends to chat!</a>
-                {% endif %}
-              {% endif %}
-
-              {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                  <div class="flash-container">
-                    {% for message in messages %}
-                      <div class="flash-message">{{ message }}</div>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              {% endwith %}
               
             </ul>
           </div>
         </div>
         <div class="right__col">
           <nav>
-            <div class="mytabs">
-              <input type="radio" id="tabPosts" name="mytabs" checked>
-              <input type="radio" id="tabFriends" name="mytabs">
-              <input type="radio" id="tabAboutMe" name="mytabs">
-            
-              <label for="tabPosts">Posts</label>
-              <label for="tabFriends">Friends</label>
-              <label for="tabAboutMe">About Me</label>
-            
-              <div class="tab-content">
-                <div class="tab" id="contentPosts">
-                  <div class="photos">
-                    <img src="../static/images/kit.jpg" alt="Photo" />
-                    <img src="../static/images/cat.jpg" alt="Photo" />
-                    <img src="../static/images/duck.jpg" alt="Photo" />
-                  </div>
-                </div>
-                <div class="tab" id="contentFriends">
-                  <h3>My Friends</h3>
-                  {% if current_user.friends %}
-                    <ul>
-                      {% for friend in current_user.friends %}
-                      <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a>
-                        {{ friend.username }}
-                      {% endfor %}
-                    </ul>
-                  {% else %}
-                    <p><em>You have no friends added.</em></p>
-                  {% endif %} 
-                <div class="tab" id="contentAboutMe">
-                  Major : Computer Science
-                  <br>
-                  Age : 19
-                  <br>
-                  Interests: Music, reading, gaming, outdoors
-                </div>
-              </div>
-            </div>
             <ul>
                 <div class = "mytabs">
                     <input type = "radio" id = "tabPosts" name="mytabs" checked="checked">

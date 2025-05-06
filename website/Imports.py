@@ -19,8 +19,9 @@ from base64 import *
 import re 
 import os
 from werkzeug.utils import secure_filename #to save files to the server
+import uuid as uuid
 import json
-from flask_cors import CORS #
+from flask_cors import CORS
 #to allow database to be accessed from other domains
 import uuid as uuid
 
