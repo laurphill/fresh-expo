@@ -18,7 +18,7 @@ from io import *
 from base64 import *
 import re 
 import os
-from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename #to save files to the server
 import uuid as uuid
 import json
 from flask_cors import CORS

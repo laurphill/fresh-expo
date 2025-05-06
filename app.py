@@ -235,11 +235,6 @@ def other_profile(username):
     form = SettingsForm()
     return render_template('other_profile.html', user = user, form=form)
 
-@app.route('/events', methods = ["GET", "POST"])
-@login_required
-def events():
-    return render_template('events.html')
-
 @app.route('/start_chat', methods = ["GET", "POST"])
 @login_required
 def start_chat():
@@ -343,7 +338,6 @@ def robinson_suite():
 @app.route('/potts-suite')
 def potts_suite():
     return render_template('potts-suite.html')
-# Connect with other users via QR code
 # Connect with other users via QR code
 @app.route("/connect")
 def connect():
