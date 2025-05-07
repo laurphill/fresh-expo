@@ -1,21 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chats</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-    <link rel = "stylesheet" href = "../static/sidebar/chats.css">
-</head>
-<body>
-    <div class="sidebar">
-        <button id="toggleSidebar" class="toggle-btn">☰</button>
-        <a href = "{{url_for('dashboard')}}">Dashboard</a>
-          <a href="{{url_for('chats')}}">Chats</a>
-          <a href="{{url_for('resources')}}">Resources</a>
-          <div style="flex-grow: 1;"></div>
-          <a href="{{url_for('logout')}}">Log Out</a>
-
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+			integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+			crossorigin="anonymous"
+		/>
+        <link rel="stylesheet" href="../static/style.css" />
+		<title>Chats</title>
+	</head>
+	<body>
+        <div class="sidebar">
+            <button id="toggleSidebar" class="toggle-btn">☰</button>
+            <a href = "{{url_for('dashboard')}}">Dashboard</a>
+              <a href="{{url_for('chats')}}">Chats</a>
+              <a href="{{url_for('resources')}}">Resources</a>
+              <div style="flex-grow: 1;"></div>
+              <a href = "{{url_for('connect')}}">Connect</a>
+              <a href="{{url_for('logout')}}">Log Out</a>
+        </div>
         <script>
             const toggleBtn = document.getElementById("toggleSidebar");
             const sidebar = document.querySelector(".sidebar");
@@ -24,7 +31,38 @@
               sidebar.classList.toggle("expanded");
             });
         </script>
-    </div>
-    
-</body>
+		<div class="join-container">
+			<header class="join-header">
+				<h1><i class="fas fa-smile"></i> PawChats</h1>
+			</header>
+            <main class="join-main">
+                <form action="{{ url_for('index') }}" method="post">
+                    <div class="form-control">
+                        <label for="username">Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            id="username"
+                            placeholder="Enter username..."
+                            required
+                        />
+                    </div>
+                    <div class="form-control">
+                        <label for="room">Classes</label>
+                        <select name="room" id="room" required>
+                            <option value="">Select a Room</option>
+                            <option value="Python">Python</option>
+                            <option value="PHP">PHP</option>
+                            <option value="C#">C#</option>
+                            <option value="Ruby">Ruby</option>
+                            <option value="Java">Java</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Join Chat</button>
+                </form>
+            </main>
+            
+		</div>
+        
+	</body>
 </html>

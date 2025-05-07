@@ -67,9 +67,9 @@ io.on("connection", (socket) => {
     // Double check the room is correct (fallback to user's room)
     const targetRoom = room || user.room;
 
+    // Emit the formatted message to the room
     io.to(targetRoom).emit("message", formatMessage(user.username, msg));
-});
-
+  });
 
   // Runs when client disconnects
   socket.on("disconnect", () => {
@@ -90,6 +90,6 @@ io.on("connection", (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

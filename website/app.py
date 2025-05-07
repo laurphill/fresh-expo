@@ -152,6 +152,16 @@ def friend_profile(username):
 def calendar():
     return render_template('calendar.html', events = events)
 
+@app.route('/index', methods=["GET", "POST"])
+@login_required
+def index():
+    username = None
+    room = None
+    if request.method == "POST":
+        username = request.form.get('username')  # Retrieve username from the form
+        room = request.form.get('room')        # Retrieve room from the form
+    return render_template('index.html', username=username, room=room)
+
 @app.route('/chats', methods = ["GET", "POST"])
 @login_required
 def chats():
