@@ -5,27 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chats</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel = "stylesheet" href = "../static/sidebar/chats.css">
+    <link rel="stylesheet" href="../static/sidebar/chats.css">
+    <style>
+        #messages {
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.you {
+            text-align: right;
+        }
+        .chat-selector {
+            margin-bottom: 15px;
+        }
+        .chat-selector select {
+            padding: 8px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="sidebar">
-    <button id="toggleSidebar" class="toggle-btn">☰</button>
-    <a href = "{{url_for('dashboard')}}">Dashboard</a>
-    <a href="{{url_for('chats')}}">Chats</a>
-    <a href="{{url_for('resources')}}">Resources</a>
-    <a href="{{url_for('calendar')}}">Calendar</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <a href="{{ url_for('connect')}}">Connect</a>
-    <a href="{{url_for('logout')}}">Log Out</a>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('chats') }}">Chats</a>
+        <a href="{{ url_for('resources') }}">Resources</a>
+        <a href="{{ url_for('calendar') }}">Calendar</a>
+        <div style = "flex-grow: 1px;"></div>
+        <a href="{{ url_for('connect') }}">Connect</a>
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
 
-  </div>
-      <script>
-          const toggleBtn = document.getElementById("toggleSidebar");
-          const sidebar = document.querySelector(".sidebar");
-          
-          toggleBtn.addEventListener("click", () => {
+    <div class="chat-container">
+        <h1>Chats</h1>
+
+        <!-- Dropdown to Select a Chat -->
+        <div class="chat-selector">
+            <select id="chatSelect">
+                <option disabled selected>Select a chat</option>
+                <optgroup label="Friends">
+                    {% for friend in current_user.friends %}
+                        <option value="friend-{{ friend.id }}">{{ friend.username }}</option>
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Groups">
+                    {% for group in current_user.classes %}
+                        <option value="group-{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </optgroup>
+            </select>
+        </div>
+
+        <!-- Messages Section -->
+        <div id="messages"></div>
+
+        <!-- Chat Form -->
+        <form id="chatForm" style="display: none;">
+            <input type="text" id="messageInput" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedChatType = null;
+        let selectedChatId = null;
+
+        // Handle chat selection
+        document.getElementById('chatSelect').addEventListener('change', function () {
+            const selectedValue = this.value;
+            if (selectedValue.startsWith('friend-')) {
+                selectedChatType = 'friend';
+                selectedChatId = selectedValue.split('-')[1];
+            } else if (selectedValue.startsWith('group-')) {
+                selectedChatType = 'group';
+                selectedChatId = selectedValue.split('-')[1];
+            }
+
+            // Show the chat form and load messages
+            document.getElementById('chatForm').style.display = 'block';
+            loadMessages();
+        });
+
+        // Fetch and display messages
+        function loadMessages() {
+            if (!selectedChatId || !selectedChatType) {
+                alert('Please select a chat to load messages.');
+                return;
+            }
+
+            const endpoint = selectedChatType === 'friend'
+                ? `/api/messages/${selectedChatId}`
+                : `/api/classes/${selectedChatId}/messages`;
+
+            fetch(endpoint)
+                .then(response => response.json())
+                .then(messages => {
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = '';
+                    messages.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message');
+                        if (message.sender_id === {{ current_user.id }}) {
+                            messageDiv.classList.add('you');
+                            messageDiv.textContent = `You: ${message.content}`;
+                        } else {
+                            messageDiv.textContent = `${message.sender_username || message.content}`;
+                        }
+                        messagesDiv.appendChild(messageDiv);
+                    });
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                });
+        }
+
+        // Send a new message
+                document.getElementById('chatForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const content = document.getElementById('messageInput').value;
+        
+            if (!selectedChatId || !selectedChatType) {
+                alert('Please select a chat to send a message.');
+                return;
+            }
+        
+            const endpoint = selectedChatType === 'friend'
+                ? '/api/messages/send'
+                : `/api/classes/${selectedChatId}/send_message`;
+        
+            const body = selectedChatType === 'friend'
+                ? { receiver_id: selectedChatId, content }
+                : { content };
+        
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Adds the new messages to the bottom
+                        const messagesDiv = document.getElementById('messages');
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message', 'you');
+                        messageDiv.textContent = `You: ${content}`;
+                        messagesDiv.appendChild(messageDiv);
+        
+                        // Scroll to the bottom of the messages container
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        
+                        // Clear the input field
+                        document.getElementById('messageInput').value = '';
+                    } else {
+                        alert('Error sending message.');
+                    }
+                });
+        });
+        // Sidebar toggle functionality
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+
+        toggleBtn.addEventListener("click", () => {
             sidebar.classList.toggle("expanded");
-          });
-      </script>
+        });
+    </script>
 </body>
 </html>
