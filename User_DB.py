@@ -9,12 +9,51 @@ friends_table = db.Table(
  )
 
 
+class Messages(db.Model):
+    __tablename__ = 'messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now())
+
+    sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
+    receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
+
+    
 class Class(db.Model):
     __tablename__ = 'classes'
 
-    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
-    name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
-    users = db.relationship('User', secondary='user_classes', backref='classes')
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    name = db.Column(db.String(50), unique=True, nullable=False)  # Class name, must be unique
+
+    # Relationship for user_classes
+    users = db.relationship('User', secondary='user_classes', backref='enrolled_classes')
+
+    # Relationship for class_members
+    members = db.relationship('User', secondary='class_members', backref='member_of_classes')
+
+
+
+class ClassMessage(db.Model):
+    __tablename__ = 'class_messages'
+
+    id = db.Column(db.Integer, primary_key=True)
+    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now())
+
+    class_ = db.relationship('Class', backref='messages')
+    sender = db.relationship('User', backref='class_messages')
+
+# Association table for class members
+class_members = db.Table(
+    'class_members',
+    db.Column('class_id', db.Integer, db.ForeignKey('classes.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id'))
+)
 
 class Events(db.Model):
     __tablename__ = 'events'

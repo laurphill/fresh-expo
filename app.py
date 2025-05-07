@@ -1,5 +1,5 @@
 from Imports import *
-from User_DB import Events, Class, User, get_user_by_id, get_user_by_username, add_user_to_class
+from User_DB import Events, Class, User, Messages, ClassMessage, get_user_by_id, get_user_by_username, add_user_to_class
 
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
@@ -25,6 +25,72 @@ class SettingsForm(FlaskForm):
     major = StringField('Major',validators=[Optional()],render_kw={"place_holder":"Major"})
     submit = SubmitField('Update')
     
+
+@app.route('/api/messages/send', methods=['POST'])
+@login_required
+def send_message():
+    data = request.json
+    print("Received data:", data)  # Debug log
+
+    receiver_id = data.get('receiver_id')
+    content = data.get('content')
+
+    if not receiver_id or not content:
+        return jsonify({'error': 'Receiver ID and content are required.'}), 400
+
+    receiver = User.query.get(receiver_id)
+    if not receiver:
+        return jsonify({'error': 'Receiver not found.'}), 404
+
+    try:
+        message = Messages(sender_id=current_user.id, receiver_id=receiver_id, content=content)
+        db.session.add(message)
+        db.session.commit()
+        return jsonify({'message': 'Message sent successfully!'}), 201
+    except Exception as e:
+        print("Database error:", e)  # Debug log
+        return jsonify({'error': 'Failed to save message to the database.'}), 500
+
+@app.route('/api/messages/<int:receiver_id>', methods=['GET'])
+@login_required
+def get_messages(receiver_id):
+    messages = Messages.query.filter(
+        ((Messages.sender_id == current_user.id) & (Messages.receiver_id == receiver_id)) |
+        ((Messages.sender_id == receiver_id) & (Messages.receiver_id == current_user.id))
+    ).order_by(Messages.timestamp).all()
+
+    messages_data = [
+        {
+            'id': message.id,
+            'sender_id': message.sender_id,
+            'receiver_id': message.receiver_id,
+            'content': message.content,
+            'sender_username': message.sender.username,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for message in messages
+    ]
+
+    return jsonify(messages_data), 200
+
+@app.route('/chat/<int:friend_id>', methods=['GET'])
+@login_required
+def chat(friend_id):
+    friend = User.query.get(friend_id)
+    if not friend:
+        flash('Friend not found.', 'error')
+        return redirect(url_for('dashboard'))
+
+    return render_template('chats.html', friend=friend)
+
+
+    # Create the group and add the current user as a member
+    group = Group(name=group_name)
+    group.members.append(current_user)
+    db.session.add(group)
+    db.session.commit()
+
+    return jsonify({'message': 'Group created successfully!', 'group_id': group.id}), 201
 
 @app.route("/calendar", methods = ["GET", "POST"])
 @login_required
@@ -171,6 +237,7 @@ def upload_photo(photo_id):
     else:
         flash('Invalid file type. Please upload an image file.', 'error')
         return redirect(url_for('profile', username=current_user.username))
+    
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
@@ -491,7 +558,88 @@ def create_class():
         add_user_to_class(db.session, class_name, current_user.id)
         return render_template('profile.html', user = current_user, form=form)
         
+@app.route('/api/classes/<int:class_id>/add_member', methods=['POST'])
+@login_required
+def add_member_to_class(class_id):
+    data = request.json
+    user_id = data.get('user_id')
 
+    class_ = Class.query.get(class_id)
+    if not class_:
+        return jsonify({'error': 'Class not found.'}), 404
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found.'}), 404
+
+    if user in class_.members:
+        return jsonify({'error': 'User is already a member of the class.'}), 400
+
+    class_.members.append(user)
+    db.session.commit()
+
+    return jsonify({'message': 'User added to the class successfully!'}), 200
+
+
+@app.route('/api/classes/<int:class_id>/send_message', methods=['POST'])
+@login_required
+def send_class_message(class_id):
+    data = request.json
+    content = data.get('content')
+
+    if not content:
+        return jsonify({'error': 'Message content is required.'}), 400
+
+    class_ = Class.query.get(class_id)
+    if not class_:
+        return jsonify({'error': 'Class not found.'}), 404
+
+    if current_user not in class_.members:
+        return jsonify({'error': 'You are not a member of this class.'}), 403
+
+    message = ClassMessage(class_id=class_id, sender_id=current_user.id, content=content)
+    db.session.add(message)
+    db.session.commit()
+
+    return jsonify({'message': 'Message sent successfully!'}), 201
+
+@app.route('/class_chat/<int:class_id>', methods=['GET'])
+@login_required
+def class_chat(class_id):
+    class_ = Class.query.get(class_id)
+    if not class_:
+        flash('Class not found.', 'error')
+        return redirect(url_for('dashboard'))
+
+    if current_user not in class_.members:
+        flash('You are not a member of this class.', 'error')
+        return redirect(url_for('dashboard'))
+
+    return render_template('class_chats.html', class_=class_)
+
+@app.route('/api/classes/<int:class_id>/messages', methods=['GET'])
+@login_required
+def get_class_messages(class_id):
+    class_ = Class.query.get(class_id)
+    if not class_:
+        return jsonify({'error': 'Class not found.'}), 404
+
+    if current_user not in class_.members:
+        return jsonify({'error': 'You are not a member of this class.'}), 403
+
+    messages = ClassMessage.query.filter_by(class_id=class_id).order_by(ClassMessage.timestamp).all()
+    messages_data = [
+        {
+            'id': message.id,
+            'sender_id': message.sender_id,
+            'sender_username': message.sender.username,
+            'content': message.content,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for message in messages
+    ]
+
+    return jsonify(messages_data), 200
 # Generates a qr code with the user's id info
 @app.route('/generate')
 @login_required
