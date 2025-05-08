@@ -11,6 +11,7 @@ body {
   background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);    
   color: #3a3a3a;
   display: flex;
+
   min-height: 100vh;
 }
 
@@ -79,10 +80,10 @@ body {
 
 /*LOGO*/
 .logo {
-  width: 35px;
-  height: auto;
-  align-self: flex-end;
-  margin-bottom: -9px
+  width: 200px;
+  height:180px;
+  margin-left: 1000px;
+  margin-top: -129px;
 }
 
 .site-title {
@@ -104,7 +105,7 @@ body {
 .weekly-highlights {
   width: 330px;
   height: 500px;
-  margin-right: 10  0px;
+  margin-right: -20px;
   flex-shrink: 0;
   background-color: #fff9d6;
   padding: 20px;
@@ -128,6 +129,7 @@ body {
   border-radius: 10px;
   padding: 10px 15px;
   margin-bottom: 15px;
+  color: #6984df;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
@@ -181,8 +183,9 @@ body {
 }
 
 .wrapper{
-  width: 750px;
+  width: 1000px;
   background: #fff;
+  margin-left:-20px;
   border-radius: 10px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.12);
   
@@ -190,13 +193,7 @@ body {
     background-color: #f0f0f0;
   }
 }
-  .wrapper{
-    width: 750px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-    
-  }
+
   .wrapper header{
     display: flex;
     align-items: center;
@@ -304,4 +301,47 @@ body {
     20% { opacity: 1; }
     80% { opacity: 1; }
     100% { opacity: 0; }
+  }
+
+    .welcome-banner {
+      background-color: #647fe1;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      margin-left:100px;
+      margin-top: 45px;
+      height: 140px;
+      width: 1280px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-banner h1 {
+      margin: 0;
+      font-size: 2rem;
+  }
+  
+  .welcome-banner p {
+      margin: 10px 0 0;
+      font-size: 1.2rem;
+  }
+  
+  
+  .welcome{
+    height:120px;
+  }
+
+  .footer {
+    color: white;
+    text-align: center;
+    padding: 32px 20px 0px 500px;
+    position: fixed;
+    margin-left:200px;
+    height: 50px;
+    width: 1000px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .footer p {
+    font-size: 10px;
   }

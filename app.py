@@ -313,7 +313,28 @@ def register():
 #dashboard route
 @app.route("/dashboard", methods = ["GET", "POST"])
 def dashboard():
-    return render_template("dashboard.html", username = current_user.username, friends=current_user.friends)
+    
+
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning"
+    elif current_hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+
+    fact = random.choice(fun_facts)
+    
+    today = datetime.now().date()
+
+    # events_today = Events.query.filter_by(id=event_id, user_id=current_user.id).first()
+
+    events_today = Events.query.filter(
+        Events.user_id == current_user.id,  # Filter by the current user's ID
+        Events.date == today  # Filter by today's date
+    ).all()
+    
+    return render_template('dashboard.html', username=current_user.username, events=events_today, friends = current_user.friends, greeting=greeting, fact=fact)
 
 @app.route("/settings/<username>", methods=["GET", "POST"])
 @login_required
@@ -681,3 +702,65 @@ def join_class():
         return jsonify({'success': True, 'message': 'User successfully added to class.'})
     else:
         return jsonify({'success': False, 'message': 'User or Class not found.'})
+    
+
+fun_facts = [
+    "Honey never spoils—even after thousands of years.",
+    "Bananas are berries, but strawberries are not.",
+    "Octopuses have three hearts and blue blood.",
+    "Sharks existed before trees.",
+    "A group of flamingos is called a 'flamboyance'.",
+    "Cats can't taste sweetness.",
+    "Scotland's national animal is the unicorn.",
+    "Wombat poop is cube-shaped.",
+    "Sloths can hold their breath longer than dolphins.",
+    "An ostrich's eye is bigger than its brain.",
+    "You can't hum while holding your nose.",
+    "Koalas have fingerprints like humans.",
+    "There are more stars in the universe than grains of sand on Earth.",
+    "A snail can sleep for three years.",
+    "Hot water freezes faster than cold water—this is called the Mpemba effect.",
+    "Turtles can breathe through their butts.",
+    "The Eiffel Tower can grow over 6 inches during summer.",
+    "Butterflies can taste with their feet.",
+    "There are more fake flamingos in the world than real ones.",
+    "A cloud can weigh over a million pounds.",
+    "Some jellyfish are immortal.",
+    "Cows have best friends and get stressed when separated.",
+    "The dot over the lowercase 'i' is called a 'tittle'.",
+    "The inventor of the Frisbee was turned into a Frisbee after he died.",
+    "A bolt of lightning contains enough energy to toast 100,000 slices of bread.",
+    "Water can boil and freeze at the same time (called the triple point).",
+    "Humans share about 60% of their DNA with bananas.",
+    "There’s a species of jellyfish that can live forever.",
+    "The moon has moonquakes.",
+    "Goats have rectangular pupils.",
+    "There's a basketball court on the top floor of the U.S. Supreme Court building—it's nicknamed the 'Highest Court in the Land'.",
+    "Sea otters hold hands when they sleep so they don’t drift apart.",
+    "The longest hiccuping spree lasted 68 years.",
+    "Penguins propose to each other with pebbles.",
+    "Some frogs can freeze and come back to life.",
+    "Banging your head against a wall for one hour burns 150 calories.",
+    "Cows can walk upstairs but not downstairs.",
+    "The hashtag symbol (#) is technically called an 'octothorpe'.",
+    "Mosquitoes are attracted to people who just ate bananas.",
+    "An apple can float in water because it's 25% air.",
+    "There's a species of fungus that glows in the dark—it's called 'foxfire'.",
+    "The heart of a blue whale is the size of a small car.",
+    "A baby puffin is called a 'puffling'.",
+    "A single strand of spaghetti is called a 'spaghetto'.",
+    "Rabbits can't vomit.",
+    "The total weight of all ants on Earth once equaled the weight of all humans.",
+    "A day on Venus is longer than its year.",
+    "Humans are the only animals with chins.",
+    "A crocodile can't stick its tongue out.",
+    "Some turtles can breathe through their butts."
+    "The world's largest desert is Antarctica.",
+    "A group of jellyfish is called a 'smack'.",    
+    "The world's smallest reptile was discovered in 2021 and is smaller than a pea.",
+    "A group of owls is called a 'parliament'.",
+    "The world's largest snowflake on record was 15 inches wide.",
+    "A group of hedgehogs is called a 'prickle'.",
+    "The world's largest living organism is a fungus in Oregon that covers over 2,385 acres.",
+    
+]

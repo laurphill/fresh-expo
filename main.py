@@ -1,6 +1,6 @@
 from Imports import *
 from app import *
-from User_DB import User
+from User_DB import *
 
 #reload user id from database
 login_manager = LoginManager()
@@ -30,6 +30,10 @@ def allowed_file(filename):
 if __name__ == "__main__":
     with app.app_context():
         #db.drop_all()
+        events = Events.query.all()
+        for event in events:
+            event.date = event.start.date()  # Set the date based on the start datetime
+        db.session.commit()
         #app.jinja_env.cache = {}
         db.create_all()
     app.run(debug=True)

@@ -60,11 +60,15 @@ class Events(db.Model):
     title = db.Column(db.String(100), nullable=False)  # Event title
     end = db.Column(db.DateTime, nullable=True)  # Event end date and time (optional)
     start = db.Column(db.DateTime, nullable=False)  # Event start date and time
+    date = db.Column(db.Date, nullable=True)    
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
         nullable=False  # Set to False to enforce NOT NULL constraint
     )
+    @property
+    def time(self):
+        return self.start.time() 
 
     # Relationship to the User model
     user = db.relationship('User', backref='events')

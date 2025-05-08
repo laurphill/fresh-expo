@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({
           id: info.event.id, // Use the actual event ID
           title: info.event.title,
+          
           start: info.event.start.toISOString(), // Convert to ISO string
         }),
       })
