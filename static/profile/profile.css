@@ -237,14 +237,8 @@ object-fit: cover;
 
 #tabPosts:checked ~ .tab-content #contentPosts,
 #tabFriends:checked ~ .tab-content #contentFriends,
-#tabAboutMe:checked ~ .tab-content #contentAboutMe {
+#tabClasses:checked ~ .tab-content #contentClasses {
 display: block;
-}
-
-#tabPosts:checked ~ .tab-content #contentPosts,
-#tabFriends:checked ~ .tab-content #contentFriends,
-#tabAboutMe:checked ~ .tab-content #contentAboutMe {
-  display: block;
 }
 
 @media (min-width: 1017px) {

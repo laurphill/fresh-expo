@@ -81,6 +81,19 @@ body {
     font-weight: 600;
 }
 
+.wrapper .teacher-btn {
+    width: 100%;
+    height: 45px;
+    margin-top: 16px;
+    background:transparent;
+    border: none;
+    outline: none;
+    cursor:pointer;
+    font-size: 16px;
+    color: rgb(72, 71, 71);
+    font-weight: 600;
+}
+
 /* changes login appearance when button is hovered */
 .wrapper .btn:hover {
     background: rgb(188, 139, 237);

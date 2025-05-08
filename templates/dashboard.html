@@ -87,9 +87,10 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p>No events for today. Enjoy your day!</p>
+            <p><em>No events for today. Enjoy your day!</em></p>
           {% endif %}
-          <h4>Your Friends</h4>
+          <br>
+          <h2>Your Friends</h2>
           <ul>
             {% for friend in friends[:2] %}  {# Preview first 5 #}
               <li><a href="{{ url_for('other_profile', username=friend.username) }}">

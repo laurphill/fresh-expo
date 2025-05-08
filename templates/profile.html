@@ -207,18 +207,19 @@
                       {% endif %}
                     </div>
 
-                    <input type = "radio" id = "tabAboutMe" name="mytabs">
-                    <label for="tabAboutMe">Classes</label>
+                    <input type = "radio" id = "tabClasses" name="mytabs">
+                    <label for="tabClasses">Classes</label>
                     <div class = 'tab'>
-                        {{current_user.username}}'s Classes
-                        <ul>
+                      <h4>My Classes</h4>
                           {% if current_user.classes %}
+                          <ul>
                             {% for class in current_user.classes %}
-                              <li>{{ class.name }}</a></li>
+                              <li><a href="{{ url_for('chats', chat=class.name) }}"></a>{{ class.name }}</a></li>
                             {% endfor %}
-                          {% else %}
+                        </ul>
+                        {% else %}
                             <p><em>No classes added.</em></p>
-                          {% endif %}
+                      {% endif %}
                     </div>
                 </div>
             </ul>
