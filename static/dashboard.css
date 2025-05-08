@@ -80,10 +80,10 @@ body {
 
 /*LOGO*/
 .logo {
-  width: 200px;
-  height:180px;
-  margin-left: 1000px;
-  margin-top: -129px;
+  width: 180px;
+  height:160px;
+  margin-left: 1050px;
+  margin-top: -120px;
 }
 
 .site-title {
@@ -222,9 +222,11 @@ body {
     background: #f2f2f2;
   }
   header .current-date{
-    font-size: 1.45rem;
+    font-size: 2.6rem;
+    color: #333;
     font-weight: 500;
   }
+
   .calendar{
     padding: 20px;
   }
@@ -275,7 +277,6 @@ body {
   .days li:not(.active):hover::before{
     background: #f2f2f2;
   }
-
   .flash-message {
     animation: fadeInOut 4s ease-in-out forwards;
     font-size: 1rem;
