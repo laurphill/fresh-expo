@@ -85,17 +85,25 @@
     </div>
 
     <script>
-
-      
-        let selectedChatType = null;
-        let selectedChatId = null;
-
       
     document.addEventListener('DOMContentLoaded', function () {
         const chatItems = document.querySelectorAll('.chat-item');
+        
         let selectedChatType = null;
         let selectedChatId = null;
-    
+
+        // If a friend is chosen from /start_chat, set the chat type and ID
+        {% if chose_friend %}
+            selectedChatType = "friend";
+            selectedChatId = {{ chose_friend.id }};
+            loadMessages();
+            // Highlight the corresponding chat item
+            const activeChatItem = document.querySelector(`.chat-item[data-chat-type="friend"][data-chat-id="{{ chose_friend.id }}"]`);
+            if (activeChatItem) {
+                activeChatItem.classList.add('active');
+            }
+        {% endif %}
+
         chatItems.forEach(item => {
             item.addEventListener('click', function () {
                 selectedChatType = this.dataset.chatType;

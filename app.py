@@ -467,9 +467,8 @@ def start_chat():
     match = re.search(r'[?&]username=([^&#]+)', url)
     scanned_username = match.group(1) if match else None
     user = get_user_by_username(db.session, scanned_username)
-    ######
-    # Currently unused, but the beginnings of a chat method
-    return render_template('chats.html')
+    
+    return render_template('chats.html', chose_friend = user)
 
 @app.route('/chats', methods = ["GET", "POST"])
 @login_required
