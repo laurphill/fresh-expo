@@ -99,7 +99,6 @@ def create_class():
         db.session.commit()
         db.session.refresh(new_class)
 
-        flash(f"Success! You have created the class {class_name}.")
         add_user_to_class(db.session, class_name, current_user.id)
         return render_template('profile.html', user = current_user, form=form)
     else:
@@ -582,17 +581,17 @@ def scanned():
     if not friend:
         flash(f"User ID {scanned_user_id} not found.")
         return redirect(url_for('scan'))
-    
+
     if not scanned_user_id and not class_name:
         flash("Invalid QR code.")
         return redirect(url_for('scan'))
-    
+
     if current_user.is_teacher:
         add_user_to_class(db.session, class_name, friend.id)
         db.session.commit()
         return render_template('qrscanner.html', selected_class=class_name)
 
-    
+
     if not current_user.is_teacher and scanned_user_id is not None:
         if scanned_user_id == current_user.id:
             flash("You can't add yourself.")
@@ -615,6 +614,7 @@ def scanned():
     new_class.users.append(current_user)
     db.session.add(new_class)
     db.session.commit()
+    
 
     return jsonify({'message': 'Class created successfully!', 'class_id': new_class.id}), 201
         

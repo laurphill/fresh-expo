@@ -253,9 +253,9 @@ def add_user_to_class(db_session, class_name, user_id):
         class_exists.users.append(user)
         db_session.commit()
         if current_user.is_teacher and user.id == current_user.id:
-            flash(f"Created course '{class_exists.name}' successfully.")
+            flash(f"Created course '{class_exists.name}' successfully!")
         else:
-            flash(f"User '{user.username}' successfully added to '{class_exists.name}'.")
+            flash(f"User '{user.username}' successfully added to '{class_exists.name}'!")
     else:
         if current_user.is_teacher and user.id == current_user.id:
             flash(f"Course '{class_exists.name}' already exists.")
