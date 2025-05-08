@@ -43,13 +43,10 @@
             <a href="{{url_for('logout')}}">Log Out</a>
             
           </div>
-          
         </div>
 
-
-
         <div class="welcome-banner">
-          <div class="welcome"><h1>{{greeting}}, {{ current_user.username }}!</h1>
+          <div class="welcome"><h1>🤍🐾{{greeting}}, {{ current_user.username }}!🤍🐾</h1>
             <p>Fun fact: {{fact}}</p>
             <img src="../static/images/PawPoint.png" alt="PawPoint Logo" class="logo" /></div>
           
@@ -87,9 +84,11 @@
               {% endfor %}
             </ul>
           {% else %}
-            <p>No events for today. Enjoy your day!</p>
+            <p>No events for today...</p>
+            <p>Click <a href="{{ url_for('calendar') }}">here</a> to add events!</p>
+            <br><br>
           {% endif %}
-          <h4>Your Friends</h4>
+          <h2>Your Friends: </h2>
           <ul>
             {% for friend in friends[:2] %}  {# Preview first 5 #}
               <li><a href="{{ url_for('other_profile', username=friend.username) }}">

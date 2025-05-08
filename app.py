@@ -5,21 +5,21 @@ from main import *
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
-    password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
-    email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
+    username = StringField(validators=[InputRequired(), Length(min=3, max = 20)], render_kw={"place_holder":"Username"})
+    email = EmailField(validators=[InputRequired(),Length(min=6, max = 40)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
     is_teacher = BooleanField(render_kw={"place_holder":"is_teacher"})
 
 #Logging in 
 class LoginForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
+    username = StringField(validators=[InputRequired(), Length(min=3, max = 20)], render_kw={"place_holder":"Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     remember_me = BooleanField(render_kw={"place_holder":"Remember me"})
     submit = SubmitField("Login") 
 
 class SettingsForm(FlaskForm):
-    username = StringField(validators=[Length(min=4, max = 20), Optional()], render_kw={"place_holder":"Username"})
-    email = EmailField(validators=[Length(min=4, max = 100), Optional()], render_kw={"place_holder":"email"})
+    username = StringField(validators=[Length(min=3, max = 20), Optional()], render_kw={"place_holder":"Username"})
+    email = EmailField(validators=[Length(min=6, max = 40), Optional()], render_kw={"place_holder":"email"})
     password = PasswordField(validators=[Length(min=4, max = 20), Optional()], render_kw={"place_holder":"password"})
     nickname = StringField('Nickname', validators=[Optional()],render_kw={"place_holder":"nickname"})
     bio = StringField('Bio',validators=[Optional()],render_kw={"place_holder":"Bio"})
@@ -512,17 +512,17 @@ def scanned():
     if not friend:
         flash(f"User ID {scanned_user_id} not found.")
         return redirect(url_for('scan'))
-    
+
     if not scanned_user_id and not class_name:
         flash("Invalid QR code.")
         return redirect(url_for('scan'))
-    
+
     if current_user.is_teacher:
         add_user_to_class(db.session, class_name, friend.id)
         db.session.commit()
         return render_template('qrscanner.html', selected_class=class_name)
 
-    
+
     if not current_user.is_teacher and scanned_user_id is not None:
         if scanned_user_id == current_user.id:
             flash("You can't add yourself.")
@@ -540,28 +540,38 @@ def scanned():
 
     db.session.commit()
 
-@app.route('/api/classes/create', methods=['POST'])
-@login_required
-def create_class():
-    data = request.json
-    class_name = data.get('name')
-
-    if not class_name:
-        return jsonify({'error': 'Class name is required.'}), 400
-
-    # Check if the class name already exists
-    existing_class = Class.query.filter_by(name=class_name).first()
-    if existing_class:
-        return jsonify({'error': 'Class name already exists.'}), 400
-
     # Create the class and add the current user as a member
     new_class = Class(name=class_name)
     new_class.members.append(current_user)
+    new_class.users.append(current_user)
     db.session.add(new_class)
     db.session.commit()
+    
 
-    return jsonify({'message': 'Class created successfully!', 'class_id': new_class.id}), 201
-        
+@app.route('/create_class')
+def create_class():
+    url = request.url
+    form = SettingsForm()
+    # Extract the class name from the URL (e.g., after %class%)
+    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
+    class_name = class_match.group(1) if class_match else None
+    
+    # First, check if the class exists in the Classes table
+    class_exists = db.session.query(Class).filter(Class.name == class_name).first()
+    if not class_exists:
+        # If the class doesn't exist, create it
+        new_class = Class(name=class_name)
+        db.session.add(new_class)
+        db.session.commit()
+        db.session.refresh(new_class)
+
+        flash(f"Success! You have created the class {class_name}.")
+        add_user_to_class(db.session, class_name, current_user.id)
+        return render_template('profile.html', user = current_user, form=form)
+    else:
+        add_user_to_class(db.session, class_name, current_user.id)
+        return render_template('profile.html', user = current_user, form=form)
+    
 
 @app.route('/api/classes/<int:class_id>/add_member', methods=['POST'])
 @login_required
@@ -599,7 +609,7 @@ def send_class_message(class_id):
     if not class_:
         return jsonify({'error': 'Class not found.'}), 404
 
-    if current_user not in class_.members:
+    if current_user not in class_.users:
         return jsonify({'error': 'You are not a member of this class.'}), 403
 
     message = ClassMessage(class_id=class_id, sender_id=current_user.id, content=content)
@@ -616,7 +626,7 @@ def class_chat(class_id):
         flash('Class not found.', 'error')
         return redirect(url_for('dashboard'))
 
-    if current_user not in class_.members:
+    if current_user not in class_.users:
         flash('You are not a member of this class.', 'error')
         return redirect(url_for('dashboard'))
 
@@ -627,9 +637,11 @@ def class_chat(class_id):
 def get_class_messages(class_id):
     class_ = Class.query.get(class_id)
     if not class_:
+        print("class not found")
         return jsonify({'error': 'Class not found.'}), 404
 
-    if current_user not in class_.members:
+    if current_user not in class_.users:
+        print("not a member")        
         return jsonify({'error': 'You are not a member of this class.'}), 403
 
     messages = ClassMessage.query.filter_by(class_id=class_id).order_by(ClassMessage.timestamp).all()

@@ -99,14 +99,13 @@
                     <input type = "radio" id = "tabFriends" name="mytabs">
                     <label for="tabFriends">Friends</label>
                     <div class = 'tab'>
-                      <h4>Friends</h4>
-
+                      <h4>{{user.username}}'s Friends: </h4>
+                      <div class = "friendusers">
                       {% if user.friends %}
-                        <ul class = "friends-list">
+                        <ul>
                           {% for friend in user.friends %}
                             {% if friend.username != user.username %}
-                                <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a></li>
-                            {{ friend.username }}
+                                <li><i class="fas fa-user"></i> {{friend.username}}</li>
                             {% endif %}
                           {% endfor %}
                         </ul>
@@ -114,14 +113,15 @@
                         <p><em>No current friends.</em></p>
                       {% endif %}
                     </div>
+                  </div>
                     <input type = "radio" id = "tabAboutMe" name="mytabs">
                     <label for="tabAboutMe">Classes</label>
                     <div class = 'tab'>
-                        {{user.username}}'s Classes
+                        <h4>{{user.username}}'s Classes: </h4>
                         <ul>
                           {% if user.classes %}
                             {% for class in current_user.classes %}
-                              <li>{{ class.name }}</a></li>
+                              <li><a> <i class="fas fa-book"> </i> {{ class.name }}</a></li>
                             {% endfor %}
                           {% else %}
                             <p><em>No classes added.</em></p>

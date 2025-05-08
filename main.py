@@ -1,6 +1,6 @@
 from Imports import *
 from app import *
-from User_DB import *
+from User_DB import User, Events
 
 #reload user id from database
 login_manager = LoginManager()
