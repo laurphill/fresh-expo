@@ -30,7 +30,6 @@ class SettingsForm(FlaskForm):
 @login_required
 def send_message():
     data = request.json
-    print("Received data:", data)  # Debug log
 
     receiver_id = data.get('receiver_id')
     content = data.get('content')
@@ -48,13 +47,11 @@ def send_message():
         db.session.commit()
         return jsonify({'message': 'Message sent successfully!'}), 201
     except Exception as e:
-        print("Database error:", e)  # Debug log
         return jsonify({'error': 'Failed to save message to the database.'}), 500
 
 @app.route('/api/messages/<int:receiver_id>', methods=['GET'])
 @login_required
 def get_messages(receiver_id):
-    print("Fetching messages for receiver ID:", receiver_id)  # Debug log
     messages = Messages.query.filter(
         ((Messages.sender_id == current_user.id) & (Messages.receiver_id == receiver_id)) |
         ((Messages.sender_id == receiver_id) & (Messages.receiver_id == current_user.id))
@@ -71,8 +68,6 @@ def get_messages(receiver_id):
         }
         for message in messages
     ]
-
-    print("Messages found:", messages_data)  # Debug log
 
     return jsonify(messages_data), 200
 
@@ -131,7 +126,6 @@ def send_class_message(class_id):
     message = ClassMessage(class_id=class_id, sender_id=current_user.id, content=content)
     db.session.add(message)
     db.session.commit()
-    print("Message sent:", message)  # Debug log
 
     return jsonify({'message': 'Message sent successfully!'}), 201
 
@@ -154,11 +148,9 @@ def class_chat(class_id):
 def get_class_messages(class_id):
     class_ = Class.query.get(class_id)
     if not class_:
-        print("class not found")
         return jsonify({'error': 'Class not found.'}), 404
 
     if current_user not in class_.users:
-        print("not a member")
         return jsonify({'error': 'You are not a member of this class.'}), 403
 
     messages = ClassMessage.query.filter_by(class_id=class_id).order_by(ClassMessage.timestamp).all()
@@ -584,7 +576,6 @@ def scan():
 # Route to add user when qr code scanned
 @app.route('/scanned')
 def scanned():
-    print(request.url)
     scanned_user_id = request.args.get('userId', type=int)
     friend = get_user_by_id(db.session, scanned_user_id)
     class_name = request.args.get('class')  # None if not provided
@@ -639,10 +630,10 @@ def generate(class_name=None):
     border=4,
     )
 
-    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"
+    qr_data = f"/scanned?userId={user_id}"
 
     if current_user.is_teacher and class_name:
-        qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}&class={class_name}"
+        qr_data = f"/scanned?userId={user_id}&class={class_name}"
 
     # Add data to the QR code
     qr.add_data(qr_data)
@@ -664,13 +655,9 @@ def join_class():
     user_id = data.get('user_id')
     class_id = data.get('class_id')
 
-    print(class_id)
-
     # Find the user and class
     user = User.query.get(user_id)
     class_ = Class.query.get(class_id)
-
-    print(class_)
 
     if user and class_:
         # Check if the user is already in the class
