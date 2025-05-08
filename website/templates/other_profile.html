@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel = "stylesheet" href = "../static/profile/other_profile.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <title>{{ user.username }}'s Profile</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"/>
+<body>
+  <div class="sidebar">
+    <button id="toggleSidebar" class="toggle-btn">☰</button>
+    <a href = "{{url_for('dashboard')}}">Dashboard</a>
+    <a href="{{url_for('chats')}}">Chats</a>
+    <a href="{{url_for('resources')}}">Resources</a>
+    <a href="{{url_for('calendar')}}">Calendar</a>
+    <div style = "flex-grow: 1;"></div>
+    <a href="{{ url_for('connect')}}">Connect</a>
+    <a href="{{url_for('logout')}}">Log Out</a>
+
+  </div>
+    <script>
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+            
+        toggleBtn.addEventListener("click", () => {
+          sidebar.classList.toggle("expanded");
+        });
+
+    </script>
+
+    <div class="header__wrapper">
+      <header></header>
+      <div class="cols__container">
+        <div class="left__col">
+          <div class="img__container">
+            {% if user.profile_picture %}
+              <img src="{{ url_for('static', filename='/profile_pictures/' + user.profile_picture) }}" alt="Profile Picture">
+            {% else %}
+              <img src="{{ url_for('static', filename='/profile_pictures/def.jpg') }}" alt="Default Profile Picture">
+            {% endif %}    
+          <span></span>
+          </div>
+          {%if user.nickname%}
+          <h2>{{user.nickname}}</h2>
+          {%else%}
+          <h2> No nickname</h2>
+          {%endif%}
+          {%if user.major%}
+          {{user.major}}
+          {%else%}
+          <p> No major</p>
+          {%endif%}
+        
+          <p>{{user.email}}</p>
+
+          <div class="content">
+            <p>
+                <br>
+                {%if user.bio%}
+                {{user.bio}}
+                {%else%}
+                <p> No bio</p>
+                {%endif%}
+            </p>
+
+
+          </div>
+        </div>
+        <div class="right__col">
+          <nav>
+            <ul>
+                <div class = "mytabs">
+                    <input type = "radio" id = "tabPosts" name="mytabs" checked="checked">
+                    <label for="tabPosts">Posts</label>
+                    <div class = 'tab'>
+                      <div class="photos" >
+                        {% if user.photo1 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo1)) }}" alt = "Post 1" style="height:300px;">
+                        {% else %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 1" style="height:300px;">
+                        {% endif %}
+                        {% if user.photo2 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo2)) }}" alt = "Post 2" style="height:300px;">
+                        {% else %}
+                        <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 2" style="height:300px;">
+                        {% endif %}
+                        {% if user.photo3 %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo3)) }}" alt = "Post 3" style="height:300px;">
+                        {% else %}
+                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 3" style="height:300px;">
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <input type = "radio" id = "tabFriends" name="mytabs">
+                    <label for="tabFriends">Friends</label>
+                    <div class = 'tab'>
+                      <h4>Friends</h4>
+
+                      {% if user.friends %}
+                        <ul class = "friends-list">
+                          {% for friend in user.friends %}
+                            {% if friend.username != user.username %}
+                                <li><a href="{{ url_for('other_profile', username=friend.username) }}"></a></li>
+                            {{ friend.username }}
+                            {% endif %}
+                          {% endfor %}
+                        </ul>
+                      {% else %}
+                        <p><em>No current friends.</em></p>
+                      {% endif %}
+                    </div>
+                    <input type = "radio" id = "tabAboutMe" name="mytabs">
+                    <label for="tabAboutMe">Classes</label>
+                    <div class = 'tab'>
+                        {{user.username}}'s Classes
+                        <ul>
+                          {% if user.classes %}
+                            {% for class in current_user.classes %}
+                              <li>{{ class.name }}</a></li>
+                            {% endfor %}
+                          {% else %}
+                            <p><em>No classes added.</em></p>
+                          {% endif %}
+                    </div>
+              </div>
+            </ul>
+          </nav>
+          
+          
+        </div>
+      </div>
+    </div>
+</body>
+</html>
