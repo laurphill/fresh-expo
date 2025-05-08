@@ -5,7 +5,7 @@ from main import *
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
-    username = StringField(validators=[InputRequired(), Length(min=3, max = 20)], render_kw={"place_holder":"Username"})
+    password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     email = EmailField(validators=[InputRequired(),Length(min=6, max = 40)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
     is_teacher = BooleanField(render_kw={"place_holder":"is_teacher"})

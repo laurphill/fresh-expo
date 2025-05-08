@@ -5,8 +5,8 @@
 }
 
 body {
-  font-family: "Poppins", Tahoma, sans-serif;
-  color: #5170ef;
+  font-family: 'Fredoka', sa;
+  color: #647fe1;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -33,9 +33,32 @@ nav {
 /* Logo + Site Title */
 .nav-left {
   display: flex;
+  
   align-items: center;
   gap: 10px;
 }
+.buttons {
+    text-align: center; /* Center the buttons horizontally */
+  
+}
+.cta-button {
+  display: inline-block;
+  margin: 0 5px; /* Add spacing between buttons */
+  padding: 10px 15px;
+  background-color: transparent;
+  color: #647fe1;
+  border-radius: 10px;
+  text-decoration: none;
+  font-family: 'Fredoka', sa;
+  font-size: 22px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.cta-button:hover {
+  background-color: #d7dbff;
+}
+
 
 .logo {
   width: 40px;
@@ -57,21 +80,21 @@ nav {
   align-items: center;
   padding: 60px 5%;
   gap: 40px;
+  
   flex-wrap: nowrap;        
   min-width: 0;
 }
 
 .hero {
-  max-width: 1000px;
-  margin: 30px auto 40px;
-  width: 100%;
+  width: 1200px;
+  height: 800px;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  padding: 60px 5%;
-  background-image: url("../static/images/tulipslatech.jpg"); 
+  padding: 150px;
+  background-image: url("../static/images/latech.png"); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -79,32 +102,24 @@ nav {
   color: white;
   opacity: 0.9;
 }
-
-.hero-left h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #ffffff;
+.hero-left{
+  align-items: row;
+  margin-top: -60px;
 }
-
-.hero-left p {
-  font-size: 1.1rem;
-  color: #ffffff;
-}
-
-.cta-button {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 18px;
-  background-color: #e74343;
-  color: #ffffff;
-  border-radius: 10px;
-  text-decoration: none;
+.hero-left h1{
   font-weight: bold;
-  transition: background-color 0.2s;
+  margin-left: 115px;
+  font-size: 2rem;
+  color: #5567cb;
+  line-height: 1.2;
 }
-
-.cta-button:hover {
-  background-color: #ead975;
+.hero-left p{
+  font-size: 20px;
+  margin-left: 30px;
+  line-height: 1.5;
+}
+.hero-left a{
+  margin-left: 100px;
 }
 
 .hero-right img {
@@ -115,25 +130,26 @@ nav {
 }
 
 .about {
-  width: 100%;
-  text-align: left;
-  padding-left: 60px;
-  margin-left: 120px;
+  width: 1000px;
+  margin-left: 30px;
   color: #3a3a3a;
   font-family: 'Fredoka', sa;
 }
 .about h2 {
   font-size: 1.7rem;
+  margin-left: 310px;
   color: #5567cb;
-  margin-bottom: 8px;
+  margin-top: -30px;
+  margin-bottom: 30px;
   line-height: 1.2;
 }
 
 .about p {
-  max-width: 600px;     
+  justify-content: center;
+  width: 1200px;     
   line-height: 1.8;   
-  padding-left: 5%;  
   font-size: 1rem;
+  margin-left: -100px;
 }
 
 
