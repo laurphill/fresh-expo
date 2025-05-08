@@ -5,27 +5,184 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chats</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-    <link rel = "stylesheet" href = "../static/sidebar/chats.css">
+    <link rel="stylesheet" href="../static/sidebar/chats.css">
+
 </head>
 <body>
-  <div class="sidebar">
-    <button id="toggleSidebar" class="toggle-btn">☰</button>
-    <a href = "{{url_for('dashboard')}}">Dashboard</a>
-    <a href="{{url_for('chats')}}">Chats</a>
-    <a href="{{url_for('resources')}}">Resources</a>
-    <a href="{{url_for('calendar')}}">Calendar</a>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <a href="{{ url_for('connect')}}">Connect</a>
-    <a href="{{url_for('logout')}}">Log Out</a>
+    <div class="sidebar">
+        <button id="toggleSidebar" class="toggle-btn">☰</button>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('chats') }}">Chats</a>
+        <a href="{{ url_for('resources') }}">Resources</a>
+        <a href="{{ url_for('calendar') }}">Calendar</a>
+        <div style = "flex-grow: 1;"></div>
+        <a href="{{ url_for('connect') }}">Connect</a>
+        <a href="{{ url_for('logout') }}">Log Out</a>
+    </div>
 
-  </div>
-      <script>
-          const toggleBtn = document.getElementById("toggleSidebar");
-          const sidebar = document.querySelector(".sidebar");
-          
-          toggleBtn.addEventListener("click", () => {
+
+        <div class="chat-layout">
+            <!-- Sidebar -->
+            <div class="chat-sidebar">
+                <h3>Chats</h3>
+                <div class="chat-list">
+                    <h4>Friends</h4>
+                    <ul id="friendsList">
+                        {% for friend in current_user.friends %}
+                            <li class="chat-item" data-chat-type="friend" data-chat-id="{{ friend.id }}">
+                                {{ friend.username }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <h4>Groups</h4>
+                    <ul id="groupsList">
+                        {% for group in current_user.classes %}
+                            <li class="chat-item" data-chat-type="group" data-chat-id="{{ group.id }}">
+                                {{ group.name }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        
+            <!-- Main Chat Container -->
+            <div class="chat-main">
+                <div id="messages" class="messages-container"></div>
+                <form id="chatForm">
+                    <input type="text" id="messageInput" placeholder="Type your message..." required>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+        <!-- Chat Form -->
+        <form id="chatForm" style="display: none;">
+            <input type="text" id="messageInput" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+
+      
+        let selectedChatType = null;
+        let selectedChatId = null;
+
+      
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatItems = document.querySelectorAll('.chat-item');
+        let selectedChatType = null;
+        let selectedChatId = null;
+    
+        chatItems.forEach(item => {
+            item.addEventListener('click', function () {
+                selectedChatType = this.dataset.chatType;
+                selectedChatId = this.dataset.chatId;
+    
+                // Highlight the selected chat
+                chatItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+    
+                // Load messages for the selected chat
+                loadMessages();
+            });
+        });
+    
+        function loadMessages() {
+            if (!selectedChatId || !selectedChatType) {
+                alert('Please select a chat to load messages.');
+                return;
+            }
+        
+            const endpoint = selectedChatType === 'friend'
+                ? `/api/messages/${selectedChatId}`
+                : `/api/classes/${selectedChatId}/messages`;
+        
+            fetch(endpoint)
+                .then(response => response.json())
+                .then(messages => {
+                    console.log('Messages:', messages); // Debugging log
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = ''; // Clear existing messages
+        
+                    messages.forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('message');
+                    
+                        if (message.sender_id === {{ current_user.id }}) {
+                            messageDiv.classList.add('you');
+                            messageDiv.textContent = `You: ${message.content}`;
+                        } else if (message.sender_id) {
+                            messageDiv.classList.add('other');
+                            messageDiv.textContent = `${message.sender_username || 'Unknown'}: ${message.content}`;
+                        } else {
+                            console.warn('Message missing sender_id:', message); // Debugging log
+                            messageDiv.textContent = `Unknown sender: ${message.content}`;
+                        }
+                    
+                        messagesDiv.appendChild(messageDiv);
+                    });
+                    // Scroll to the bottom of the messages container
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error loading messages:', error);
+                    alert('Failed to load messages.');
+                });
+        }
+    
+        // Auto-refresh messages every 5 seconds
+        setInterval(() => {
+            if (selectedChatId && selectedChatType) {
+                loadMessages();
+            }
+        }, 2500); // Refresh every 5000 milliseconds (5 seconds)
+
+
+        // Send a new message
+        document.getElementById('chatForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const content = document.getElementById('messageInput').value;
+    
+            if (!selectedChatId || !selectedChatType) {
+                alert('Please select a chat to send a message.');
+                return;
+            }
+    
+            const endpoint = selectedChatType === 'friend'
+                ? '/api/messages/send'
+                : `/api/classes/${selectedChatId}/send_message`;
+    
+            const body = selectedChatType === 'friend'
+                ? { receiver_id: selectedChatId, content }
+                : { content };
+    
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        loadMessages();
+                        document.getElementById('messageInput').value = '';
+                    } else {
+                        alert('Error sending message.');
+                    }
+                });
+        });
+    });
+
+        // Sidebar toggle functionality
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const sidebar = document.querySelector(".sidebar");
+
+        toggleBtn.addEventListener("click", () => {
             sidebar.classList.toggle("expanded");
-          });
-      </script>
+        });
+
+    </script>
 </body>
 </html>
