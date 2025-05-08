@@ -298,8 +298,8 @@ display: block;
 
 .flash-container {
   position: fixed;
-  top: 60%;
-  left: 16%;
+  top: 70%;
+  left: 20%;
   z-index: 1000;
 }
 

@@ -4,8 +4,8 @@ Verbose = False
 
 friends_table = db.Table(
      'friends',
-     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-     db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
+     Column('user_id', db.Integer, db.ForeignKey('users.id')),
+     Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
 # Association table for class members
@@ -34,7 +34,7 @@ class Class(db.Model):
     name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
     
     # Relationship for user_classes
-    users = db.relationship('User', secondary='user_classes', backref='enrolled_classes')
+    users = db.relationship('User', secondary='user_classes', backref='classes')
 
     # Relationship for class_members
     members = db.relationship('User', secondary='class_members', backref='member_of_classes')
@@ -42,25 +42,24 @@ class Class(db.Model):
 class ClassMessage(db.Model):
     __tablename__ = 'class_messages'
 
-    id = db.Column(db.Integer, primary_key=True)
-    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable=False)
-    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.now())
+    id = Column(db.Integer, primary_key=True)
+    class_id = Column(db.Integer, db.ForeignKey('classes.id'), nullable=False)
+    sender_id = Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = Column(db.Text, nullable=False)
+    timestamp = Column(db.DateTime, default=datetime.now())
 
     class_ = db.relationship('Class', backref='messages')
     sender = db.relationship('User', backref='class_messages')
 
-
 class Events(db.Model):
     __tablename__ = 'events'
 
-    id = db.Column(db.Integer, primary_key=True)  # Primary key
-    title = db.Column(db.String(100), nullable=False)  # Event title
-    end = db.Column(db.DateTime, nullable=True)  # Event end date and time (optional)
-    start = db.Column(db.DateTime, nullable=False)  # Event start date and time
-    date = db.Column(db.Date, nullable=True)    
-    user_id = db.Column(
+    id = Column(db.Integer, primary_key=True)  # Primary key
+    title = Column(db.String(100), nullable=False)  # Event title
+    end = Column(db.DateTime, nullable=True)  # Event end date and time (optional)
+    start = Column(db.DateTime, nullable=False)  # Event start date and time
+    date = Column(db.Date, nullable=True)    
+    user_id = Column(
         db.Integer,
         db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
         nullable=False  # Set to False to enforce NOT NULL constraint
@@ -86,8 +85,8 @@ class Events(db.Model):
 class UserClass(db.Model):
     __tablename__ = 'user_classes'
 
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
+    user_id = Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    class_id = Column(db.Integer, db.ForeignKey('classes.id'), primary_key=True)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'  # Define the table name
@@ -99,7 +98,7 @@ class User(db.Model, UserMixin):
     bio = Column(String(100), nullable = True, server_default="About Me")
     nickname = Column(String(50), unique=False, nullable = True, server_default="nickname")  # Username field, must be unique
     is_teacher = Column(Boolean, unique=False, nullable = False)  # Username field, must be unique
-    profile_picture = db.Column(db.String(100), nullable=True)  # Profile picture field
+    profile_picture = Column(db.String(100), nullable=True)  # Profile picture field
     friends = db.relationship(
      'User',
      secondary=friends_table,
@@ -107,11 +106,11 @@ class User(db.Model, UserMixin):
      secondaryjoin=id==friends_table.c.friend_id,
      backref='added_by'
  )
-    display_picture = db.Column(db.String(100), nullable=True)  # Display picture field
-    major = db.Column(db.String(100), nullable=True)  # Major field
-    photo1 = db.Column(db.String(150), nullable=True)
-    photo2 = db.Column(db.String(150), nullable=True)
-    photo3 = db.Column(db.String(150), nullable=True)
+    display_picture = Column(db.String(100), nullable=True)  # Display picture field
+    major = Column(db.String(100), nullable=True)  # Major field
+    photo1 = Column(db.String(150), nullable=True)
+    photo2 = Column(db.String(150), nullable=True)
+    photo3 = Column(db.String(150), nullable=True)
 
 
     def __init__(self, username, email, password, bio="About Me", nickname="nickname", is_teacher=False, major = major):
@@ -253,8 +252,14 @@ def add_user_to_class(db_session, class_name, user_id):
         user.classes.append(class_exists)
         class_exists.users.append(user)
         db_session.commit()
-        flash(f"User '{user.username}' successfully added to '{class_exists.name}'.")
+        if current_user.is_teacher and user.id == current_user:
+            flash(f"Created course '{class_exists.name}' successfully.")
+        else:
+            flash(f"User '{user.username}' successfully added to '{class_exists.name}'.")
     else:
-        flash(f"User {user.username} is already enrolled in '{class_exists.name}'.")
+        if current_user.is_teacher and user.id == current_user:
+            flash(f"Course '{class_exists.name}' already exists.")
+        else:
+            flash(f"User {user.username} is already enrolled in '{class_exists.name}'.")
     
         return user

@@ -65,7 +65,7 @@ body {
   border-radius: 8px;
   transition: 0.2s;
 }
-
+ 
 .chats-container {
     width: 80%; /* Make the chat container take 80% of the page width */
     max-width: 900px; /* Limit the maximum width */

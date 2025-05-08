@@ -67,7 +67,7 @@
                     </ul>
                 </div>
             </div>
-        
+
             <!-- Main Chat Container -->
             <div class="chat-main">
                 <div id="messages" class="messages-container"></div>
@@ -148,8 +148,7 @@
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 })
                 .catch(error => {
-                    console.error('Error loading messages:', error);
-                    alert('Failed to load messages.');
+                    alert('Failed to load messages-> Error: ' + error);
                 });
         }
     

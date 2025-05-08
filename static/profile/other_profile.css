@@ -292,6 +292,13 @@ background: fixed;
   opacity: 0;
 }
 
+.flash-container {
+  position: fixed;
+  top: 70%;
+  left: 20%;
+  z-index: 1000;
+}
+
 @keyframes fadeInOut {
   0% { opacity: 0; }
   20% { opacity: 1; }
