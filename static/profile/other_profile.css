@@ -319,23 +319,15 @@ background: fixed;
 .tab ul li {
   margin-bottom: -10px;
   padding: 10px 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-
-  background-color: #f9f9f9;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
   color: black;
-  
   font-weight: 500;
   transition: color 0.3s ease;
 }
 .tab ul li a{
   margin-bottom: -10px;
   padding: 10px 10px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #f9f9f9;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
   color: #647fe1;
