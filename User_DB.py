@@ -8,6 +8,13 @@ friends_table = db.Table(
      db.Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
 
+# Association table for class members
+class_members = db.Table(
+    'class_members',
+    Column('class_id', db.Integer, db.ForeignKey('classes.id')),
+    Column('user_id', db.Integer, db.ForeignKey('users.id'))
+)
+
 class Messages(db.Model):
     __tablename__ = 'messages'
 
@@ -19,8 +26,6 @@ class Messages(db.Model):
 
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
-
-
 
 class Class(db.Model):
     __tablename__ = 'classes'
@@ -34,7 +39,6 @@ class Class(db.Model):
     # Relationship for class_members
     members = db.relationship('User', secondary='class_members', backref='member_of_classes')
 
-
 class ClassMessage(db.Model):
     __tablename__ = 'class_messages'
 
@@ -47,14 +51,6 @@ class ClassMessage(db.Model):
     class_ = db.relationship('Class', backref='messages')
     sender = db.relationship('User', backref='class_messages')
 
-# Association table for class members
-class_members = db.Table(
-    'class_members',
-    db.Column('class_id', db.Integer, db.ForeignKey('classes.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id'))
-)
-
-
 
 class Events(db.Model):
     __tablename__ = 'events'
@@ -63,11 +59,15 @@ class Events(db.Model):
     title = db.Column(db.String(100), nullable=False)  # Event title
     end = db.Column(db.DateTime, nullable=True)  # Event end date and time (optional)
     start = db.Column(db.DateTime, nullable=False)  # Event start date and time
+    date = db.Column(db.Date, nullable=True)    
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
         nullable=False  # Set to False to enforce NOT NULL constraint
     )
+    @property
+    def time(self):
+        return self.start.time() 
 
     # Relationship to the User model
     user = db.relationship('User', backref='events')

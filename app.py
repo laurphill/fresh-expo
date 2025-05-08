@@ -25,6 +25,22 @@ class SettingsForm(FlaskForm):
     major = StringField('Major',validators=[Optional()],render_kw={"place_holder":"Major"})
     submit = SubmitField('Update')
 
+
+@app.route('/api/classes/create', methods=['POST'])
+@login_required
+def create_class():
+    data = request.json
+    class_name = data.get('name')
+
+    if not class_name:
+        return jsonify({'error': 'Class name is required.'}), 400
+
+    # Check if the class name already exists
+    existing_class = Class.query.filter_by(name=class_name).first()
+    if existing_class:
+        return jsonify({'error': 'Class name already exists.'}), 400
+
+
 @app.route('/api/messages/send', methods=['POST'])
 @login_required
 def send_message():
@@ -313,6 +329,7 @@ def upload_photo(photo_id):
     else:
         flash('Invalid file type. Please upload an image file.', 'error')
         return redirect(url_for('profile', username=current_user.username))
+    
 @app.route('/')
 def homepage():
     return render_template("homepage.html")
@@ -385,9 +402,29 @@ def register():
 
 #dashboard route
 @app.route("/dashboard", methods = ["GET", "POST"])
-@login_required
 def dashboard():
-    return render_template("dashboard.html", username = current_user.username, friends=current_user.friends)
+    
+
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning"
+    elif current_hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+
+    fact = random.choice(fun_facts)
+    
+    today = datetime.now().date()
+
+    # events_today = Events.query.filter_by(id=event_id, user_id=current_user.id).first()
+
+    events_today = Events.query.filter(
+        Events.user_id == current_user.id,  # Filter by the current user's ID
+        Events.date == today  # Filter by today's date
+    ).all()
+    
+    return render_template('dashboard.html', username=current_user.username, events=events_today, friends = current_user.friends, greeting=greeting, fact=fact)
 
 @app.route("/settings/<username>", methods=["GET", "POST"])
 @login_required
@@ -429,12 +466,13 @@ def profile(username):
 
     if current_user.username == username:
         return render_template('profile.html', user = current_user, form=form)
+    elif user in db.session:
+        return render_template('other_profile.html', user = user, form=form)
     else:
-        return "Not your account bud🍔🍔🦛"
+        return "User not found", 404
 
         
 @app.route("/other_profile/<username>", methods=['GET', 'POST'])
-@login_required
 def other_profile(username):
     user = get_user_by_username(db.session, username)
     form = SettingsForm()
@@ -493,84 +531,68 @@ def dining():
 #on campus housing routes
 
 @app.route('/legacy-park')
-@login_required
 def legacy_park():
     return render_template('legacy-park.html')
 
 @app.route('/university-park-phase1')
-@login_required
 def university_park_phase_one():
     return render_template('university-park-phase1.html')
 
 @app.route('/university-park-phase2')
-@login_required
 def university_park_phase_two():
     return render_template('university-park-phase2.html')
 
 @app.route('/park-place')
-@login_required
 def park_place():
     return render_template('park-place.html')
 
 @app.route('/adams-hall')
-@login_required
 def adams_hall():
     return render_template('adams-hall.html')
 
 @app.route('/aswell-hall')
-@login_required
 def aswell_hall():
     return render_template('aswell-hall.html')
 
 @app.route('/dudley-hall')
-@login_required
 def dudley_hall():
     return render_template('dudley-hall.html')
 
 @app.route('/cottingham-hall')
-@login_required
 def cottingham_hall():
     return render_template('cottingham-hall.html')
 
 @app.route('/graham-hall')
-@login_required
 def graham_hall():
     return render_template('graham-hall.html')
 
 @app.route('/mitchell-hall')
-@login_required
 def mitchell_hall():
     return render_template('mitchell-hall.html')
 
 @app.route('/richardson-hall')
-@login_required
 def richardson_hall():
     return render_template('richardson-hall.html')
 
 @app.route('/robinson-suite')
-@login_required
 def robinson_suite():
     return render_template('robinson-suite.html')
 
 @app.route('/potts-suite')
-@login_required
 def potts_suite():
     return render_template('potts-suite.html')
 # Connect with other users via QR code
 @app.route("/connect")
-@login_required
 def connect():
     return render_template("connect.html")
 
 # QR code scanner route
 @app.route('/qrscanner')
-@login_required
 def scan():
     return render_template('qrscanner.html')
 
 # Route to add user when qr code scanned
 @app.route('/scanned')
-@login_required
 def scanned():
     print(request.url)
     scanned_user_id = request.args.get('userId', type=int)
@@ -608,39 +630,18 @@ def scanned():
 
     db.session.commit()
 
-@app.route('/create_class')
-@login_required
-def create_class():
-    url = request.url
-    form = SettingsForm()
-    # Extract the class name from the URL (e.g., after %class%)
-    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
-    class_name = class_match.group(1) if class_match else None
-    
-    # First, check if the class exists in the Classes table
-    class_exists = db.session.query(Class).filter(Class.name == class_name).first()
-    if not class_exists:
-        # If the class doesn't exist, create it
-        new_class = Class(name=class_name)
-        db.session.add(new_class)
-        db.session.commit()
-        db.session.refresh(new_class)
+    # Create the class and add the current user as a member
+    new_class = Class(name=class_name)
+    new_class.members.append(current_user)
+    db.session.add(new_class)
+    db.session.commit()
 
-        flash(f"Success! You have created the class {class_name}.")
-        add_user_to_class(db.session, class_name, current_user.id)
-        return render_template('profile.html', user = current_user, form=form)
-    else:
-        add_user_to_class(db.session, class_name, current_user.id)
-        return render_template('profile.html', user = current_user, form=form)
+    return jsonify({'message': 'Class created successfully!', 'class_id': new_class.id}), 201
         
-
 # Generates a qr code with the user's id info
 @app.route('/generate')
-@login_required
 def generate(class_name=None):
-    
     user_id = current_user.id
-    
     qr = QRCode(
     version=1,
     error_correction=ERROR_CORRECT_L,
@@ -648,10 +649,10 @@ def generate(class_name=None):
     border=4,
     )
 
-    qr_data = f"/scanned?userId={user_id}"
+    qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}"
 
     if current_user.is_teacher and class_name:
-        qr_data = f"/scanned?userId={user_id}&class={class_name}"
+        qr_data = f"http://127.0.0.1:5000/scanned?userId={user_id}&class={class_name}"
 
     # Add data to the QR code
     qr.add_data(qr_data)
@@ -667,7 +668,6 @@ def generate(class_name=None):
     return render_template("generate.html", qr_code_data=img_str)
 
 @app.route('/join_class', methods=['POST'])
-@login_required
 def join_class():
     # Get the user_id and class_id from the request body
     data = request.get_json()
@@ -694,3 +694,56 @@ def join_class():
         return jsonify({'success': True, 'message': 'User successfully added to class.'})
     else:
         return jsonify({'success': False, 'message': 'User or Class not found.'})
+    
+
+fun_facts = [
+    "Honey never spoils—even after thousands of years.",
+    "Bananas are berries, but strawberries are not.",
+    "Octopuses have three hearts and blue blood.",
+    "Sharks existed before trees.",
+    "A group of flamingos is called a 'flamboyance'.",
+    "Cats can't taste sweetness.",
+    "Scotland's national animal is the unicorn.",
+    "Wombat poop is cube-shaped.",
+    "Sloths can hold their breath longer than dolphins.",
+    "An ostrich's eye is bigger than its brain.",
+    "You can't hum while holding your nose.",
+    "Koalas have fingerprints like humans.",
+    "A snail can sleep for three years.",
+    "Turtles can breathe through their butts.",
+    "The Eiffel Tower can grow over 6 inches during summer.",
+    "Butterflies can taste with their feet.",
+    "There are more fake flamingos in the world than real ones.",
+    "A cloud can weigh over a million pounds.",
+    "Some jellyfish are immortal.",
+    "Cows have best friends and get stressed when separated.",
+    "The dot over the lowercase 'i' is called a 'tittle'.",
+    "The inventor of the Frisbee was turned into a Frisbee after he died.",
+    "Humans share about 60% of their DNA with bananas.",
+    "There’s a species of jellyfish that can live forever.",
+    "The moon has moonquakes.",
+    "Goats have rectangular pupils.",
+    "Sea otters hold hands when they sleep so they don’t drift apart.",
+    "The longest hiccuping spree lasted 68 years.",
+    "Penguins propose to each other with pebbles.",
+    "Some frogs can freeze and come back to life.",
+    "Banging your head against a wall for one hour burns 150 calories.",
+    "Cows can walk upstairs but not downstairs.",
+    "The hashtag symbol (#) is technically called an 'octothorpe'.",
+    "Mosquitoes are attracted to people who just ate bananas.",
+    "An apple can float in water because it's 25% air.",
+    "The heart of a blue whale is the size of a small car.",
+    "A baby puffin is called a 'puffling'.",
+    "A single strand of spaghetti is called a 'spaghetto'.",
+    "Rabbits can't vomit.",
+    "A day on Venus is longer than its year.",
+    "Humans are the only animals with chins.",
+    "A crocodile can't stick its tongue out.",
+    "Some turtles can breathe through their butts."
+    "The world's largest desert is Antarctica.",
+    "A group of jellyfish is called a 'smack'.",    
+    "A group of owls is called a 'parliament'.",
+    "The world's largest snowflake on record was 15 inches wide.",
+    "A group of hedgehogs is called a 'prickle'.",
+    
+]

@@ -123,30 +123,9 @@ section .wave.wave4{
     transform: translateY(-50%);
     font-size: 20px;
 }
-/*wrapper for remember me and forgot password*/
-.wrapper .remember-forgot {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    margin: -15px 0 15px;
-}
 
-/* moves "remember me" label for checkbox */
-.remember-forgot label {
-    accent-color: rgb(91, 80, 80);
-    margin-right:120px;
-    
-}
-/* designs "forgot password"  */
-.remember-forgot a {
-    color: rgb(91, 80, 80);
-    text-decoration: underline;
-}
-/*change color of forgot password when hovered*/
-.remember-forgot a:hover {
-    color: rgb(188, 139, 237);
-    text-decoration: underline;
-}
+
+ 
 /*button appearance of login button*/
 .wrapper .btn {
     width: 100%;
