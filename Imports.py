@@ -3,7 +3,7 @@ from flask import Flask, Response, jsonify, render_template, redirect, url_for, 
 from flask_sqlalchemy import SQLAlchemy #database
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user #making login functionality easier
 from flask_wtf import FlaskForm #validate data at all times and increased security for user input
-from flask_wtf.file import FileField, FileAllowed
+from flask_wtf.file import FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, FileField, EmailField, DateTimeField, TextAreaField#appropriate inputs for username, password, and after submitting said inputs
 from wtforms.validators import InputRequired, Optional, Length, DataRequired #controlling properties of inputs
 from flask_bcrypt import Bcrypt #secure passwords/information
@@ -20,7 +20,6 @@ from base64 import *
 import re 
 import os
 from werkzeug.utils import secure_filename #to save files to the server
-import uuid as uuid
 import json, requests
 from flask_cors import CORS
 #to allow database to be accessed from other domains
