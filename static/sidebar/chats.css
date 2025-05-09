@@ -5,30 +5,30 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
-    color: #3a3a3a;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    min-height: 100vh; /* Full viewport height */
-    margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);
+  color: #3a3a3a;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  min-height: 100vh; /* Full viewport height */
+  margin: 0;
 }
 
 .sidebar {
-    position: fixed; /* Fix the sidebar to the left */
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 60px;
-    background-color: #647fe1;
-    color: white;
-    padding: 20px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    transition: width 0.3s ease;
-    overflow: hidden;
+  position: fixed; /* Fix the sidebar to the left */
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  background-color: #647fe1;
+  color: white;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: width 0.3s ease;
+  overflow: hidden;
 }
 
 .toggle-btn {
@@ -65,7 +65,7 @@ body {
   border-radius: 8px;
   transition: 0.2s;
 }
-
+ 
 .chats-container {
     width: 80%; /* Make the chat container take 80% of the page width */
     max-width: 900px; /* Limit the maximum width */

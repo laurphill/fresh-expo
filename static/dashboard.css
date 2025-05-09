@@ -11,6 +11,7 @@ body {
   background: linear-gradient(to bottom, #ffffff 0%, #a8b4ef 100%);    
   color: #3a3a3a;
   display: flex;
+
   min-height: 100vh;
 }
 
@@ -79,10 +80,10 @@ body {
 
 /*LOGO*/
 .logo {
-  width: 35px;
-  height: auto;
-  align-self: flex-end;
-  margin-bottom: -9px
+  width: 180px;
+  height:160px;
+  margin-left: 1050px;
+  margin-top: -120px;
 }
 
 .site-title {
@@ -104,7 +105,7 @@ body {
 .weekly-highlights {
   width: 330px;
   height: 500px;
-  margin-right: 10  0px;
+  margin-right: -20px;
   flex-shrink: 0;
   background-color: #fff9d6;
   padding: 20px;
@@ -121,6 +122,7 @@ body {
 
 .weekly-highlights ul {
   list-style: none;
+  
 }
 
 .weekly-highlights li {
@@ -128,19 +130,29 @@ body {
   border-radius: 10px;
   padding: 10px 15px;
   margin-bottom: 15px;
+  color: #6984df;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+.weekly-highlights li a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color:#6984df;
 
-.weekly-highlights h3 {
-  font-size: 1rem;
-  color: #9baded;
+
 }
-
+.weekly-highlights li:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
 .weekly-highlights p {
-  font-size: 0.9rem;
-  color: #756e6e;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  color: #6984df;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-size: 1.2rem;
 }
-
 /*PROFILE*/
 .profile-container{
   position: absolute;
@@ -181,8 +193,9 @@ body {
 }
 
 .wrapper{
-  width: 750px;
+  width: 1000px;
   background: #fff;
+  margin-left:-20px;
   border-radius: 10px;
   box-shadow: 0 15px 40px rgba(0,0,0,0.12);
   
@@ -190,13 +203,7 @@ body {
     background-color: #f0f0f0;
   }
 }
-  .wrapper{
-    width: 750px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
-    
-  }
+
   .wrapper header{
     display: flex;
     align-items: center;
@@ -225,9 +232,11 @@ body {
     background: #f2f2f2;
   }
   header .current-date{
-    font-size: 1.45rem;
+    font-size: 2.6rem;
+    color: #333;
     font-weight: 500;
   }
+
   .calendar{
     padding: 20px;
   }
@@ -278,7 +287,6 @@ body {
   .days li:not(.active):hover::before{
     background: #f2f2f2;
   }
-
   .flash-message {
     animation: fadeInOut 4s ease-in-out forwards;
     font-size: 1rem;
@@ -304,4 +312,47 @@ body {
     20% { opacity: 1; }
     80% { opacity: 1; }
     100% { opacity: 0; }
+  }
+
+    .welcome-banner {
+      background-color: #647fe1;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      margin-left:100px;
+      margin-top: 45px;
+      height: 140px;
+      width: 1280px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-banner h1 {
+      margin: 0;
+      font-size: 2rem;
+  }
+  
+  .welcome-banner p {
+      margin: 10px 0 0;
+      font-size: 1.2rem;
+  }
+  
+  
+  .welcome{
+    height:120px;
+  }
+
+  .footer {
+    color: white;
+    text-align: center;
+    padding: 32px 20px 0px 500px;
+    position: fixed;
+    margin-left:200px;
+    height: 50px;
+    width: 1000px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .footer p {
+    font-size: 10px;
   }

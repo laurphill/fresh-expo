@@ -52,12 +52,15 @@ width: 120px
 .sidebar.expanded a{
 opacity: 1;
 font-size: 1rem;
+text-decoration: none;
+
 }
 .sidebar a:hover {
-background-color: #506bd4;
-padding: 8px;
-border-radius: 8px;
-transition: 0.2s;
+  background-color: #506bd4;
+  padding: 8px;
+  color:white;
+  border-radius: 8px;
+  transition: 0.2s;
 }
 
 ul {
@@ -221,32 +224,13 @@ object-fit: cover;
   grid-template-columns: 1fr 2fr;
   gap: 50px;
 }
-.header__wrapper .cols__container .left__col {
-  padding: 25px 0px;
-}
-.header__wrapper .cols__container .right__col .mytabs .tab nav ul {
-  flex-direction: row;
-  gap: 30px;
 }
 .header__wrapper .cols__container .right__col .mytabs .tab {
   height: 365px;
   overflow: auto;
   padding: 0 0 30px;
-}
-}
 
-#tabPosts:checked ~ .tab-content #contentPosts,
-#tabFriends:checked ~ .tab-content #contentFriends,
-#tabAboutMe:checked ~ .tab-content #contentAboutMe {
-display: block;
 }
-
-#tabPosts:checked ~ .tab-content #contentPosts,
-#tabFriends:checked ~ .tab-content #contentFriends,
-#tabAboutMe:checked ~ .tab-content #contentAboutMe {
-  display: block;
-}
-
 @media (min-width: 1017px) {
 .header__wrapper .cols__container .left__col {
   margin: 0;
@@ -322,7 +306,6 @@ display: block;
   
 }
 
-
 .tooltip {
   visibility: hidden;
   background-color: rgb(121, 110, 237);
@@ -373,7 +356,6 @@ display: block;
   background-color: #506bd4; /* Darker shade on hover */
 }
 .friends-list {
-  list-style-type: none; /* Remove bullet points */
   padding-left: 0px; /* Remove default padding */
   margin: 0; /* Remove default margin */
   display: flex; /* Use flexbox for horizontal layout */
@@ -382,6 +364,7 @@ display: block;
 
 .friends-list li {
   display: inline; /* Ensure list items are inline */
+
 }
 
 .friends-list a {
@@ -395,4 +378,41 @@ display: block;
 
 .friends-list a:hover {
   background-color: #f0f0f0; /* Change background color on hover */
+}
+
+
+.tab ul {
+  background-color: #ffffff;
+  width: 45%; /* Adjust width for side-by-side layout */
+  list-style: none;
+  padding: 0;
+  margin-top: 30px;
+  margin-left:-30px;
+  border-radius: 15px;
+  border-color:#506bd4;
+}
+.tab ul li a{
+  margin-bottom: -10px;
+  padding: 10px 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: #647fe1;
+  
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.friendusers{
+  border-radius: 20px;
+  border-color: #647fe1;
+}
+.tab ul li a:hover {
+  background-color: #eef3ff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #506bd4;
+
 }

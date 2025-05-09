@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chats</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel = "stylesheet" href = "../static/sidebar/chats.css">
     <link rel="stylesheet" href="../static/sidebar/chats.css">
-
+    <style>
+        #messages {
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.you {
+            text-align: right;
+        }
+        .chat-selector {
+            margin-bottom: 15px;
+        }
+        .chat-selector select {
+            padding: 8px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="sidebar">
@@ -44,7 +67,7 @@
                     </ul>
                 </div>
             </div>
-        
+
             <!-- Main Chat Container -->
             <div class="chat-main">
                 <div id="messages" class="messages-container"></div>
@@ -62,17 +85,25 @@
     </div>
 
     <script>
-
-      
-        let selectedChatType = null;
-        let selectedChatId = null;
-
       
     document.addEventListener('DOMContentLoaded', function () {
         const chatItems = document.querySelectorAll('.chat-item');
+        
         let selectedChatType = null;
         let selectedChatId = null;
-    
+
+        // If a friend is chosen from /start_chat, set the chat type and ID
+        {% if chose_friend %}
+            selectedChatType = "friend";
+            selectedChatId = {{ chose_friend.id }};
+            loadMessages();
+            // Highlight the corresponding chat item
+            const activeChatItem = document.querySelector(`.chat-item[data-chat-type="friend"][data-chat-id="{{ chose_friend.id }}"]`);
+            if (activeChatItem) {
+                activeChatItem.classList.add('active');
+            }
+        {% endif %}
+
         chatItems.forEach(item => {
             item.addEventListener('click', function () {
                 selectedChatType = this.dataset.chatType;
@@ -125,11 +156,17 @@
                     messagesDiv.scrollTop = messagesDiv.scrollHeight;
                 })
                 .catch(error => {
-                    console.error('Error loading messages:', error);
-                    alert('Failed to load messages.');
+                    alert('Failed to load messages-> Error: ' + error);
                 });
         }
     
+        // Auto-refresh messages every 5 seconds
+        setInterval(() => {
+            if (selectedChatId && selectedChatType) {
+                loadMessages();
+            }
+        }, 2500); // Refresh every 5000 milliseconds (5 seconds)
+
         // Send a new message
         document.getElementById('chatForm').addEventListener('submit', function (event) {
             event.preventDefault();

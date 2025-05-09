@@ -86,7 +86,7 @@
                         {% if user.photo2 %}
                           <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo2)) }}" alt = "Post 2" style="height:300px;">
                         {% else %}
-                          <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 2" style="height:300px;">
+                        <img src = "{{ url_for('static', filename='/profile_pictures/photodef.jpg') }}" alt = "Post 2" style="height:300px;">
                         {% endif %}
                         {% if user.photo3 %}
                           <img src = "{{ url_for('static', filename='/profile_pictures/' + (user.photo3)) }}" alt = "Post 3" style="height:300px;">

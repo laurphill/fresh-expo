@@ -1,232 +1,249 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
-    margin:0;
-    padding:0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 :root {
-  --fc-daygrid-event-dot-width: 5px;
-  font-family: "Poppins", sans-serif;
+--fc-daygrid-event-dot-width: 5px;
+font-family: "Poppins", sans-serif;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 400px;
-  font-family: "Poppins", sans-serif;
-  font-size: 14px;
+margin: 0;
+padding: 0;
+display: flex;
+gap: 400px;
+font-family: "Poppins", sans-serif;
+font-size: 14px;
 }
 
 .fc-next-button, .fc-prev-button {
-  background-color: #647fe1 !important;
-  border: none !important;
+background-color: #647fe1 !important;
+border: none !important;
 }
 .fc-col-header {
-  border-radius: 16px !important;
-  font-family: 'Poppins', sans-serif !important;
+border-radius: 16px !important;
+font-family: 'Poppins', sans-serif !important;
 
 }
 #calendar {
-  width: 950px;
-  margin-top: 50px;
-  margin-left: -300px;
-  max-height: 650px;
-  display: flex;
+width: 950px;
+margin-top: 50px;
+margin-left: -300px;
+max-height: 650px;
+display: flex;
 }
 
 /* SIDEBAR */
 .sidebar {
-  width: 60px;
-  background-color: #647fe1;
-  color: white;
-  padding: 20px 10px;
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  gap: 15px;
-  transition: width 0.3s ease;
-  overflow: hidden;
+width: 60px;
+background-color: #647fe1;
+color: white;
+padding: 20px 10px;
+display: flex;
+height: 100vh;
+flex-direction: column;
+gap: 15px;
+transition: width 0.3s ease;
+overflow: hidden;
 }
 
 .toggle-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-bottom: 20px;
-  align-self: flex-start;
+background: none;
+border: none;
+color: white;
+font-size: 1.5rem;
+cursor: pointer;
+margin-bottom: 20px;
+align-self: flex-start;
 }
 
 .sidebar a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  font-family: "Poppins", sans-serif;
-  transition: opacity 0.2s ease;
-  opacity: 0;
-  font-size:0;
+color: white;
+text-decoration: none;
+font-weight: bold;
+white-space: nowrap;
+overflow: hidden;
+transition: opacity 0.2s ease;
+opacity: 0;
+font-size:0;
 }
 .sidebar.expanded{
-  width: 120px;
-  font-family: "Poppins", sans-serif;
+width: 120px;
+font-family: "Poppins", sans-serif;
 
 }
 
 .sidebar.expanded a{
-  opacity: 1;
-  font-size: 1rem;
-  font-family: "Poppins", sans-serif;
+opacity: 1;
+font-size: 1rem;
+
 }
 .sidebar a:hover {
-  background-color: #506bd4;
-  padding: 8px;
-  border-radius: 8px;
-  transition: 0.2s;
+background-color: #506bd4;
+padding: 8px;
+border-radius: 8px;
+transition: 0.2s;
 }
 
 .header {
-    display:flex;
-    justify-content: space-between;
-    align-items: center;
-    padding:10px;
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:10px;
 }
+
 
 .header button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border:none;
-    border-radius: 50%;
-    background:white;
-    cursor:pointer;
-    width:40px;
-    height:40px;
-    box-shadow: 0 0 4px black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border:none;
+  border-radius: 50%;
+  background:white;
+  cursor:pointer;
+  width:40px;
+  height:40px;
+  box-shadow: 0 0 4px black;
 }
 
+
 .todo{
-    width:290px;
-    height:590px;
-    margin-top:110px;
-    margin-left: 1160px;
-    display: flex;
-    position: absolute;
-    flex-direction: column;
-    padding:10px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 3px #000000;
-    
+  width:290px;
+  height:590px;
+  margin-top:110px;
+  margin-left: 1160px;
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  padding:10px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 3px #000000;
+  
 }
 
 .todo ul {
-    margin: 0;
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  /* Style the list items */
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Style the list items */
 
 .todo ul li {
-    cursor: pointer;
-    position: relative;
-    padding: 12px 8px 12px 40px;
-    background: #eee;
-    font-size: 18px;
-    transition: 0.2s;
-    font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  position: relative;
+  padding: 12px 8px 12px 40px;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+  font-family: "Poppins", sans-serif;
 
-  
-    /* make the list items unselectable */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+
+  /* make the list items unselectable */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-  
-  /* Set all odd list items to a different color (zebra-stripes) */
+
+/* Set all odd list items to a different color (zebra-stripes) */
 
 .todo ul li:nth-child(odd) {
-    background: #f9f9f9;
+  background: #f9f9f9;
 }
 /* Darker background-color on hover */
 .todo ul li:hover {
-    background: #ddd;
+  background: #ddd;
 }
-  
-  /* When clicked on, add a background color and strike out text */
+
+/* When clicked on, add a background color and strike out text */
 .todo ul li.checked {
-    background: #ffffff;
-    color: #fff;
-    text-decoration: line-through;
+  background: #ffffff;
+  color: #fff;
+  text-decoration: line-through;
 }
-  
-  /* Add a "checked" mark when clicked on */
+
+/* Add a "checked" mark when clicked on */
 .todo ul li.checked::before {
-    content: '';
-    position: absolute;
-    border-color: #fff;
-    border-style: solid;
-    border-width: 0 2px 2px 0;
-    top: 10px;
-    left: 16px;
-    transform: rotate(45deg);
-    height: 15px;
-    width: 7px;
+  content: '';
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
 }
-  
-  /* Style the close button */
-  .delete-btn {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100px;
-    height: 60px;
-    padding: 12px 16px 12px 16px;
+
+/* Style the close button */
+.delete-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100px;
+  height: 60px;
+  padding: 12px 16px 12px 16px;
 }
- 
+
 .delete-btn:hover {
-    background-color: #3649f4;
-    color: white;
+  background-color: #3649f4;
+  color: white;
 }
-  /* Style the input */
+/* Style the input */
 .todo input {
-    margin: 0;
-    border: none;
-    border-radius: 0;
-    width: 75%;
-    padding: 10px;
-    float: left;
-    font-size: 16px;
-    font-family: "Poppins", sans-serif;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  width: 75%;
+  padding: 10px;
+  float: left;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
 }
 
 .todo ul li:active {
-  cursor: grabbing; /* Show a grabbing cursor when dragging */
+cursor: grabbing; /* Show a grabbing cursor when dragging */
 }
-  /* Style the "Add" button */
+/* Style the "Add" button */
 .todo .addBtn {
-    padding: 10px;
-    width: 25%;
-    background: #d9d9d9;
-    color: #555;
-    float: left;
-    text-align: center;
-    font-size: 16px;
-    cursor: pointer;
-    font-family: "Poppins", sans-serif;
-    transition: 0.3s;
-    border-radius: 0;
-}
-  
-.todo .addBtn:hover {
-    background-color: #bbb;
+  padding: 10px;
+  width: 25%;
+  background: #d9d9d9;
+  color: #555;
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: 0.3s;
+  border-radius: 0;
 }
 
+.todo .addBtn:hover {
+  background-color: #bbb;
+}
+
+.event-tooltip {
+position: absolute;
+z-index: 1000;
+background-color: #fff;
+color: #333;
+border: 1px solid #ddd;
+border-radius: 5px;
+padding: 10px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+font-size: 0.9rem;
+pointer-events: none; /* Prevent the tooltip from interfering with mouse events */
+}
+
+.event-tooltip strong {
+font-size: 1rem;
+color: #647fe1;
+}

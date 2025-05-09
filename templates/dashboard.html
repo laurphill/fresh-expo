@@ -32,27 +32,24 @@
           <a href="{{url_for('logout')}}">Log Out</a>
       
         </div>
-        
-        <div class="nav-content">
-          <div class="nav-left">
-            <img src="../static/images/PawPoint.png" alt="PawPoint Logo" class="logo" />
-            <span class="site-title">PawPoint</span>
-          </div>
+      
 
         <div class="profile-container">
+          
           <ion-icon name="person-circle" class="profile-icon" id="profileToggle"></ion-icon>
           <div class="profile-dropdown" id="profileDropdown">
             <a href="{{url_for('profile', username=username)}}">View Profile</a>
             <a href="{{url_for('settings', username=username)}}">Settings</a>
             <a href="{{url_for('logout')}}">Log Out</a>
+            
           </div>
         </div>
 
-        </div>
-
-        <div class="main-content">
-          <div class="welcome">Hello, {{current_user.username}}!</div>
-      
+        <div class="welcome-banner">
+          <div class="welcome"><h1>🤍🐾{{greeting}}, {{ current_user.username }}!🤍🐾</h1>
+            <p>Fun fact: {{fact}}</p>
+            <img src="../static/images/PawPoint.png" alt="PawPoint Logo" class="logo" /></div>
+          
           <div class="dashboard-layout">
             <div class="wrapper">
                 <header>
@@ -75,22 +72,23 @@
                   <ul class="days"></ul>
                 </div>
               </div>         
-  
-      <nav>
-        
+          
         <aside class="weekly-highlights">
-          <h2>What's Hot This Week</h2>
-          <ul>
-            <li>
-              <h3>Featured Clubs/Organizations</h3>
-              <p>Get involved on campus!</p>
-            </li>
-            <li>
-              <h3>Study Group: CSC 132</h3>
-              <p>Join active group chats and reviews</p>
-            </li>
-          </ul>
-          <h4>Your Friends</h4>
+          <h2>Your events for today:</h2>
+          {% if events %}
+            <ul>
+              {% for event in events %}
+                <li>
+                  <strong>{{ event.title }}</strong> 
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No events for today...</p>
+            <p>Click <a href="{{ url_for('calendar') }}">here</a> to add events!</p>
+            <br><br>
+          {% endif %}
+          <h2>Your Friends: </h2>
           <ul>
             {% for friend in friends[:2] %}  {# Preview first 5 #}
               <li><a href="{{ url_for('other_profile', username=friend.username) }}">
@@ -103,8 +101,9 @@
         </aside>
         
       </div>
-      
-      
+      <footer class="footer">
+        <p> Thank you for visiting PawPoint!</p>
+      </footer>
       <script>
           const profileIcon = document.getElementById("profileToggle");
           const dropdown = document.getElementById("profileDropdown");
@@ -128,5 +127,19 @@
             sidebar.classList.toggle("expanded");
           });
       </script>
+      <script>
+        var facts = ["I will add more facts later", 'Heaven']
+        var randomFact = randomlist(facts);
+
+        function generateFacts() {
+          document.getElementById('here').innerHTML = randomFact;
+        }
+
+        function randomlist(list) {
+          var x = Math.floor(Math.random() * list.length);
+          return list[x];
+        }
+      </script> 
+      <script href="../static/dashboard.js"></script>
   </body>
 </html>

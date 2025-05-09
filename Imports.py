@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from DateTime import DateTime
 from datetime import date, datetime
 from flask_migrate import Migrate
+import random
 from qrcode import *
 from io import *
 from base64 import *
@@ -20,12 +21,17 @@ import re
 import os
 from werkzeug.utils import secure_filename #to save files to the server
 import uuid as uuid
-import json
+import json, requests
 from flask_cors import CORS
+#to allow database to be accessed from other domains
+import uuid as uuid
+
 
 #initialize app
 app = Flask(__name__)
 CORS(app)
+
+bcrypt = Bcrypt(app)
 
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.cache = {}
@@ -45,6 +51,3 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-
-#For hashing passwords
-bcrypt = Bcrypt(app)

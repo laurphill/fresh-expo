@@ -3,34 +3,33 @@ from User_DB import Events, Class, User, Messages, ClassMessage, get_user_by_id,
 
 #Taking information for username and password to set up new account
 class RegisterForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
+    username = StringField(validators=[InputRequired(), Length(min=3, max = 20)], render_kw={"place_holder":"Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
-    email = EmailField(validators=[InputRequired(),Length(min=4, max = 20)], render_kw={"place_holder":"email"})
+    email = EmailField(validators=[InputRequired(),Length(min=6, max = 40)], render_kw={"place_holder":"email"})
     submit = SubmitField("Register")    
     is_teacher = BooleanField(render_kw={"place_holder":"is_teacher"})
 
 #Logging in 
 class LoginForm(FlaskForm):
-    username = StringField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"Username"})
+    username = StringField(validators=[InputRequired(), Length(min=3, max = 20)], render_kw={"place_holder":"Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max = 20)], render_kw={"place_holder":"password"})
     remember_me = BooleanField(render_kw={"place_holder":"Remember me"})
     submit = SubmitField("Login") 
 
 class SettingsForm(FlaskForm):
-    username = StringField(validators=[Length(min=4, max = 20), Optional()], render_kw={"place_holder":"Username"})
-    email = EmailField(validators=[Length(min=4, max = 100), Optional()], render_kw={"place_holder":"email"})
+    username = StringField(validators=[Length(min=3, max = 20), Optional()], render_kw={"place_holder":"Username"})
+    email = EmailField(validators=[Length(min=6, max = 40), Optional()], render_kw={"place_holder":"email"})
     password = PasswordField(validators=[Length(min=4, max = 20), Optional()], render_kw={"place_holder":"password"})
     nickname = StringField('Nickname', validators=[Optional()],render_kw={"place_holder":"nickname"})
     bio = StringField('Bio',validators=[Optional()],render_kw={"place_holder":"Bio"})
     major = StringField('Major',validators=[Optional()],render_kw={"place_holder":"Major"})
     submit = SubmitField('Update')
-    
+
 
 @app.route('/api/messages/send', methods=['POST'])
 @login_required
 def send_message():
     data = request.json
-    print("Received data:", data)  # Debug log
 
     receiver_id = data.get('receiver_id')
     content = data.get('content')
@@ -48,7 +47,6 @@ def send_message():
         db.session.commit()
         return jsonify({'message': 'Message sent successfully!'}), 201
     except Exception as e:
-        print("Database error:", e)  # Debug log
         return jsonify({'error': 'Failed to save message to the database.'}), 500
 
 @app.route('/api/messages/<int:receiver_id>', methods=['GET'])
@@ -83,14 +81,89 @@ def chat(friend_id):
 
     return render_template('chats.html', friend=friend)
 
+@app.route('/create_class')
+@login_required
+def create_class():
+    url = request.url
+    form = SettingsForm()
+    # Extract the class name from the URL (e.g., after %class%)
+    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
+    class_name = class_match.group(1) if class_match else None
+    
+    # First, check if the class exists in the Classes table
+    class_exists = db.session.query(Class).filter(Class.name == class_name).first()
+    if not class_exists:
+        # If the class doesn't exist, create it
+        new_class = Class(name=class_name)
+        db.session.add(new_class)
+        db.session.commit()
+        db.session.refresh(new_class)
 
-    # Create the group and add the current user as a member
-    group = Group(name=group_name)
-    group.members.append(current_user)
-    db.session.add(group)
+        add_user_to_class(db.session, class_name, current_user.id)
+        return render_template('profile.html', user = current_user, form=form)
+    else:
+        add_user_to_class(db.session, class_name, current_user.id)
+        return render_template('profile.html', user = current_user, form=form)
+        
+@app.route('/api/classes/<int:class_id>/send_message', methods=['POST'])
+@login_required
+def send_class_message(class_id):
+
+    data = request.json
+    content = data.get('content')
+
+    if not content:
+        return jsonify({'error': 'Message content is required.'}), 400
+
+    class_ = Class.query.get(class_id)
+    if not class_:
+        return jsonify({'error': 'Class not found.'}), 404
+
+    if current_user not in class_.users:
+        return jsonify({'error': 'You are not a member of this class.'}), 403
+
+    message = ClassMessage(class_id=class_id, sender_id=current_user.id, content=content)
+    db.session.add(message)
     db.session.commit()
 
-    return jsonify({'message': 'Group created successfully!', 'group_id': group.id}), 201
+    return jsonify({'message': 'Message sent successfully!'}), 201
+
+@app.route('/class_chat/<int:class_id>', methods=['GET'])
+@login_required
+def class_chat(class_id):
+    class_ = Class.query.get(class_id)
+    if not class_:
+        flash('Class not found.', 'error')
+        return redirect(url_for('dashboard'))
+
+    if current_user not in class_.users:
+        flash('You are not a member of this class.', 'error')
+        return redirect(url_for('dashboard'))
+
+    return render_template('class_chats.html', class_=class_)
+
+@app.route('/api/classes/<int:class_id>/messages', methods=['GET'])
+@login_required
+def get_class_messages(class_id):
+    class_ = Class.query.get(class_id)
+    if not class_:
+        return jsonify({'error': 'Class not found.'}), 404
+
+    if current_user not in class_.users:
+        return jsonify({'error': 'You are not a member of this class.'}), 403
+
+    messages = ClassMessage.query.filter_by(class_id=class_id).order_by(ClassMessage.timestamp).all()
+    messages_data = [
+        {
+            'id': message.id,
+            'sender_id': message.sender_id,
+            'sender_username': message.sender.username,
+            'content': message.content,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for message in messages
+    ]
+    return jsonify(messages_data), 200
 
 @app.route("/calendar", methods = ["GET", "POST"])
 @login_required
@@ -310,9 +383,29 @@ def register():
 
 #dashboard route
 @app.route("/dashboard", methods = ["GET", "POST"])
-@login_required
 def dashboard():
-    return render_template("dashboard.html", username = current_user.username, friends=current_user.friends)
+    
+
+    current_hour = datetime.now().hour
+    if current_hour < 12:
+        greeting = "Good Morning"
+    elif current_hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+
+    fact = random.choice(fun_facts)
+    
+    today = datetime.now().date()
+
+    # events_today = Events.query.filter_by(id=event_id, user_id=current_user.id).first()
+
+    events_today = Events.query.filter(
+        Events.user_id == current_user.id,  # Filter by the current user's ID
+        Events.date == today  # Filter by today's date
+    ).all()
+    
+    return render_template('dashboard.html', username=current_user.username, events=events_today, friends = current_user.friends, greeting=greeting, fact=fact)
 
 @app.route("/settings/<username>", methods=["GET", "POST"])
 @login_required
@@ -354,12 +447,13 @@ def profile(username):
 
     if current_user.username == username:
         return render_template('profile.html', user = current_user, form=form)
+    elif user in db.session:
+        return render_template('other_profile.html', user = user, form=form)
     else:
-        return "Not your account bud🍔🍔🦛"
+        return "User not found", 404
 
         
 @app.route("/other_profile/<username>", methods=['GET', 'POST'])
-@login_required
 def other_profile(username):
     user = get_user_by_username(db.session, username)
     form = SettingsForm()
@@ -372,9 +466,8 @@ def start_chat():
     match = re.search(r'[?&]username=([^&#]+)', url)
     scanned_username = match.group(1) if match else None
     user = get_user_by_username(db.session, scanned_username)
-    ######
-    # Currently unused, but the beginnings of a chat method
-    return render_template('chats.html')
+    
+    return render_template('chats.html', chose_friend = user)
 
 @app.route('/chats', methods = ["GET", "POST"])
 @login_required
@@ -418,86 +511,69 @@ def dining():
 #on campus housing routes
 
 @app.route('/legacy-park')
-@login_required
 def legacy_park():
     return render_template('legacy-park.html')
 
 @app.route('/university-park-phase1')
-@login_required
 def university_park_phase_one():
     return render_template('university-park-phase1.html')
 
 @app.route('/university-park-phase2')
-@login_required
 def university_park_phase_two():
     return render_template('university-park-phase2.html')
 
 @app.route('/park-place')
-@login_required
 def park_place():
     return render_template('park-place.html')
 
 @app.route('/adams-hall')
-@login_required
 def adams_hall():
     return render_template('adams-hall.html')
 
 @app.route('/aswell-hall')
-@login_required
 def aswell_hall():
     return render_template('aswell-hall.html')
 
 @app.route('/dudley-hall')
-@login_required
 def dudley_hall():
     return render_template('dudley-hall.html')
 
 @app.route('/cottingham-hall')
-@login_required
 def cottingham_hall():
     return render_template('cottingham-hall.html')
 
 @app.route('/graham-hall')
-@login_required
 def graham_hall():
     return render_template('graham-hall.html')
 
 @app.route('/mitchell-hall')
-@login_required
 def mitchell_hall():
     return render_template('mitchell-hall.html')
 
 @app.route('/richardson-hall')
-@login_required
 def richardson_hall():
     return render_template('richardson-hall.html')
 
 @app.route('/robinson-suite')
-@login_required
 def robinson_suite():
     return render_template('robinson-suite.html')
 
 @app.route('/potts-suite')
-@login_required
 def potts_suite():
     return render_template('potts-suite.html')
 # Connect with other users via QR code
 @app.route("/connect")
-@login_required
 def connect():
     return render_template("connect.html")
 
 # QR code scanner route
 @app.route('/qrscanner')
-@login_required
 def scan():
     return render_template('qrscanner.html')
 
 # Route to add user when qr code scanned
 @app.route('/scanned')
-@login_required
 def scanned():
-    print(request.url)
     scanned_user_id = request.args.get('userId', type=int)
     friend = get_user_by_id(db.session, scanned_user_id)
     class_name = request.args.get('class')  # None if not provided
@@ -505,17 +581,17 @@ def scanned():
     if not friend:
         flash(f"User ID {scanned_user_id} not found.")
         return redirect(url_for('scan'))
-    
+
     if not scanned_user_id and not class_name:
         flash("Invalid QR code.")
         return redirect(url_for('scan'))
-    
+
     if current_user.is_teacher:
         add_user_to_class(db.session, class_name, friend.id)
         db.session.commit()
         return render_template('qrscanner.html', selected_class=class_name)
 
-    
+
     if not current_user.is_teacher and scanned_user_id is not None:
         if scanned_user_id == current_user.id:
             flash("You can't add yourself.")
@@ -533,120 +609,19 @@ def scanned():
 
     db.session.commit()
 
-@app.route('/create_class')
-@login_required
-def create_class():
-    url = request.url
-    form = SettingsForm()
-    # Extract the class name from the URL (e.g., after %class%)
-    class_match = re.search(r'[?&]class=([A-Za-z0-9_]+)', url)
-    class_name = class_match.group(1) if class_match else None
+    # Create the class and add the current user as a member
+    new_class = Class(name=class_name)
+    new_class.users.append(current_user)
+    db.session.add(new_class)
+    db.session.commit()
     
-    # First, check if the class exists in the Classes table
-    class_exists = db.session.query(Class).filter(Class.name == class_name).first()
-    if not class_exists:
-        # If the class doesn't exist, create it
-        new_class = Class(name=class_name)
-        db.session.add(new_class)
-        db.session.commit()
-        db.session.refresh(new_class)
 
-        flash(f"Success! You have created the class {class_name}.")
-        add_user_to_class(db.session, class_name, current_user.id)
-        return render_template('profile.html', user = current_user, form=form)
-    else:
-        add_user_to_class(db.session, class_name, current_user.id)
-        return render_template('profile.html', user = current_user, form=form)
+    return jsonify({'message': 'Class created successfully!', 'class_id': new_class.id}), 201
         
-@app.route('/api/classes/<int:class_id>/add_member', methods=['POST'])
-@login_required
-def add_member_to_class(class_id):
-    data = request.json
-    user_id = data.get('user_id')
-
-    class_ = Class.query.get(class_id)
-    if not class_:
-        return jsonify({'error': 'Class not found.'}), 404
-
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found.'}), 404
-
-    if user in class_.members:
-        return jsonify({'error': 'User is already a member of the class.'}), 400
-
-    class_.members.append(user)
-    db.session.commit()
-
-    return jsonify({'message': 'User added to the class successfully!'}), 200
-
-
-@app.route('/api/classes/<int:class_id>/send_message', methods=['POST'])
-@login_required
-def send_class_message(class_id):
-    data = request.json
-    content = data.get('content')
-
-    if not content:
-        return jsonify({'error': 'Message content is required.'}), 400
-
-    class_ = Class.query.get(class_id)
-    if not class_:
-        return jsonify({'error': 'Class not found.'}), 404
-
-    if current_user not in class_.members:
-        return jsonify({'error': 'You are not a member of this class.'}), 403
-
-    message = ClassMessage(class_id=class_id, sender_id=current_user.id, content=content)
-    db.session.add(message)
-    db.session.commit()
-
-    return jsonify({'message': 'Message sent successfully!'}), 201
-
-@app.route('/class_chat/<int:class_id>', methods=['GET'])
-@login_required
-def class_chat(class_id):
-    class_ = Class.query.get(class_id)
-    if not class_:
-        flash('Class not found.', 'error')
-        return redirect(url_for('dashboard'))
-
-    if current_user not in class_.members:
-        flash('You are not a member of this class.', 'error')
-        return redirect(url_for('dashboard'))
-
-    return render_template('class_chats.html', class_=class_)
-
-@app.route('/api/classes/<int:class_id>/messages', methods=['GET'])
-@login_required
-def get_class_messages(class_id):
-    class_ = Class.query.get(class_id)
-    if not class_:
-        return jsonify({'error': 'Class not found.'}), 404
-
-    if current_user not in class_.members:
-        return jsonify({'error': 'You are not a member of this class.'}), 403
-
-    messages = ClassMessage.query.filter_by(class_id=class_id).order_by(ClassMessage.timestamp).all()
-    messages_data = [
-        {
-            'id': message.id,
-            'sender_id': message.sender_id,
-            'sender_username': message.sender.username,
-            'content': message.content,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        }
-        for message in messages
-    ]
-
-    return jsonify(messages_data), 200
 # Generates a qr code with the user's id info
 @app.route('/generate')
-@login_required
 def generate(class_name=None):
-    
     user_id = current_user.id
-    
     qr = QRCode(
     version=1,
     error_correction=ERROR_CORRECT_L,
@@ -673,20 +648,15 @@ def generate(class_name=None):
     return render_template("generate.html", qr_code_data=img_str)
 
 @app.route('/join_class', methods=['POST'])
-@login_required
 def join_class():
     # Get the user_id and class_id from the request body
     data = request.get_json()
     user_id = data.get('user_id')
     class_id = data.get('class_id')
 
-    print(class_id)
-
     # Find the user and class
     user = User.query.get(user_id)
     class_ = Class.query.get(class_id)
-
-    print(class_)
 
     if user and class_:
         # Check if the user is already in the class
@@ -700,3 +670,56 @@ def join_class():
         return jsonify({'success': True, 'message': 'User successfully added to class.'})
     else:
         return jsonify({'success': False, 'message': 'User or Class not found.'})
+    
+
+fun_facts = [
+    "Honey never spoils—even after thousands of years.",
+    "Bananas are berries, but strawberries are not.",
+    "Octopuses have three hearts and blue blood.",
+    "Sharks existed before trees.",
+    "A group of flamingos is called a 'flamboyance'.",
+    "Cats can't taste sweetness.",
+    "Scotland's national animal is the unicorn.",
+    "Wombat poop is cube-shaped.",
+    "Sloths can hold their breath longer than dolphins.",
+    "An ostrich's eye is bigger than its brain.",
+    "You can't hum while holding your nose.",
+    "Koalas have fingerprints like humans.",
+    "A snail can sleep for three years.",
+    "Turtles can breathe through their butts.",
+    "The Eiffel Tower can grow over 6 inches during summer.",
+    "Butterflies can taste with their feet.",
+    "There are more fake flamingos in the world than real ones.",
+    "A cloud can weigh over a million pounds.",
+    "Some jellyfish are immortal.",
+    "Cows have best friends and get stressed when separated.",
+    "The dot over the lowercase 'i' is called a 'tittle'.",
+    "The inventor of the Frisbee was turned into a Frisbee after he died.",
+    "Humans share about 60% of their DNA with bananas.",
+    "There’s a species of jellyfish that can live forever.",
+    "The moon has moonquakes.",
+    "Goats have rectangular pupils.",
+    "Sea otters hold hands when they sleep so they don’t drift apart.",
+    "The longest hiccuping spree lasted 68 years.",
+    "Penguins propose to each other with pebbles.",
+    "Some frogs can freeze and come back to life.",
+    "Banging your head against a wall for one hour burns 150 calories.",
+    "Cows can walk upstairs but not downstairs.",
+    "The hashtag symbol (#) is technically called an 'octothorpe'.",
+    "Mosquitoes are attracted to people who just ate bananas.",
+    "An apple can float in water because it's 25% air.",
+    "The heart of a blue whale is the size of a small car.",
+    "A baby puffin is called a 'puffling'.",
+    "A single strand of spaghetti is called a 'spaghetto'.",
+    "Rabbits can't vomit.",
+    "A day on Venus is longer than its year.",
+    "Humans are the only animals with chins.",
+    "A crocodile can't stick its tongue out.",
+    "Some turtles can breathe through their butts."
+    "The world's largest desert is Antarctica.",
+    "A group of jellyfish is called a 'smack'.",    
+    "A group of owls is called a 'parliament'.",
+    "The world's largest snowflake on record was 15 inches wide.",
+    "A group of hedgehogs is called a 'prickle'.",
+    
+]
