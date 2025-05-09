@@ -1,6 +1,6 @@
 from Imports import *
 from app import *
-from User_DB import User, Events
+from User_DB import User
 
 #reload user id from database
 login_manager = LoginManager()
@@ -36,4 +36,4 @@ if __name__ == "__main__":
         db.session.commit()
         #app.jinja_env.cache = {}
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True) 

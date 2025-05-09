@@ -49,7 +49,7 @@
             <div class="chat-sidebar">
                 <h3>Chats</h3>
                 <div class="chat-list">
-                    <h4>💌 Friends</h4>
+                    <h4>Friends</h4>
                     <ul id="friendsList">
                         {% for friend in current_user.friends %}
                             <li class="chat-item" data-chat-type="friend" data-chat-id="{{ friend.id }}">
@@ -57,7 +57,7 @@
                             </li>
                         {% endfor %}
                     </ul>
-                    <h4>✉️ Groups</h4>
+                    <h4>Groups</h4>
                     <ul id="groupsList">
                         {% for group in current_user.classes %}
                             <li class="chat-item" data-chat-type="group" data-chat-id="{{ group.id }}">
@@ -67,7 +67,7 @@
                     </ul>
                 </div>
             </div>
-        
+
             <!-- Main Chat Container -->
             <div class="chat-main">
                 <div id="messages" class="messages-container"></div>
@@ -85,17 +85,25 @@
     </div>
 
     <script>
-
-      
-        let selectedChatType = null;
-        let selectedChatId = null;
-
       
     document.addEventListener('DOMContentLoaded', function () {
         const chatItems = document.querySelectorAll('.chat-item');
+        
         let selectedChatType = null;
         let selectedChatId = null;
-    
+
+        // If a friend is chosen from /start_chat, set the chat type and ID
+        {% if chose_friend %}
+            selectedChatType = "friend";
+            selectedChatId = {{ chose_friend.id }};
+            loadMessages();
+            // Highlight the corresponding chat item
+            const activeChatItem = document.querySelector(`.chat-item[data-chat-type="friend"][data-chat-id="{{ chose_friend.id }}"]`);
+            if (activeChatItem) {
+                activeChatItem.classList.add('active');
+            }
+        {% endif %}
+
         chatItems.forEach(item => {
             item.addEventListener('click', function () {
                 selectedChatType = this.dataset.chatType;
@@ -152,6 +160,13 @@
                 });
         }
     
+        // Auto-refresh messages every 5 seconds
+        setInterval(() => {
+            if (selectedChatId && selectedChatType) {
+                loadMessages();
+            }
+        }, 2500); // Refresh every 5000 milliseconds (5 seconds)
+
         // Send a new message
         document.getElementById('chatForm').addEventListener('submit', function (event) {
             event.preventDefault();
@@ -195,9 +210,8 @@
 
         toggleBtn.addEventListener("click", () => {
             sidebar.classList.toggle("expanded");
-          });
-      </script>
-        
+        });
+
     </script>
 </body>
 </html>

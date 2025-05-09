@@ -16,7 +16,6 @@ from flask_migrate import Migrate
 import random
 from qrcode import *
 from io import *
-
 from base64 import *
 import re 
 import os

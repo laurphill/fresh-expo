@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "stylesheet" href = "../static/sidebar/resources.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
     <title>Resources</title>
 </head>
 <body>
@@ -19,17 +19,14 @@
         <a href="{{url_for('logout')}}">Log Out</a>
     
       </div>
-    
     <div class = "container">
-        
-        <div class = "card1"><a href = "{{url_for('advising')}}">Advising & Registration</a></div>
+        <div class = "card1"><a href = "{{url_for('advising')}}">Advising and Classes</a></div>
         <div class = "card2"><a href = "{{url_for('organizations')}}">Organizations</a></div>
         <div class = "card3"><a href = "{{url_for('spots')}}">Best Study Spots</a></div>
         <div class = "card4"><a href = "{{url_for('oncampus')}}">On-Campus Living</a></div>
         <div class = "card5"><a href = "{{url_for('offcampus')}}">Off-Campus Living</a></div>
-        <div class = "card6"><a href = "{{url_for('dining')}}">Meal Plan & Declining Balance</a></div>
+        <div class = "card6"><a href = "{{url_for('dining')}}">Meal Plan and Declining Balance</a></div>
     </div>
-
     <script>
         const toggleBtn = document.getElementById("toggleSidebar");
         const sidebar = document.querySelector(".sidebar");

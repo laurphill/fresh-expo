@@ -4,9 +4,11 @@ Verbose = False
 
 friends_table = db.Table(
      'friends',
-      Column('user_id', db.Integer, db.ForeignKey('users.id')),
-      Column('friend_id', db.Integer, db.ForeignKey('users.id'))
+     Column('user_id', db.Integer, db.ForeignKey('users.id')),
+     Column('friend_id', db.Integer, db.ForeignKey('users.id'))
  )
+
+# Association table for class members
 class_members = db.Table(
     'class_members',
     Column('class_id', db.Integer, db.ForeignKey('classes.id')),
@@ -16,15 +18,26 @@ class_members = db.Table(
 class Messages(db.Model):
     __tablename__ = 'messages'
 
-    id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    receiver_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.now())
+    id = Column(db.Integer, primary_key=True)
+    sender_id = Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    receiver_id = Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = Column(db.Text, nullable=False)
+    timestamp = Column(db.DateTime, default=datetime.now())
 
     sender = db.relationship('User', foreign_keys=[sender_id], backref='sent_messages')
     receiver = db.relationship('User', foreign_keys=[receiver_id], backref='received_messages')
-  
+
+class Class(db.Model):
+    __tablename__ = 'classes'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
+    name = Column(String(50), unique=True, nullable=False)  # Username field, must be unique
+    
+    # Relationship for user_classes
+    users = db.relationship('User', secondary='user_classes', backref='classes')
+
+    # Relationship for class_members
+    members = db.relationship('User', secondary='class_members', backref='member_of_classes')
 
 class ClassMessage(db.Model):
     __tablename__ = 'class_messages'
@@ -38,19 +51,6 @@ class ClassMessage(db.Model):
     class_ = db.relationship('Class', backref='messages')
     sender = db.relationship('User', backref='class_messages')
 
-
-class Class(db.Model):
-    __tablename__ = 'classes'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Auto-incrementing primary key
-    name = db.Column(db.String(50), unique=True, nullable=False)  # Class name, must be unique
-
-    # Relationship for user_classes
-    users = db.relationship('User', secondary='user_classes', backref='classes')
-
-    # Relationship for class_members
-    members = db.relationship('User', secondary='class_members', backref='member_of_classes')
-    
 class Events(db.Model):
     __tablename__ = 'events'
 
@@ -58,7 +58,7 @@ class Events(db.Model):
     title = Column(db.String(100), nullable=False)  # Event title
     end = Column(db.DateTime, nullable=True)  # Event end date and time (optional)
     start = Column(db.DateTime, nullable=False)  # Event start date and time
-    date = Column(db.Date, nullable=True)     
+    date = Column(db.Date, nullable=True)    
     user_id = Column(
         db.Integer,
         db.ForeignKey('users.id', name='fk_events_user_id'),  # Foreign key to the users table
@@ -106,7 +106,7 @@ class User(db.Model, UserMixin):
      secondaryjoin=id==friends_table.c.friend_id,
      backref='added_by'
  )
-    display_picture = db.Column(db.String(100), nullable=True)  # Display picture field
+    display_picture = Column(db.String(100), nullable=True)  # Display picture field
     major = Column(db.String(100), nullable=True)  # Major field
     photo1 = Column(db.String(150), nullable=True)
     photo2 = Column(db.String(150), nullable=True)
@@ -225,10 +225,15 @@ def delete_user(db_session, user_id: int):
     return None
             
 def add_user_to_class(db_session, class_name, user_id):
+    # Only proceed if a class_name was given
+    if not class_name:
+        flash(f"Class name must be provided.")
+        return None
+
     # First, check if the class exists in the Classes table
-    user = get_user_by_id(db_session, user_id)
     class_exists = db_session.query(Class).filter(Class.name == class_name).first()
-        
+    
+    user = get_user_by_id(db_session, user_id)
     # Now, check if the user exists in the Users table
     if not user:
         flash(f"User with ID '{user_id}' not found.")
@@ -247,14 +252,14 @@ def add_user_to_class(db_session, class_name, user_id):
         user.classes.append(class_exists)
         class_exists.users.append(user)
         db_session.commit()
-        if current_user.is_teacher and user.id == current_user:
-            flash(f"Created course '{class_exists.name}' successfully.")
+        if current_user.is_teacher and user.id == current_user.id:
+            flash(f"Created course '{class_exists.name}' successfully!")
         else:
-            flash(f"User '{user.username}' successfully added to '{class_exists.name}'.")
+            flash(f"User '{user.username}' successfully added to '{class_exists.name}'!")
     else:
-        if current_user.is_teacher and user.id == current_user:
+        if current_user.is_teacher and user.id == current_user.id:
             flash(f"Course '{class_exists.name}' already exists.")
         else:
-            flash(f"User {user.username} is already enrolled in '{class_exists.name}'.") 
-               
+            flash(f"User {user.username} is already enrolled in '{class_exists.name}'.")
+    
         return user
